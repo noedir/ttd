@@ -1,0 +1,95 @@
+*{
+    border: 0px;
+}
+
+body{
+    background: #427196;
+    color: #fff;
+    font-family: Verdana, Arial, cursive, sans-serif;
+    margin: 0px;
+    padding: 0px;
+}
+a{
+    text-decoration: none;
+}
+a.white{
+    color: #fff;
+}
+a.black{
+    color: #333;
+}
+a.black:hover{
+    color: #666;
+}
+.esconde{
+    display: none;
+}
+.container{
+    position: relative;
+    float: left;
+    width: 98%;
+    margin: 0px 10px;
+    overflow: hidden;
+    overflow-y: auto;
+    border-radius: 8px;
+}
+.loader{
+    position: absolute;
+    top: 4px;
+    left: 5px;
+}
+#list_foto{
+    position: relative;
+    margin: 0px auto;
+}
+.fti{
+    position: relative;
+    float: left;
+    width: 45px;
+    height: 45px;
+    margin: 8px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.fti:hover{
+    box-shadow: 0px 0px 4px #000;
+    width: 90px;
+    height: 90px;
+}
+#FileUpload {
+    position:relative;
+}
+ 
+#BrowserVisible {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+    background:url(../img/upload.gif) 100% 0px no-repeat;
+    height:26px;
+    width:225px;
+}
+ 
+#FileField {
+    width:155px;
+    margin-right:85px;
+    border:solid 1px #000;
+}
+ 
+#BrowserHidden {
+    position:relative;
+    width:240px;
+    height:20px;
+    text-align: right;
+    -moz-opacity:0 ;
+    filter:alpha(opacity=00);
+    opacity: 0;
+    z-index: 2;
+}
+
+#telinha img{
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    max-width: 640px;
+}
