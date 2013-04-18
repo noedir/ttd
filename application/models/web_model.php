@@ -230,7 +230,11 @@ class Web_model extends CI_Model {
     }
     
     public function get_seguepush(){
-	return $this->db->query("SELECT u.us_email email, (SELECT COUNT(*) FROM tbl_convidados c WHERE c.con_email = u.us_email AND c.con_aceitou = 's') AS total, u.us_tokenpush push, (SELECT c2.con_count FROM tbl_convidados c2 WHERE c2.con_email = u.us_email AND c2.con_aceitou = 's' LIMIT 1) AS count FROM tbl_usuario u WHERE u.us_tokenpush <> ''");
+	return $this->db->query("SELECT u.us_email email, (SELECT COUNT(*) FROM tbl_convidados c WHERE c.con_email = u.us_email AND c.con_aceitou = 's') AS total, u.us_tokenpush push, (SELECT c2.con_count FROM tbl_convidados c2 WHERE c2.con_email = u.us_email AND c2.con_aceitou = 's' LIMIT 1) AS count FROM tbl_usuario u WHERE u.us_tokenpush <> '' ORDER BY us_ultimologin DESC");
+    }
+    
+    public function get_ultimotoken($tok){
+	return $this->db->query("SELECT MAX(us_ultimologin) as ultimo FROM tbl_usuario WHERE us_tokenpush = '$tok'");
     }
     
     public function get_tokenpush($tok){
