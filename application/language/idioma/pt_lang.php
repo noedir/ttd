@@ -1,9 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 $lang['pt_thome'] = 'HOME';
-$lang['pt_tidioma'] = 'SELECIONE O IDIOMA';
-$lang['pt_tcriar'] = 'CRIAR PROJETO';
-$lang['pt_tlogin'] = 'LOGIN';
+$lang['pt_tidioma'] = 'Idioma';
+$lang['pt_tcriar'] = 'Criar Projeto';
+$lang['pt_tlogin'] = 'Login';
 $lang['pt_tlogin2'] = 'Login';
 $lang['pt_tola'] = 'Olá';
 $lang['pt_tvisitante'] = 'Visitante';
@@ -16,8 +16,8 @@ $lang['pt_pemail'] = 'Digite o seu email';
 $lang['pt_psenha'] = 'Digite a sua senha';
 $lang['pt_bentrar'] = 'Entrar';
 $lang['pt_errologin'] = 'Email ou senha incorretos';
-$lang['pt_tquemsomos'] = 'QUEM SOMOS';
-$lang['pt_tcontato'] = 'CONTATO';
+$lang['pt_tquemsomos'] = 'Quem Somos';
+$lang['pt_tcontato'] = 'Contato';
 $lang['pt_tlogado'] = 'Logado com sucesso';
 $lang['pt_tmaster'] = 'Master';
 $lang['pt_tatualiza'] = 'Atualiza Dados';

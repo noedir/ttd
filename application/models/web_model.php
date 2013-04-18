@@ -233,6 +233,11 @@ class Web_model extends CI_Model {
 	return $this->db->query("SELECT u.us_email email, (SELECT COUNT(*) FROM tbl_convidados c WHERE c.con_email = u.us_email AND c.con_aceitou = 's') AS total, u.us_tokenpush push, (SELECT c2.con_count FROM tbl_convidados c2 WHERE c2.con_email = u.us_email AND c2.con_aceitou = 's' LIMIT 1) AS count FROM tbl_usuario u WHERE u.us_tokenpush <> ''");
     }
     
+    public function get_tokenpush($tok){
+	$this->db->where('us_tokenpush',$tok);
+	return $this->db->count_all_results('tbl_usuario');
+    }
+    
     public function get_idcount($email){
 	$w = array(
 	    'con_email' => $email,

@@ -59,14 +59,19 @@
 }
 *{
     border: 0px;
+    margin: 0px;
+    padding: 0px;
 }
 
 body{
-    background: #ddd;
+    background: #fff;
     color: #333;
     font-family: Verdana, Arial, cursive, sans-serif;
     margin: 0px;
     padding: 0px;
+}
+#clr {
+	clear:both;
 }
 a{
     text-decoration: none;
@@ -158,33 +163,81 @@ a.black:hover{
     background: #fff;
 }
 #baseLogo {
-	margin-top: -6px;
-	float: left;
+    margin-top: -6px;
+    float: left;
 }
 
 #baseHeader {
-	width: 100%;
-	height: 30px;
-	font-family: 'ColaborateRegular';
-	padding-top: 15px;
-	background: #212121;
+    width: 100%;
+    height: 30px;
+    font-family: 'ColaborateRegular';
+    padding-top: 15px;
+    background: #212121;
 }
 
 #baseMenuGeral {
-	width: 960px;
-	margin: 0 auto;
-	font-size: 12px;
-	color: #fff;
+    width: 960px;
+    margin: 0 auto;
+    font-size: 12px;
+    color: #fff;
 }
 
 #baseMenuGeral ul {
-	float: right;
-	list-style: none;
+    float: right;
+    list-style: none;
 }
 
 #baseMenuGeral li {
-	float: left;
-	margin-left: 35px;
+    float: left;
+    margin-left: 35px;
+}
+#baseBarraAdmin {
+    font-family: 'ColaborateRegular';
+    background: #373737 url(../img/admin_bar_texture.jpg) repeat;
+    width: 100%;
+    font-size: 12px;
+    margin-bottom: 30px;
+}
+
+#baseMenuAdmin {
+    width: 960px;
+    position:relative;
+    margin: 0 auto;
+    padding: 12px 0 12px 5px;
+}
+
+#baseMenuAdmin .settingsTick {
+    position: absolute;
+    left: -60px;
+    top: 0px;
+    background: url(../img/settings_tab.png) no-repeat;
+    width: 45px; height: 66px;
+    z-index: 99;
+}
+
+#baseMenuAdmin .welcome {
+    color: #eaa138;
+    font-size: 16px;
+}
+
+#baseMenuAdmin .linksAdmin {
+    color: #afafaf;
+    float: right;
+}
+
+#baseMenuAdmin .linksAdmin a{
+    color: #afafaf;
+}
+
+#baseMenuAdmin .linksAdmin ul{
+    margin-top: -15px;
+    list-style: none;
+}
+
+#baseMenuAdmin .linksAdmin li {
+    float: left;
+    margin-left: 35px;
+    color: #fff;
 }
 #topo{
     position: relative;
@@ -400,11 +453,12 @@ a.black:hover{
 .tip-maior{
     position: relative;
     float: right;
-    margin-top: -70px;
+    margin-top: -65px;
     margin-right: -22px;
     width: 361px !important;
-    background: url(../img/painel_background.png) no-repeat;
-    border-radius: 10px;
+    background: #ddd;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
     padding: 0px 0px 0px 7px;
     height: 710px;
 }

@@ -31,6 +31,11 @@ class Web extends CI_Controller {
 	    }
 	}
     }
+    private function ver_conta(){
+	if($this->session->userdata('us_codigo') == ''){
+	    redirect(index_page());
+	}
+    }
     private function crypt($u=NULL,$s=NULL){
 	if($u != NULL && $s != NULL){
 	    $r = sha1(md5($u).':'.md5($s));
@@ -43,6 +48,7 @@ class Web extends CI_Controller {
     }
     
     public function nomeunico(){
+	$this->ver_conta();
 	header('content-type: application/json');
 	$input = elements(array('nome','proj','dias'),$this->input->post());
 	
@@ -148,6 +154,7 @@ class Web extends CI_Controller {
     }
     
     public function atualiza_dados(){
+	$this->ver_conta();
 	$dados = array(
 	    'title' => 'Projeto Count &raquo; Atualizar Dados',
 	    'tela' => 'atualiza_dados',
@@ -231,6 +238,7 @@ class Web extends CI_Controller {
     }
     
     public function criar_novo_projeto(){
+	$this->ver_conta();
 	$dados = array(
             'title' => 'Projeto Count &raquo; Criar Novo Projeto Count',
             'tela' => 'novo_projeto',
@@ -260,6 +268,7 @@ class Web extends CI_Controller {
     }
     
     public function edit_count(){
+	$this->ver_conta();
 	$id = $this->uri->segment(3);
 	$dados = array(
 	    'title'	=> 'Projeto Count &raquo; Editar Count',
@@ -281,12 +290,14 @@ class Web extends CI_Controller {
     }
     
     public function excluir_count(){
+	$this->ver_conta();
 	$id = $this->uri->segment(3);
 	$this->wdb->del_count($id);
 	redirect('web/counts');
     }
     
     public function counts(){
+	$this->ver_conta();
 	$dados = array(
 	    'title' => 'Projeto Count &raquo; Minhas Counts',
 	    'tela' => 'counts',
@@ -297,6 +308,7 @@ class Web extends CI_Controller {
     }
     
     public function tips(){
+	$this->ver_conta();
 	if($this->uri->segment(3) != ''){
 	    $id = $this->uri->segment(3);
 	    $this->session->set_userdata('tips',$id);
@@ -319,6 +331,7 @@ class Web extends CI_Controller {
     }
     
     public function upphoto(){
+	$this->ver_conta();
 	$dados = array(
 	    'title' => 'Projeto Count &raquo; Fotos',
 	    'tela' => 'sobefoto',
@@ -328,6 +341,7 @@ class Web extends CI_Controller {
     }
     
     public function img_instagram(){
+	$this->ver_conta();
 	$img = $this->input->post('imgi');
 	$local = $this->input->post('local');
 	$exp = array_reverse(explode("/",$img));
@@ -376,6 +390,7 @@ class Web extends CI_Controller {
     }
     
     public function img_upload(){
+	$this->ver_conta();
 	$path = $this->uri->segment(3);
 	if($path == ''){
 	    $path = 'tips';
@@ -435,6 +450,7 @@ class Web extends CI_Controller {
     }
     
     public function grava_tip(){
+	$this->ver_conta();
 	$input = elements(array('id_tip','codigo','img','titulo','sub','mensagem','central','largura','altura','posicao'), $this->input->post());
 	
 	$crd = explode('/',$input['posicao']);
@@ -442,13 +458,14 @@ class Web extends CI_Controller {
 	$posiw = ($input['largura']);
 	
 	if(file_exists('./tips/tmp_'.$input['img'])){
-	
+	    
+	    // FAZ O RESIZE DA IMAGEM
 	    if($input['central'] === 's'){
 		$config = array(
 		    'image_library' => 'gd2',
 		    'source_image' => './tips/tmp_'.$input['img'],
-		    'width' => ($posiw * 1.325),
-		    'height' => ($posih * 1.20),
+		    'width' => ($posiw * 1.19),
+		    'height' => ($posih * 1.187),
 		    'maintain_ratio' => FALSE,
 		);
 		$this->load->library('image_lib',$config);
@@ -456,7 +473,7 @@ class Web extends CI_Controller {
 		$this->image_lib->clear();
 
 		$img = getimagesize('./tips/tmp_'.$input['img']);
-
+		
 		$tmpw = ($img[0] * 2);
 		$tmph = ($img[1] * 2);
 
@@ -470,73 +487,49 @@ class Web extends CI_Controller {
 		$this->image_lib->initialize($config);
 		$this->image_lib->resize();
 		$this->image_lib->clear();
-
-		$posl = abs($crd[0]) * 3.25;
-		$post = abs($crd[1]) * 2.70; 
+		
+		$posl = abs($crd[0]) * 1.19;
+		$post = abs($crd[1]) * 1.187; 
 
 		$config = array(
 		    'image_library' => 'gd2',
 		    'source_image' => './tips/'.$input['img'],
-		    'x_axis' => $posl,
-		    'y_axis' => $post,
+		    'x_axis' => ($posl * 2),
+		    'y_axis' => ($post * 2),
 		    'width'  => 640, //$input['largura'],
 		    'height' => 570, //$input['altura'],
 		    'maintain_ratio' => FALSE,
 		);
 
-		//$this->load->library('image_lib',$config);
 		$this->image_lib->initialize($config);
 		$this->image_lib->crop();
 		$this->image_lib->clear();
-
+		
+		// FAZ O CROP DA IMAGEM
 	    }else{
+		
+		$posil = ((abs($crd[0]) - 100) * 2.37);
+		$posit = ((abs($crd[1]) - 90) * 2.45);
 
-		$lar = getimagesize('./tips/'.$input['img']);
-		if($lar[0] >= 640){
-
-		    $post = (abs($crd[1]) * 2) / 1.32;
-		    $posl = (abs($crd[0]) * 2) / 1.20;
-
-		    $config = array(
-			'image_library' => 'gd2',
-			'source_image' => './tips/'.$input['img'],
-			'x_axis' => $posl,
-			'y_axis' => $post,
-			'width'  => 640, //$input['largura'],
-			'height' => 570, //$input['altura'],
-			'maintain_ratio' => FALSE,
-		    );	    
-		    $this->load->library('image_lib',$config);
-		    $this->image_lib->crop();
-		    $this->image_lib->clear();
-		}else{
-		    $config = array(
-			'image_library' => 'gd2',
-			'source_image' => './tips/'.$input['img'],
-			'width' => 640, //$input['largura'];
-			'height' => 570, //$input['altura'];
-			'maintain_ratio' => FALSE,
-		    );
-		    $this->load->library('image_lib',$config);
-		    $this->image_lib->resize();
-		    $this->image_lib->clear();
-
-		    $posit = (abs($crd[1]) * 2.70) / 1.30;
-		    $posil = (abs($crd[0]) * 3.25) / 1.25;
-
-		    $config = array(
-			'image_library' => 'gd2',
-			'source_image' => './tips/'.$input['img'],
-			'x_axis' => $posil,
-			'y_axis' => $posit,
-			'width'  => 640, //$input['largura'],
-			'height' => 570, //$input['altura'],
-			'maintain_ratio' => FALSE,
-		    );	    
-		    $this->image_lib->initialize($config);
-		    $this->image_lib->crop();
-		    $this->image_lib->clear();
+		if($posil < 0){
+		    $posil = 0;
 		}
+		if($posit < 0){
+		    $posit = 0;
+		}
+		
+		$config = array(
+		    'image_library' => 'gd2',
+		    'source_image' => './tips/'.$input['img'],
+		    'x_axis' => $posil,
+		    'y_axis' => $posit,
+		    'width'  => 640,
+		    'height' => 570,
+		    'maintain_ratio' => FALSE,
+		);	    
+		$this->load->library('image_lib',$config);
+		$this->image_lib->crop();
+		$this->image_lib->clear();
 	    }
 
 	    $config['image_library'] = 'gd2';
@@ -577,6 +570,7 @@ class Web extends CI_Controller {
     }
     
     public function gravadata(){
+	$this->ver_conta();
 	$input = elements(array('cd_count','dias_count','calendario'),$this->input->post());
 	$c = 0;
 	
@@ -600,6 +594,7 @@ class Web extends CI_Controller {
     }
     
     public function gravatag(){
+	$this->ver_conta();
 	$input = elements(array('tags','codigo'),$this->input->post());
 	$this->wdb->set_tag($input);
 	print_r($input);
@@ -615,6 +610,7 @@ class Web extends CI_Controller {
     }
     
     public function invites(){
+	$this->ver_conta();
 	$access = $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result_array();
 	$dados = array(
 	    'title' => 'Projeto Count &raquo; Invites',
@@ -630,6 +626,7 @@ class Web extends CI_Controller {
     }
     
     public function grava_convite(){
+	$this->ver_conta();
 	$this->load->helper('email');
 	$this->load->library('email');
 	
@@ -728,8 +725,7 @@ class Web extends CI_Controller {
 
 	// Open a connection to the APNS server
 	$fp = stream_socket_client(
-		'ssl://gateway.sandbox.push.apple.com:2195', $err,
-		$errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
+		'ssl://gateway.sandbox.push.apple.com:2195', $err, $errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
 
 	/*if (!$fp)
 		exit("Failed to connect: $err $errstr" . PHP_EOL);
@@ -773,28 +769,36 @@ class Web extends CI_Controller {
     public function sendpuxi(){
 	$segue = $this->wdb->get_seguepush()->result_array();
 	
+	$ver = array();
+	
 	foreach ($segue as $sg){
-	    $idc = '';
-	    $c = $this->wdb->get_idcount($sg['email'])->result_array();
-	    if(count($c) > 0){
-		foreach($c as $co){
-		    $idc .= $co['con_count'].',';
+	    if(!in_array($sg['push'],$ver)){
+		$idc = '';
+		$c = $this->wdb->get_idcount($sg['email'])->result_array();
+		if(count($c) > 0){
+		    foreach($c as $co){
+			$idc .= $co['con_count'].',';
+		    }
+		    $idc = substr($idc,0,-1);
+		}else{
+		    $idc = NULL;
 		}
-		$idc = substr($idc,0,-1);
-	    }else{
-		$idc = NULL;
-	    }
-	    
-	    if($sg['total'] > 1){
-		if($sg['push'] != '(null)' && $sg['push'] != ''){
-		    $this->push($sg['push'],"Novas TIPS disponíveis",$idc);
+
+		if($sg['total'] > 1){
+		    if($sg['push'] != '(null)' && $sg['push'] != ''){
+			$this->push($sg['push'],"Novas TIPS disponíveis",$idc);
+		    }
+		}else if($sg['total'] == 1){
+		    if($sg['push'] != '(null)' && $sg['push'] != ''){
+			$count = $this->wdb->get_countpush($sg['count'])->result_array();
+			$this->push($sg['push'],$count[0]['co_titulo'], $idc);
+		    }
 		}
-	    }else if($sg['total'] == 1){
-		if($sg['push'] != '(null)' && $sg['push'] != ''){
-		    $count = $this->wdb->get_countpush($sg['count'])->result_array();
-		    $this->push($sg['push'],$count[0]['co_titulo'], $idc);
-		}
+		$ver[] = $sg['push'];
 	    }
 	}
+	
+	echo "<pre>";
+	print_r($ver);
     }
 }

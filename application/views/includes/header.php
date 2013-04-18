@@ -20,43 +20,46 @@
     </head>
     <body>
 	<div id="ur" data-url="<?php echo base_url(); ?>"></div>
-	<div id="baseHeader">
-	    <div id="baseMenuGeral">
-                <div id="baseLogo"><img src="<?php echo base_url(); ?>img/logotipo_header.jpg" /></div>
-		<ul>
-		    <li><?php echo anchor('web/quem_somos','Quem Somos','class="white"'); ?></li>
-		    <li><?php echo anchor('web/politica','Política de Privacidade','class="white"'); ?></li>
-		    <li style="margin-right: 0px;"><?php echo anchor('web/contato','Contato','class="white"'); ?></li>
-		</ul>    
-            </div>
-        </div>
 	<div id="pagina">
 	    <div id="close"></div>
 	    <img class="loader" src="<?php echo base_url(); ?>img/loader.gif">
 	    <div class="pag"></div>
 	</div>
 	<div id="fundo_box"></div>
-        <div id="tudo">
-            <div id="topo">
-		<div class="engrenagem"></div>
-                <p class="left"><?php echo anchor('web',$this->lang->line('pt_thome'),'class="white"'); ?></p>
-                <p class="left well"><span id="btn_idioma"><?php echo $this->lang->line('pt_tidioma'); ?></span></p>
-		<div id="lang">
-		    <span class="fechar">x</span>
-		    <ul>
-			<li class="lang" data-lang="pt"><img src="<?php echo base_url(); ?>img/pt.png"> Português</li>
-			<li class="lang" data-lang="en"><img src="<?php echo base_url(); ?>img/en.jpg"> English</li>
-		    </ul>
-		</div>
-		<?php if($this->session->userdata('us_nome') == ''){ ?>
-		<p class="right"><?php echo anchor('web/login',$this->lang->line('pt_tlogin'),'class="white"'); ?></p>
-		    <p class="right well"><?php echo anchor('web/criar_projeto',$this->lang->line('pt_tcriar'),'class="white"'); ?></p>
-		<?php } ?>
+	<div id="baseHeader">
+	    <div id="baseMenuGeral">
+                <div id="baseLogo"><?php echo anchor(index_page(),'<img title="TilTheDay" alt="Logotipo TilTheDay" src="'.base_url().'img/logotipo_header.jpg" />','class="white"'); ?></div>
+		<ul>
+		    <li><?php echo anchor('web/quem_somos','Quem Somos','class="white"'); ?></li>
+		    <li><?php echo anchor('web/politica','Política de Privacidade','class="white"'); ?></li>
+		    <li><?php echo anchor('web/contato','Contato','class="white"'); ?></li>
+		    <?php if($this->session->userdata("us_nome") == ''){ ?>
+		    <li><?php echo anchor('web/login',$this->lang->line('pt_tlogin'),'class="white"'); ?></li>
+                    <li style="margin-right: 0px;"><?php echo anchor('web/criar_projeto',$this->lang->line('pt_tcriar'),'class="white"'); ?></li>
+		    <?php }else{ ?>
+		    <li style="margin-right: 0px;"><?php echo anchor('web/sair',$this->lang->line('pt_tlogout'),'class="white"'); ?></li>
+		    <?php } ?>
+		</ul>    
             </div>
-	    <div id="log">
-            <?php if($this->session->userdata('us_nome') != ''){ ?>
-		Master: <strong><?php echo $this->session->userdata('nomecurto'); ?></strong> | <?php echo anchor('web/atualiza_dados','<strong>'.$this->lang->line('pt_tatualiza').'</strong>','class="white"'); ?> | <?php echo anchor('web/counts','<strong>'.$this->lang->line('pt_tminhas').'</strong>','class="white"'); ?> | <?php echo anchor('web/criar_novo_projeto','<strong>'.$this->lang->line('pt_tnovo').'</strong>','class="white"'); ?> | <?php echo anchor('web/sair','<strong>'.$this->lang->line('pt_tlogout').'</strong>','class="white"'); ?>
-            <?php }else{ ?>
-		<?php echo $this->lang->line('pt_tola'); ?>, <strong><?php echo $this->lang->line('pt_tvisitante'); ?></strong>. <?php echo $this->lang->line('pt_tfaca'); ?> <span class="btn_login"><strong><?php echo anchor('web/login',$this->lang->line('pt_tlogin2'),'class="white"'); ?></strong></span> ou <?php echo anchor('web/criar_projeto','<strong>'.$this->lang->line('pt_tcrie').'</strong>','class="white"'); ?>.
-	    <?php } ?>
-	    </div>
+        </div>
+	<div id="clr"></div>
+	
+	<?php if($this->session->userdata("us_nome") != ''){ ?>
+	<div id="baseBarraAdmin">	    
+        	<div id="baseMenuAdmin">
+                <div class="settingsTick"></div>
+                <div class="welcome">
+		    <?php echo "Bem vindo, ".$this->session->userdata('nomecurto'); ?>
+                </div>
+                <div class="linksAdmin">
+		    <ul>
+                        <li><?php echo anchor('web/atualiza_dados',$this->lang->line('pt_tatualiza'),'class="white"'); ?></li>
+                        <li><?php echo anchor('web/counts',$this->lang->line('pt_tminhas'),'class="white"'); ?></li>
+                        <li><?php echo anchor('web/criar_novo_projeto',$this->lang->line('pt_tnovo'),'class="white"'); ?></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+	<?php } ?>
+        <div id="clr"></div>
+        <div id="tudo">
