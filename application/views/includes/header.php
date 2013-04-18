@@ -20,6 +20,16 @@
     </head>
     <body>
 	<div id="ur" data-url="<?php echo base_url(); ?>"></div>
+	<div id="baseHeader">
+	    <div id="baseMenuGeral">
+                <div id="baseLogo"><img src="<?php echo base_url(); ?>img/logotipo_header.jpg" /></div>
+		<ul>
+		    <li><?php echo anchor('web/quem_somos','Quem Somos','class="white"'); ?></li>
+		    <li><?php echo anchor('web/politica','Política de Privacidade','class="white"'); ?></li>
+		    <li style="margin-right: 0px;"><?php echo anchor('web/contato','Contato','class="white"'); ?></li>
+		</ul>    
+            </div>
+        </div>
 	<div id="pagina">
 	    <div id="close"></div>
 	    <img class="loader" src="<?php echo base_url(); ?>img/loader.gif">
