@@ -48,7 +48,6 @@ class Web extends CI_Controller {
     }
     
     public function nomeunico(){
-	$this->ver_conta();
 	header('content-type: application/json');
 	$input = elements(array('nome','proj','dias'),$this->input->post());
 	
@@ -203,7 +202,6 @@ class Web extends CI_Controller {
         $this->form_validation->set_rules('senha_usuario','Senha','trim|required');
         $this->form_validation->set_rules('confirma_senha','Confirmação','trim|required|matches[senha_usuario]');
         $this->form_validation->set_rules('nome_projeto','Projeto','trim|required');
-        $this->form_validation->set_rules('ocasiao_projeto','Ocasião','trim|required');
         $this->form_validation->set_rules('dias_projeto','Dias do Projeto','trim|required|numeric');
         $this->form_validation->set_rules('nomeunico','Identificador','trim|required|is_unique[tbl_count.co_nomeunico]');
 	
@@ -216,7 +214,7 @@ class Web extends CI_Controller {
 	    $this->wdb->set_usuario($in_user);
             $idu = $this->db->insert_id();
 	    
-	    $in_count = elements(array('privado','nome_projeto','ocasiao_projeto','dias_projeto','valor_projeto','nomeunico'),$this->input->post());
+	    $in_count = elements(array('privado','nome_projeto','dias_projeto','valor_projeto','nomeunico'),$this->input->post());
 	    
 	    $in_count['user_id'] = $idu;
 	    
@@ -322,7 +320,7 @@ class Web extends CI_Controller {
 	    'count'	=> $this->wdb->get_tcount($id)->result(),
 	    'tips'	=> $this->wdb->get_tips($id)->result(),
 	    'totaltips'	=> $this->wdb->get_totaltips($id),
-	    'oauth' => $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result_array(),
+	    'oauth'	=> $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result_array(),
 	);
 	
 	$dados['facebook'] = base_url().'facebook';
@@ -399,8 +397,10 @@ class Web extends CI_Controller {
 	$config['upload_path']   = FCPATH.$path.'/';
 	$config['allowed_types'] = 'jpg|png';
 	$config['file_name'] = md5(date("YmdHis"));
-	$config['min_width'] = 640;
-	$config['min_height'] = 570;
+	if($path === 'tips'){
+	    $config['min_width'] = 640;
+	    $config['min_height'] = 570;
+	}
 	$config['overwrite'] = TRUE;
 	$this->load->library('upload', $config);
 	
@@ -408,10 +408,14 @@ class Web extends CI_Controller {
 	    $file = $this->upload->data();
 	    
 	    $data['arquivo'] = $file['file_name'];
-	    $temp = 'tmp_'.$file['file_name'];
+	    if($path === 'tips'){
+		$temp = 'tmp_'.$file['file_name'];
+	    }else{
+		$temp = $file['file_name'];
+	    }
 	    
-	    $lar = $file['image_width'] / 2;
-	    $alt = $file['image_height'] / 2;
+	    $lar = ($file['image_width'] / 2);
+	    $alt = ($file['image_height'] / 2);
 	    
 	    if($path == 'tips'){
 		$config = array(
@@ -619,8 +623,11 @@ class Web extends CI_Controller {
 	    'facebook' => base_url().'facebook',
 	);
 	
-	if($access[0]['oa_facebook_access_token'] != ''){
+	if(count($access) === 0){
 	    $dados['facebook'] = base_url().'facebook';
+	}else{
+	    $dados['appID'] = '445876232159922';
+	    $dados['facebook'] = '';
 	}
 	$this->load->view('web_view',$dados);
     }

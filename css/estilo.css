@@ -70,7 +70,7 @@ body{
     margin: 0px;
     padding: 0px;
 }
-#clr {
+.clr {
 	clear:both;
 }
 a{
@@ -318,6 +318,33 @@ a.black:hover{
     background: #fff;
     padding: 10px;
     padding-bottom: 40px;
+}
+#container #lista_facebook{
+    position: relative;
+    width: 1000px;
+    margin: 0px auto;
+}
+#lista_facebook .fb{
+    position: relative;
+    float: left;
+    width: 200px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin: 8px;
+    padding: 5px;
+}
+.fb .inv{
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+}
+.fb .pict{
+    float: left;
+    margin-right: 6px;
+}
+.fb p{
+    font-size: 10px;
 }
 #container #login{
     position: relative;
@@ -628,10 +655,6 @@ button[type='reset']:hover, button[type='cancel']:hover{
 .exc{
     cursor: pointer;
 }
-#formcad{
-    width: 300px;
-    margin: 0px auto;
-}
 .box{
     width: 1060px;
     height: 260px;
@@ -787,3 +810,92 @@ div.tagsinput input { width: 30px; border: none; padding: 5px 8px 6px 8px; backg
 div.tagsinput div { display: block; float: left; } 
 .tags_clear { clear: both; width: 100%; height: 0px; }
 .not_valid { background: #FBD8DB !important; color: #90111A !important;}
+
+.baseNovoCount {
+    width: 715px;
+    margin: 0px auto;
+    margin-top: 35px;
+}
+
+.baseNovoCount label{
+	margin-top: 20px;
+}
+
+.baseNovoCount input{
+	width: 690px; height: 25px;
+	padding: 10px;
+	border: 2px solid #ebebeb;
+}
+
+.formNovoCount {
+	margin-top: 15px;
+}
+
+.formNovoCountDias {
+	margin-top: 15px;
+	position:relative;
+}
+
+#baseValores {
+	position:absolute;
+	width: 310px;
+	height: 30px;
+	top: 33px;
+	right: -12px;
+	color: #fff;
+	text-align: center;
+	font-size: 13px;
+}
+
+#baseValores .startfee{
+	background: #b2b2b2;
+	width: 70px;
+	float:left;
+	margin: 9px 0px 0px 0px;
+	padding: 1px 10px 2px 10px;
+}
+
+#baseValores .cadaDia{
+	background: #d18c28;
+	width: 70px;
+	float:left;
+	margin: 9px 0px 0px 0px;
+	padding: 1px 10px 2px 10px;
+}
+
+#baseValores .valorFinal {
+	background: #eaa138;
+	width: 110px;
+	float:left;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	margin: 9px 0px 0px 0px;
+	padding: 1px 10px 2px 10px;
+}
+
+.formNovoCountDataInicio{
+	margin-top: 15px;
+	float:left
+}
+
+.formNovoCountDataFim {
+	margin-top: 15px;
+	float:right;
+}
+
+.baseNovoCount .inicioTermino{
+	width: 300px; height: 25px;
+	padding: 10px;
+	border: 2px solid #ebebeb;
+}
+
+.baseNovoCount .criarProjeto {
+	width: 200px; height: 50px;
+	float: right;
+	margin-top: 15px;
+	cursor: pointer;
+	background: #15e09b;
+	border: 0px;
+	color: #fff;
+	font-size: 14px;
+}

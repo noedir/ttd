@@ -12,12 +12,12 @@
 	    </div>
 	    <div id="ajuste_automatico"></div>
 	    <div class="menu_foto">
-		<?php if($oauth[0]['oa_facebook_access_token'] != ''){
+		<?php if(count($oauth) > 0 && $oauth[0]['oa_facebook_access_token'] != ''){
 		    echo '<div class="facebook" id="pega_facebook"><img src="'.base_url().'img/facebook.png"></div>';
 		}else{
 		    echo '<div class="facebook"><a href="'.base_url().'facebook?inv='.current_url().'"><img src="'.base_url().'img/facebook.png"></a></div>';
 		}
-		if($oauth[0]['oa_instagram_access_token'] != ''){
+		if(count($oauth) > 0 && $oauth[0]['oa_instagram_access_token'] != ''){
 		    echo '<div class="instagram" id="pega_instagram"><img src="'.base_url().'img/up_instagram.png"></div>';
 		}else{
 		    echo '<div class="instagram"><a href="https://api.instagram.com/oauth/authorize/?client_id=4df5f47cf2fa4da98b0d0f91beb158fb&redirect_uri='.base_url().'auth/token&response_type=code"><img src="'.base_url().'img/up_instagram.png"></a></div>';
@@ -86,7 +86,7 @@
 		<?php
 		$c = 1;
 		foreach($tips as $t){
-		    if($t->ti_data_mostra < date("Y-m-d")){
+		    if($t->ti_data_mostra <= date("Y-m-d")){
 			$dis = 'data-disabled="yes"';
 		    }else{
 			$dis = 'data-disabled="no"';

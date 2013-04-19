@@ -143,14 +143,94 @@ class Auth extends CI_Controller{
     }
         
     public function token_facebook(){
-	if($_GET['code'] != ''){
+	if(isset($_GET['code']) && $_GET['code'] != ''){
 	    redirect('http://www.dcanm.mobi/count/facebook/confirm?code='.$_GET['code']);
-	}
-	if($_GET['access_token'] != ''){
+	}else
+	if(isset($_GET['access_token']) && $_GET['access_token'] != ''){
 	    redirect('http://www.dcanm.mobi/count/facebook/confirm?access_token='.$_GET['access_token']);
+	}else	
+	if(isset($_GET['post_id']) && $_GET['post_id'] != ''){
+	    redirect(base_url().'/web/invites/'.$this->session->userdata('idcount').'/sim');
+	}else{
+	    redirect(base_url().'/web/invites/'.$this->session->userdata('idcount').'/sim');
 	}
     }
     
+    public function send_dialog_face(){
+	$tk = $this->id_secret('facebook');
+	$iduser = $this->uri->segment(3);
+	$idcount = $this->uri->segment(4);
+	
+	$this->session->set_userdata('idcount',$idcount);
+	
+	$txt = 'O link para o aplicativo é tiltheday://'.$idcount;
+		
+	$url = 'https://www.facebook.com/dialog/feed?app_id='.$tk['id'].'&display=popup&name=People%20Argue%20Just%20to%20Win&link=http://www.dcanm.mobi/count/&picture=http://www.dcam.mobi/count/img/logotipo_header.jpg&name=TilTheDay&caption=Contagem%20Regressiva&description=fa%C3%A7a%20uma%20contagem%20dos%20seus%20eventos%20'.$txt.'&redirect_uri=http://www.dcanm.mobi/count/auth/token_facebook&to='.$iduser.'';
+	
+	redirect($url);
+    }
+
+
+    public function get_amigos(){
+	header("content-type: application/json");
+	$tkfb = $this->id_secret('facebook');
+	$token = $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result_array();
+	$access = $token[0]['oa_facebook_access_token'];
+	$usuario = $token[0]['oa_facebook_usuario'];
+	
+	$pega = $this->getpage('https://graph.facebook.com/'.$usuario.'/?fields=friends.fields(first_name,link,picture)&access_token='.$access);
+	$jsondec = json_decode($pega)->friends->data;
+	$amigos = $jsondec;
+	
+	$saida = array();
+	$c = 0;
+	foreach($amigos as $fr){
+	    $amg = (array)$fr;
+	    $pict = (array)$amg['picture']->data;
+	    $saida[$c]['appid'] = $tkfb['id'];
+	    $saida[$c]['acctk'] = $access;
+	    $saida[$c]['nome'] = $amg['first_name'];
+	    $saida[$c]['link'] = $amg['link'];
+	    $saida[$c]['id'] = $amg['id'];
+	    $saida[$c]['pic'] = $pict['url'];
+	    $c++;
+	}
+	sort($saida);
+	
+	echo json_encode($saida);
+    }
+    
+    public function send_post(){
+	$tk = $this->id_secret('facebook');
+	$token = $this->wdb->get_oauth($this->session->userdata("us_codigo"))->result_array();
+	$access = $token[0]['oa_facebook_access_token'];
+	$usuario = $token[0]['oa_facebook_usuario'];
+	#https://graph.facebook.com/100001933896128/feed?message=Mensagem%20da%20DCANM%20Mobil&link=http%3A%2F%2Fwww.dcanm.mobi%2Fcount
+	$data['link'] = 'http://www.dcanm.mobi/count/';
+	$data['message'] = 'Essa é uma mensagem de teste';
+	$data['caption'] = 'Caption';
+	$data['description'] = 'Description';
+	$data['access_token'] = $access;
+	
+	$post_url = 'https://graph.facebook.com/100000174844022/feed';
+	
+	$manda = $this->sendpage($post_url,$data);
+	
+	print_r($manda);
+    }
+    
+    private function sendpage($url,$post){
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	$return = curl_exec($ch);
+	curl_close($ch);
+	
+	return $return;
+    }
+
     private function getpage($url){
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);

@@ -38,7 +38,7 @@ class Facebook extends CI_Controller {
         $callback = 'http://www.dcanm.mobi/count/auth/token_facebook'; //base_url().'auth/token_facebook';
         // create the FB auth url to redirect the user to. 'scope' is
         // a comma sep list of the permissions you want. then direct them to it
-        $url = "https://graph.facebook.com/oauth/authorize?client_id={$this->appid}&redirect_uri={$callback}&scope=email,friends_about_me,user_photos";
+        $url = "https://graph.facebook.com/oauth/authorize?client_id={$this->appid}&redirect_uri={$callback}&scope=email,friends_about_me,user_photos,publish_stream";
         redirect($url);
     }
  
@@ -70,10 +70,6 @@ class Facebook extends CI_Controller {
 	    $this->wdb->set_faceoauth($info->id,$access_token);
         }
 	redirect($this->session->userdata('return'));
-    }
-    
-    public function get_amigos(){
-	$token = $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result_array();
     }
  
     /**

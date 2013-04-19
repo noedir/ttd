@@ -2,7 +2,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="<?php echo base_url(); ?>css/jquery-ui-1.8.21.custom.css">
+	<meta property="og:title" content="TilTheDay" />
+	<meta property="og:description" content="Siga nossa count no celular" />
+	<meta property="og:image" content="thumbnail_image" />
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css">
         <script src="<?php echo base_url(); ?>js/jquery-1.7.2.min.js"></script>
         <script src="<?php echo base_url(); ?>js/jquery-ui-1.8.21.custom.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/imgareaselect-default.css" />
@@ -19,6 +22,7 @@
         <title><?php echo $title; ?></title>
     </head>
     <body>
+	<div id="fb-root"></div>
 	<div id="ur" data-url="<?php echo base_url(); ?>"></div>
 	<div id="pagina">
 	    <div id="close"></div>

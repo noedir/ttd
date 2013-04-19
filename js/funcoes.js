@@ -79,8 +79,25 @@ function updateCoords(){
     return res;
 };
 
+function convida_face(){
+    var ur = $('#ur').data('url');
+    var html = '';
+    var url = '';
+    var count = $("#convida_face").data('count');
+    $.getJSON(ur+'auth/get_amigos', function(resp){
+	$.each(resp, function(index, value){
+	    url = ur+'auth/send_dialog_face/'+value['id']+'/'+count;
+	    html += '<div class="fb"><img class="pict" src="'+value['pic']+'"><p>'+value['nome']+'</p><a href="'+url+'"><img class="inv" src="'+ur+'img/invite_facebook.jpg"></a></div>';
+	});
+
+	$("#lista_facebook").html(html);
+    });
+}
+
 $(document).ready(function(){
     var ur = $('#ur').data('url');
+    
+    $(".formNovoCount").buttonset();
     
     $("#tabs").tabs();
     
@@ -100,6 +117,15 @@ $(document).ready(function(){
 		}
 	    });
 	}
+    });
+    
+    if($("#convida_face").data('volta') === 'sim'){
+	$("#convida_face").click();
+	convida_face();
+    }
+    
+    $("#convida_face").click(function(){
+	convida_face();
     });
     
     $(".hastags").tagsInput({
@@ -249,12 +275,12 @@ $(document).ready(function(){
 	}
     });
     
-    $("#calendario").datepicker({
+    $("#calendario, #fimcount, #inicount").datepicker({
 	dateFormat: 'dd/mm/yy',
 	monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
 	dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sab'],
 	dayNamesMin: ['Do','Se','Te','Qu','Qu','Se','Sa'],
-	minDate: '+0',
+	minDate: '+1',
     });
     
     $(document).on('click','#ajuste_automatico', function(){
@@ -461,20 +487,29 @@ $(document).ready(function(){
         $(this).css('border-color','#ddd');
     });
     
+    if($("input[name='dias_projeto']").val() !== ''){
+	var valor = $(this).val();
+	if(valor !== ''){
+	    var dia = 0.99;
+	    var pagto = (valor * dia) + 1;
+	    
+	    var num = new Number(pagto);
+	    
+	    $("#vlr_proj").val(num.toFixed(2));
+	    $("#resultado_dias").html("R$ "+num.toFixed(2));
+	}
+    }
+    
     $("input[name='dias_projeto']").blur(function(){
         var valor = $(this).val();
 	if(valor !== ''){
-	    var pagto = 9.9;
-
-	    if(valor <= 10){
-		pagto = 9.9;
-	    }else{
-		for(i=11;i <= valor;i++){
-		    pagto = pagto + 1;
-		}
-	    }
-	    $("#vlr_proj").val(pagto);
-	    $("#resultado_dias").html("Valor a pagar: R$ "+pagto);
+	    var dia = 0.99;
+	    var pagto = (valor * dia) + 1;
+	    
+	    var num = new Number(pagto);
+	    
+	    $("#vlr_proj").val(num.toFixed(2));
+	    $("#resultado_dias").html("R$ "+num.toFixed(2));
 	}
     });
 });

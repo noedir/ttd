@@ -17,7 +17,7 @@ class Mobile extends CI_Controller {
     }
     
     public function cadastro(){
-        header("Content-type: application/json");
+	header("Content-type: application/json");
 	$input = elements(array('token_face','nome_usuario','email_usuario','tokenpush'),$this->input->post());
         $ver = array(
 	    'email' => $input['email_usuario'],
@@ -31,8 +31,8 @@ class Mobile extends CI_Controller {
             $verify = $this->mdb->chk_usuario($ver['email'])->result();
 	    $user['contagem'] = count($verify);
             if(count($verify) > 0){
-                $user['cadastro']['status'] = '201';
-                $user['cadastro']['msg'] = 'Email existente';
+                $user['status'] = '201';
+                $user['msg'] = 'Email existente';
             }else{
                 $query = $this->mdb->set_usuario($input);
 		$query = $this->mdb->get_loginuser($ver)->result_array();
@@ -40,12 +40,12 @@ class Mobile extends CI_Controller {
 		foreach($query as $v){
 		    $user['login'] = $v;
 		}
-                $user['cadastro']['status'] = '200';
-                $user['cadastro']['msg'] = 'ok';
+                $user['status'] = '200';
+                $user['msg'] = 'ok';
             }
         }else{
-            $user['cadastro']['status'] = '202';
-            $user['cadastro']['msg'] = 'Email não Informado';
+            $user['status'] = '202';
+            $user['msg'] = 'Email não Informado';
         }
 	echo json_encode($user);
     }
@@ -60,15 +60,15 @@ class Mobile extends CI_Controller {
 		foreach($query as $v){
 		    $user['login'] = $v;
 		}
-		$user['login']['status'] = '200';
-		$user['login']['msg'] = 'ok';
+		$user['status'] = '200';
+		$user['msg'] = 'ok';
 	    }else{
-		$user['login']['status'] = '201';
-		$user['login']['msg'] = "Email não localizado";
+		$user['status'] = '201';
+		$user['msg'] = "Email não localizado";
 	    }
 	}else{
-	    $user['login']['status'] = '202';
-	    $user['login']['msg'] = 'Insira seu email';
+	    $user['status'] = '202';
+	    $user['msg'] = 'Insira seu email';
 	}
 	echo json_encode($user);
     }
@@ -132,11 +132,10 @@ class Mobile extends CI_Controller {
 
 	    }
 	}else{
+	    $ret['counts'] = array();
 	    $ret['status'] = '201';
 	    $ret['msg'] = 'Nenhuma count encontrada';
 	}
-	
-	
 
 	echo json_encode($ret);
     }
