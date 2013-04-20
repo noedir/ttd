@@ -202,6 +202,7 @@ class Web extends CI_Controller {
         $this->form_validation->set_rules('senha_usuario','Senha','trim|required');
         $this->form_validation->set_rules('confirma_senha','Confirmação','trim|required|matches[senha_usuario]');
         $this->form_validation->set_rules('nome_projeto','Projeto','trim|required');
+        $this->form_validation->set_rules('ocasiao_projeto','Ocasião','trim|required');
         $this->form_validation->set_rules('dias_projeto','Dias do Projeto','trim|required|numeric');
         $this->form_validation->set_rules('nomeunico','Identificador','trim|required|is_unique[tbl_count.co_nomeunico]');
 	
@@ -214,7 +215,7 @@ class Web extends CI_Controller {
 	    $this->wdb->set_usuario($in_user);
             $idu = $this->db->insert_id();
 	    
-	    $in_count = elements(array('privado','nome_projeto','dias_projeto','valor_projeto','nomeunico'),$this->input->post());
+	    $in_count = elements(array('privado','nome_projeto','ocasiao_projeto','dias_projeto','valor_projeto','nomeunico'),$this->input->post());
 	    
 	    $in_count['user_id'] = $idu;
 	    
