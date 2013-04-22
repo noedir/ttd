@@ -266,6 +266,24 @@ class Web extends CI_Controller {
 	$this->load->view('web_view',$dados);
     }
     
+    public function estatisticas(){
+	$dados = array(
+	    'title'	=> 'Projeto Count &raquo; Estatísticas',
+	    'tela'	=> 'estatistica',
+	);
+	
+	$this->load->view('web_view', $dados);
+    }
+    
+    public function politica(){
+	$dados = array(
+	    'title'	=> 'Projeto Count &raquo; Política de Privacidade',
+	    'tela'	=> 'privacidade',
+	);
+	
+	$this->load->view('web_view', $dados);
+    }
+    
     public function edit_count(){
 	$this->ver_conta();
 	$id = $this->uri->segment(3);
@@ -341,23 +359,33 @@ class Web extends CI_Controller {
     
     public function img_instagram(){
 	$this->ver_conta();
+	$loca = $this->uri->segment(3);
 	$img = $this->input->post('imgi');
 	$local = $this->input->post('local');
 	$exp = array_reverse(explode("/",$img));
 	$loc = date("YmdHis").'_'.$exp[0];
 	
 	$in=    fopen($img, "rb");
-	$out=   fopen('./tips/'.$loc, "wb");
+	$out=   fopen('./'.$loca.'/'.$loc, "wb");
 	while ($chunk = fread($in,(8192 * 10))){
 	    fwrite($out, $chunk, (8192 * 10));
 	}
 	fclose($in);
 	fclose($out);
 	
-	$tam = getimagesize('./tips/'.$loc);
+	$tam = getimagesize('./'.$loca.'/'.$loc);
 	
-	if($local === 'facebook'){
+	if($local === 'facebook' && $loca === 'tip'){
 	    if($tam[0] < 640 || $tam[1] < 570){
+		unlink($loc);
+		$data['erro'] = 'sim';
+		echo json_encode($data);
+		die();
+	    }
+	}
+	
+	if($local === 'facebook' && $loca === 'capa'){
+	    if($tam[0] < 640 || $tam[1] < 200){
 		unlink($loc);
 		$data['erro'] = 'sim';
 		echo json_encode($data);
@@ -367,15 +395,26 @@ class Web extends CI_Controller {
 	
 	$lar = $tam[0] / 2;
 	$alt = $tam[1] / 2;
-
-	$config = array(
-	    'image_library' => 'gd2',
-	    'source_image' => './tips/'.$loc,
-	    'new_image' => './tips/'.'tmp_'.$loc,
-	    'width' => $lar,
-	    'height' => $alt,
-	    'maintain_ratio' => FALSE,
-	);
+	
+	if($local === 'instagram' && $loca === 'capa'){
+	    $config = array(
+		'image_library' => 'gd2',
+		'source_image' => './'.$loca.'/'.$loc,
+		'new_image' => './'.$loca.'/'.'tmp_'.$loc,
+		'width' => 320,
+		'height' => 320,
+		'maintain_ratio' => TRUE,
+	    );
+	}else{
+	    $config = array(
+		'image_library' => 'gd2',
+		'source_image' => './'.$loca.'/'.$loc,
+		'new_image' => './'.$loca.'/'.'tmp_'.$loc,
+		'width' => $lar,
+		'height' => $alt,
+		'maintain_ratio' => FALSE,
+	    );
+	}
 
 	$this->load->library('image_lib',$config);
 	$this->image_lib->resize();
@@ -385,6 +424,14 @@ class Web extends CI_Controller {
 	$data['url'] = $loc;
 	$data['erro'] = '';
 	
+	if($loca == 'capa'){
+	    $input = array(
+		'img' => $loc,
+		'codigo' => $this->input->post('idcount'),
+	    );
+	    $this->wdb->up_count($input);
+	}
+	
 	echo json_encode($data);
     }
     
@@ -393,6 +440,8 @@ class Web extends CI_Controller {
 	$path = $this->uri->segment(3);
 	if($path == ''){
 	    $path = 'tips';
+	}else{
+	    $path = 'capa';
 	}
 	$this->load->helper('file');
 	$config['upload_path']   = FCPATH.$path.'/';
@@ -401,6 +450,9 @@ class Web extends CI_Controller {
 	if($path === 'tips'){
 	    $config['min_width'] = 640;
 	    $config['min_height'] = 570;
+	}else if($path === 'capa'){
+	    $config['min_width'] = 640;
+	    $config['min_height'] = 200;
 	}
 	$config['overwrite'] = TRUE;
 	$this->load->library('upload', $config);
@@ -409,31 +461,28 @@ class Web extends CI_Controller {
 	    $file = $this->upload->data();
 	    
 	    $data['arquivo'] = $file['file_name'];
-	    if($path === 'tips'){
-		$temp = 'tmp_'.$file['file_name'];
-	    }else{
-		$temp = $file['file_name'];
-	    }
+	    $temp = 'tmp_'.$file['file_name'];
 	    
 	    $lar = ($file['image_width'] / 2);
 	    $alt = ($file['image_height'] / 2);
 	    
-	    if($path == 'tips'){
-		$config = array(
-		    'image_library' => 'gd2',
-		    'source_image' => './tips/'.$file['file_name'],
-		    'new_image' => './tips/'.'tmp_'.$file['file_name'],
-		    'width' => $lar,
-		    'height' => $alt,
-		    'maintain_ratio' => FALSE,
-		);
+	    $config = array(
+		'image_library' => 'gd2',
+		'source_image' => './'.$path.'/'.$file['file_name'],
+		'new_image' => './'.$path.'/'.'tmp_'.$file['file_name'],
+		'width' => $lar,
+		'height' => $alt,
+		'maintain_ratio' => FALSE,
+	    );
 
-		$this->load->library('image_lib',$config);
-		$this->image_lib->resize();
-		
+	    $this->load->library('image_lib',$config);
+	    $this->image_lib->resize();
+	    
+	    
+	    if($path == 'tips'){
 		$param = 'id="photo"';
 	    }else{
-		 $param = 'width="335" height="120"';
+		 $param = 'id="photoc"';
 	    }
 	    $data['img'] = '<img data-wi="'.$lar.'" data-he="'.$alt.'" '.$param.' src="'.base_url().$path.'/'.$temp.'">';
 	    
@@ -444,14 +493,121 @@ class Web extends CI_Controller {
 		);
 		$this->wdb->up_count($input);
 	    }
+	    
 	    $data['status'] = '200';
 	    $data['msg'] = 'OK';
 	}else{
 	    $data['status'] = '201';
-	    $data['msg'] = 'A imagem precisa ter no mínimo 640 x 570 pixels.';
+	    if($path == 'tips'){
+		$data['msg'] = 'A imagem precisa ter no mínimo 640 x 570 pixels.';
+	    }else{
+		$data['msg'] = 'A imagem precisa ter no mínimo 640 x 200 pixels.';
+	    }
 	}
 	
 	echo json_encode($data);
+    }
+    
+    public function grava_capa(){
+	$this->ver_conta();
+	$input = elements(array('codigo','img','central','largura','altura','posicao'), $this->input->post());
+		
+	$crd = explode('/',$input['posicao']);
+	$posih = ($input['altura']);
+	$posiw = ($input['largura']);
+	
+	if(file_exists('./capa/tmp_'.$input['img'])){
+	    // FAZ O RESIZE DA IMAGEM
+	    if($input['central'] === 's'){
+		$config = array(
+		    'image_library' => 'gd2',
+		    'source_image' => './capa/tmp_'.$input['img'],
+		    'width' => $posiw,
+		    'height' => $posih,
+		    'maintain_ratio' => FALSE,
+		);
+		$this->load->library('image_lib',$config);
+		$this->image_lib->resize();
+		$this->image_lib->clear();
+
+		$img = getimagesize('./capa/tmp_'.$input['img']);
+		
+		$tmpw = ($img[0] * 2);
+		$tmph = ($img[1] * 2);
+
+		$config = array(
+		    'image_library' => 'gd2',
+		    'source_image' => './capa/'.$input['img'],
+		    'width' => $tmpw,
+		    'height' => $tmph,
+		    'maintain_ratio' => FALSE,
+		);
+		$this->image_lib->initialize($config);
+		$this->image_lib->resize();
+		$this->image_lib->clear();
+		
+		$posl = abs($crd[0]);
+		$post = abs($crd[1]);
+
+		$config = array(
+		    'image_library' => 'gd2',
+		    'source_image' => './capa/'.$input['img'],
+		    'x_axis' => ($posl * 2),
+		    'y_axis' => ($post * 2),
+		    'width'  => 640, //$input['largura'],
+		    'height' => 200, //$input['altura'],
+		    'maintain_ratio' => FALSE,
+		);
+
+		$this->image_lib->initialize($config);
+		$this->image_lib->crop();
+		$this->image_lib->clear();
+		
+		// FAZ O CROP DA IMAGEM
+	    }else{
+		
+		$posil = (abs($crd[0]) * 2);
+		$posit = (abs($crd[1]) * 2);
+
+		if($posil < 0){
+		    $posil = 0;
+		}
+		if($posit < 0){
+		    $posit = 0;
+		}
+		
+		$config = array(
+		    'image_library' => 'gd2',
+		    'source_image' => './capa/'.$input['img'],
+		    'x_axis' => $posil,
+		    'y_axis' => $posit,
+		    'width'  => 640,
+		    'height' => 200,
+		    'maintain_ratio' => FALSE,
+		);
+		
+		$this->load->library('image_lib',$config);
+		$this->image_lib->crop();
+		$this->image_lib->clear();
+	    }
+	    
+	    $resp['msg'] = base_url().'capa/'.$input['img'];
+	    $resp['erro'] = 'ok';
+
+	    if(file_exists('./capa/tmp_'.$input['img'])){
+		unlink('./capa/tmp_'.$input['img']);
+	    }
+
+	    if($this->image_lib->display_errors()){
+		$resp['msg'] = $this->image_lib->display_errors();
+		$resp['erro'] = 'sim';
+	    }
+	}else{
+	    $resp['msg'] = 'Arquivo não encontrado';
+	    $resp['erro'] = 'sim';
+	}
+	
+	echo json_encode($resp);
     }
     
     public function grava_tip(){

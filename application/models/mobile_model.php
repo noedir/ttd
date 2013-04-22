@@ -13,6 +13,7 @@ class Mobile_model extends CI_Model {
 		$this->db->where('us_codigo',$dados['codigo']);
 		$this->db->update('tbl_usuario',$ins);
 	    }else{
+		$ins['us_senha']  = $dados['senhaprov'];
 		$ins['us_data_cadastro']= date("Y-m-d H:i:s");
 		$this->db->insert('tbl_usuario',$ins);
 	    }
@@ -210,13 +211,8 @@ class Mobile_model extends CI_Model {
     
     public function set_seguircount($dados){
 	if($dados['sair'] == 'n'){
-	    $ins = array(
-		'con_count' => $dados['id_count'],
-		'con_email' => $dados['email'],
-		'con_aceitou' => 's',
-		'con_data_aceite' => date("Y-m-d"),
-	    );
-	    $this->db->insert('tbl_convidados',$ins);
+	    $query = "INSERT INTO tbl_convidados (con_count,con_email,con_aceitou,con_data_aceite) VALUES ('".$dados['id_count']."','".$dados['email']."','".$dados['seguir']."','".date("Y-m-d")."') ON DUPLICATE KEY UPDATE con_aceitou = '".$dados['seguir']."', con_data_aceite = '".date("Y-m-d")."'";
+	    $this->db->query($query);
 	}else{
 	    $this->db->delete('tbl_convidados',array('con_count'=>$dados['id_count'],'con_email'=>$dados['email']));
 	}

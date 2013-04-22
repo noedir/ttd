@@ -19,6 +19,7 @@ class Mobile extends CI_Controller {
     public function cadastro(){
 	header("Content-type: application/json");
 	$input = elements(array('token_face','nome_usuario','email_usuario','tokenpush'),$this->input->post());
+	$input['senhaprov'] = sha1(md5($input['email_usuario']).":".md5('123456'));
         $ver = array(
 	    'email' => $input['email_usuario'],
             'token' => $input['token_face'],
@@ -40,6 +41,54 @@ class Mobile extends CI_Controller {
 		foreach($query as $v){
 		    $user['login'] = $v;
 		}
+		
+		$segue = $this->mdb->get_convites('s',$tk)->result_array();
+		$meus = $this->mdb->get_meus($tk)->result_array();
+		$conv = $this->mdb->get_convites('n',$tk)->result_array();
+
+		if(count($segue) > 0){
+		    foreach($segue as $k){
+			if($k['privado'] == 's'){
+			    $k['privado'] = 'true';
+			}else{
+			    $k['privado'] = 'false';
+			}
+			$user['seguindo']['counts'][] = $k;
+		    }
+		}else{
+		    $user['seguindo']['counts'] = array();
+		}
+
+		if(count($meus) > 0){
+		    foreach($meus as $m){
+			if($m['id'] != null || $m['id'] != ''){
+			    if($m['privado'] == 's'){
+				$m['privado'] = 'true';
+			    }else{
+				$m['privado'] = 'false';
+			    }
+			    $user['projetos']['counts'][] = $m;
+			}else{
+			    $user['projetos']['counts'] = array();
+			}
+		    }
+		}else{
+		    $user['projetos']['counts'] = array();
+		}
+
+		if(count($conv) > 0){
+		    foreach($conv as $c){
+			if($c['privado'] == 's'){
+			    $c['privado'] = 'true';
+			}else{
+			    $c['privado'] = 'false';
+			}
+			$user['convites']['counts'][] = $c;
+		    }
+		}else{
+		    $user['convites']['counts'] = array();
+		}
+		
                 $user['status'] = '200';
                 $user['msg'] = 'ok';
             }
@@ -49,7 +98,7 @@ class Mobile extends CI_Controller {
         }
 	echo json_encode($user);
     }
-
+    
     public function login(){
 	header("Content-type: application/json");
 	$input = elements(array('email','tokenpush'),$this->input->post());
@@ -60,6 +109,53 @@ class Mobile extends CI_Controller {
 		foreach($query as $v){
 		    $user['login'] = $v;
 		}
+		$segue = $this->mdb->get_convites('s',$input)->result_array();
+		$meus = $this->mdb->get_meus($input)->result_array();
+		$conv = $this->mdb->get_convites('n',$input)->result_array();
+
+		if(count($segue) > 0){
+		    foreach($segue as $k){
+			if($k['privado'] == 's'){
+			    $k['privado'] = 'true';
+			}else{
+			    $k['privado'] = 'false';
+			}
+			$user['seguindo']['counts'][] = $k;
+		    }
+		}else{
+		    $user['seguindo']['counts'] = array();
+		}
+
+		if(count($meus) > 0){
+		    foreach($meus as $m){
+			if($m['id'] != null || $m['id'] != ''){
+			    if($m['privado'] == 's'){
+				$m['privado'] = 'true';
+			    }else{
+				$m['privado'] = 'false';
+			    }
+			    $user['projetos']['counts'][] = $m;
+			}else{
+			    $user['projetos']['counts'] = array();
+			}
+		    }
+		}else{
+		    $user['projetos']['counts'] = array();
+		}
+
+		if(count($conv) > 0){
+		    foreach($conv as $c){
+			if($c['privado'] == 's'){
+			    $c['privado'] = 'true';
+			}else{
+			    $c['privado'] = 'false';
+			}
+			$user['convites']['counts'][] = $c;
+		    }
+		}else{
+		    $user['convites']['counts'] = array();
+		}
+		
 		$user['status'] = '200';
 		$user['msg'] = 'ok';
 	    }else{
@@ -123,7 +219,7 @@ class Mobile extends CI_Controller {
 		if($ret['counts'][$k]['inicio'] != '0000-00-00' && $ret['counts'][$k]['inicio'] != '' && $ret['counts'][$k]['inicio'] <= date("Y-m-d")){
 		    $dataini = date("Y-m-d");
 		    $datafim = $ret['counts'][$k]['inicio'];
-		    $ret['counts'][$k]['dias_passados'] = $this->geraTimestamp($dataini, $datafim);
+		    $ret['counts'][$k]['dias_passados'] = strval($this->geraTimestamp($dataini, $datafim) + 1);
 		}else{
 		    $ret['counts'][$k]['dias_passados'] = '0';
 		}
@@ -289,13 +385,11 @@ class Mobile extends CI_Controller {
     public function seguir_count(){
 	header("Content-type: application/json");
 	$input = elements(array('email','id_count'),$this->input->post());
-	$input['codigo'] = $input['id_count'];
+	$input['seguir'] = 's';
 	$input['sair'] = 'n';
 	$this->mdb->set_seguircount($input);
 	
-	unset($input['id_count']);
-	
-	$query = $this->mdb->get_tipcount($input)->result_array();
+	$query = $this->mdb->get_count($input['id_count'])->result_array();
 			
 	$user['status'] = '200';
 	$user['msg'] = 'Você começou a seguir a count '.$query[0]['co_titulo'];
@@ -311,6 +405,7 @@ class Mobile extends CI_Controller {
 	header("Content-type: application/json");
 	$input = elements(array('email','id_count'),$this->input->post());
 	$input['codigo'] = $input['id_count'];
+	$input['seguir'] = 'n';
 	$input['sair'] = 's';
 	$this->mdb->set_seguircount($input);
 	

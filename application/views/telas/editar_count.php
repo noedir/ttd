@@ -51,7 +51,7 @@ if(form_error('nomeunico')){
             </div>
             <div class="formNovoCountDias">
                 <label for="Dias">Quantos dias terá seu projeto?</label>
-                <br /><br /><input type="text" size="45" <?php if(form_error('dias_projeto')){ echo 'style="border: 1px solid #900" placeholder="Dias do projeto é obrigatório"'; }else{ echo 'placeholder="Dias do projeto"'; } ?> name="dias_projeto" id="dias_projeto" value="<?php echo $edcount[0]['co_dias']; ?>">
+                <br /><br /><input type="text" style="width: 20%" <?php if(form_error('dias_projeto')){ echo 'style="border: 1px solid #900" placeholder="Dias do projeto é obrigatório"'; }else{ echo 'placeholder="Dias do projeto"'; } ?> name="dias_projeto" id="dias_projeto" value="<?php echo $edcount[0]['co_dias']; ?>">
                 <div id="baseValores">
                     <input type="hidden" name="valor_projeto" id="vlr_proj" value="">
                     <div class="startfee">
@@ -75,7 +75,7 @@ if(form_error('nomeunico')){
             
             <div class="formNovoCount">    
                 <label for="nomeunico">Identificador desse Projeto</label>
-                <br /><br /><input type="text" <?php if(form_error('nomeunico')){ echo 'style="border: 1px solid #900" placeholder="Identificador é obrigatório e deve ser único"'; }else{ echo 'placeholder="Identificador do Projeto"'; } ?> onblur='retornaValor(this.name)' name="nomeunico" id="nomeunico" value="<?php echo $edcount[0]['co_nomeunico']; ?>"><input type="hidden" name="unique" value="v"> <?php echo $avi; ?>
+                <br /><br /><input type="text" name="nome_unico" disabled="disabled" value="<?php echo $edcount[0]['co_nomeunico']; ?>">
             </div>
             
             <input type="hidden" name="codigo" value="<?php echo $edcount[0]['co_codigo']; ?>">

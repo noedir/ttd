@@ -48,12 +48,22 @@
 	    <button id="cantip" type="cancel" class="esconde">Cancelar</button>
 	</div>
 	<div class="tip-maior">
-	    <h3>Painel de Controle</h3>
 	    <h5>Capa da Contagem</h5>
+	    <div id="controle_capa">Opções</div>
+	    <div id="opcoes_capa">
+		    <ul>
+			<li id="computador">Computador</li>
+			<li id="get_facebook">Facebook</li>
+			<li id="get_instagram">Instagram</li>
+			<li id="redimensionar">Redimensionar</li>
+			<li id="salvar">Salvar</li>
+		    </ul>
+		</div>
 	    <div class="capa" title="Clique para escolher uma foto para esse count">
 		<form id="formcapa" action="<?php echo base_url(); ?>web/img_upload/capa" method="post" enctype="multipart/form-data">
+		    <input type="hidden" name="optimgc" id="optimgc" value="n">
 		    <div id="FileUploadc">
-			<input type="file" name="imagem" style="width: 335px; height: 120px; cursor: pointer;" id="BrowserHiddenc">
+			<input type="file" name="imagem" id="BrowserHiddenc">
 			<div id="BrowserVisiblec">
 			    <input type="text" id="FileFieldc" style="width: 0px; cursor: pointer;" name="foto">
 			    <input type="hidden" id="cod_count" name="cod_count" value="<?php echo $count[0]->co_codigo; ?>">
@@ -61,7 +71,7 @@
 		    </div>
 		    <div id="telinha">
 			<?php if($count[0]->co_capa !== '' || $count[0]->co_capa != 'no_capa.png'){ ?>
-			    <img src="<?php echo base_url().'capa/'.$count[0]->co_capa; ?>" width="335" height="120">
+			    <img width='320' height='100' src="<?php echo base_url().'capa/'.$count[0]->co_capa; ?>">
 			<?php } ?>
 		    </div>
 		</form>

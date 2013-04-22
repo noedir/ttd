@@ -107,7 +107,7 @@ class Web_model extends CI_Model {
     }
     
     public function get_counts($id){
-	return $this->db->query("SELECT u.us_codigo, u.us_nome, c.co_codigo, c.co_pago, c.co_admin, c.co_titulo, c.co_descricao, c.co_dias, c.co_data_compra, c.co_data_expira, c.co_privado, c.co_tags FROM tbl_count c INNER JOIN tbl_usuario u ON u.us_codigo = c.co_master WHERE u.us_codigo = $id AND c.co_excluido <> 's' AND c.co_finalizado <> 's' ORDER BY c.co_data_expira");
+	return $this->db->query("SELECT u.us_codigo, u.us_nome, c.* FROM tbl_count c INNER JOIN tbl_usuario u ON u.us_codigo = c.co_master WHERE u.us_codigo = $id AND c.co_excluido <> 's' AND c.co_finalizado <> 's' ORDER BY c.co_data_expira");
     }
     
     public function get_tcount($id){

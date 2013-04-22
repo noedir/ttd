@@ -43,7 +43,11 @@ function processJson(data){
 }
 
 function processJsonc(data){
-    $(".capa #telinha").html('').html(data.img);
+    if(data.status === '200'){
+	$(".capa #telinha").html('').html(data.img+'<input type="hidden" name="fotoc" value="'+data.arquivo+'">');
+    }else{
+	alert("Aviso: "+data.msg);
+    }
 }
 
 function instagram(ur){
@@ -56,10 +60,6 @@ function instagram(ur){
 	    $(".loader").fadeOut();
 	}
     });
-}
-
-function gravaData(valor){
-    alert(valor);
 }
 
 function addTag(valor,codigo,ur){
@@ -79,6 +79,13 @@ function updateCoords(){
     return res;
 };
 
+function coordsCapa(){
+    var tp = $("#photoc").css('top');
+    var lf = $("#photoc").css('left');
+    var res = lf+'/'+tp;
+    return res;
+};
+
 function convida_face(){
     var ur = $('#ur').data('url');
     var html = '';
@@ -87,7 +94,7 @@ function convida_face(){
     $.getJSON(ur+'auth/get_amigos', function(resp){
 	$.each(resp, function(index, value){
 	    url = ur+'auth/send_dialog_face/'+value['id']+'/'+count;
-	    html += '<div class="fb"><img class="pict" src="'+value['pic']+'"><p>'+value['nome']+'</p><a href="'+url+'"><img class="inv" src="'+ur+'img/invite_facebook.jpg"></a></div>';
+	    html += '<div class="fb"><img class="pict" src="'+value['pic']+'"><p>'+value['nome']+'</p><a rel="prettyPhoto[face]" href="'+url+'"><img class="inv" src="'+ur+'img/invite_facebook.jpg"></a></div>';
 	});
 
 	$("#lista_facebook").html(html);
@@ -98,6 +105,14 @@ $(document).ready(function(){
     var ur = $('#ur').data('url');
     
     $(".formNovoCount").buttonset();
+    
+    $('.poshy').tooltip({
+	position: {
+	    my: "left bottom-10",
+	    at: "left top",
+	},
+	tooltipClass: 'poshy_style',
+    });
     
     $("#tabs").tabs();
     
@@ -138,6 +153,52 @@ $(document).ready(function(){
     
     $(document).on('click','#uploadpc', function(){
 	$("#BrowserHidden").click();
+    });
+    
+    $("#controle_capa").click(function(){
+	$("#opcoes_capa").fadeToggle();
+    });
+    
+    $(document).on('click','#computador', function(){
+	$("#BrowserHiddenc").click();
+    });
+    
+    $(document).on('mouseover','#telinha', function(){
+	if($("#opcoes_capa").is(":visible")){
+	    $("#photoc").draggable({
+		cursor: "move",
+		scroll: false,
+		snapTolerance: 5,
+		stop: function (event,ui){
+		    var limitx = $(this).width();
+		    var limity = $(this).height();
+		    
+		    if(ui.position.top > 0){
+			$(this).animate({
+			    top: '0px',
+			},200);
+		    }
+		    if((limity + ui.position.top) < 100){
+			var alt = (limity - 100);
+			$(this).animate({
+			    top: '-'+alt+'px',
+			},200);
+		    }
+		    
+		    if(ui.position.left > 0){
+			$(this).animate({
+			    left: '0px',
+			},200);
+		    }
+		    if((limitx + ui.position.left) < 320){
+			var lar = (limitx - 320);
+			$(this).animate({
+			    left: '-'+lar+'px',
+			},200);
+		    }
+		}
+	    });
+	}
     });
     
     $(document).on('mouseover','#tela', function(){
@@ -186,10 +247,7 @@ $(document).ready(function(){
     });
     
     $("a[rel^='prettyPhoto']").prettyPhoto({
-	default_width: 700,
-	default_height: 480,
-	show_title: false,
-	modal: false,
+	modal: true,
 	social_tools: false
     });
     
@@ -201,7 +259,27 @@ $(document).ready(function(){
 	$.ajax({
 	    type: 'post',
 	    dataType: 'html',
-	    url: ur+'auth/fotos_facebook',
+	    url: ur+'auth/fotos_facebook/tip',
+	    beforeSend: function(){
+		$(".loader").fadeIn();
+	    },
+	    success: function(resp){
+		var html = '<p align="center"><img src="'+ur+'img/facebook_photo.jpg"></p><hr>'+resp+''
+		$(html).appendTo('.pag');
+		$(".loader").fadeOut();
+	    }
+	});
+    });
+    
+    $("#get_facebook").click(function(){
+	$("#fundo_box").fadeIn(function(){
+	    $("#pagina").fadeIn();
+	    $(".pag").fadeIn().html('');
+	});
+	$.ajax({
+	    type: 'post',
+	    dataType: 'html',
+	    url: ur+'auth/fotos_facebook/capa',
 	    beforeSend: function(){
 		$(".loader").fadeIn();
 	    },
@@ -221,7 +299,7 @@ $(document).ready(function(){
 	$.ajax({
 	    type: 'post',
 	    dataType: 'html',
-	    url: ur+'auth/fotos_instagram',
+	    url: ur+'auth/fotos_instagram/tip',
 	    beforeSend: function(){
 		$(".loader").fadeIn();
 	    },
@@ -232,21 +310,35 @@ $(document).ready(function(){
 	    }
 	});
     });
+    
+    $("#get_instagram").click(function(){
+	$("#fundo_box").fadeIn(function(){
+	    $("#pagina").fadeIn();
+	    $(".pag").fadeIn();
+	});
+	$.ajax({
+	    type: 'post',
+	    dataType: 'html',
+	    url: ur+'auth/fotos_instagram/capa',
+	    beforeSend: function(){
+		$(".loader").fadeIn();
+	    },
+	    success: function(resp){
+		var html = '<p align="center"><img src="'+ur+'img/instagram.png"></p><hr>'+resp+''
+		$(html).appendTo('.pag');
+		$(".loader").fadeOut();
+	    }
+	});
+    });
+    
+    
     $("#fundo_box").click(function(){
 	$("#pagina").fadeOut();
 	$(".pag").fadeOut().html('');
 	$(this).fadeOut();
     });
     
-    $(document).on('click','#photo',function(e){
-	var alt = $("#photo").height();
-	var lar = $("#photo").width();
-	var ofs = $("#photo").offset();
-	
-	alert("Altura: "+alt+" - Largura: "+lar+" - Posição: "+(e.clientX - ofs.left)+"x"+(e.clientY - ofs.top));
-    });
-    
-    $(document).on('click','.fti',function(){
+    $(document).on('click','.ftitip',function(){
 	var img = $(this).data('alta');
 	var local = $(this).data('local');
 	
@@ -254,7 +346,7 @@ $(document).ready(function(){
 	   type: 'post',
 	   dataType: 'json',
 	   data: 'imgi='+img+'&local='+local,
-	   url: ur+'web/img_instagram',
+	   url: ur+'web/img_instagram/tip',
 	   success: function(resp){
 	       if(resp.erro === 'sim'){
 		   alert('Aviso: A imagem precisa ter no mínimo 640 x 570 pixels.')
@@ -264,6 +356,29 @@ $(document).ready(function(){
 		    $(".pag").fadeOut().html('');
 		    $("#fundo_box").fadeOut();
 		   $("#tela").html('').html('<img id="photo" data-he="'+resp.height+'" data-wi="'+resp.width+'" src="'+ur+'/tips/tmp_'+resp.url+'">'+'<input type="hidden" name="foto" value="'+resp.url+'">');
+	       }
+	   }
+	});
+    });
+    
+    $(document).on('click','.fticapa',function(){
+	var img = $(this).data('alta');
+	var local = $(this).data('local');
+	var cod_count = $("#cod_count").val();
+	
+	$.ajax({
+	   type: 'post',
+	   dataType: 'json',
+	   data: 'imgi='+img+'&local='+local+'&idcount='+cod_count,
+	   url: ur+'web/img_instagram/capa',
+	   success: function(resp){
+	       if(resp.erro === 'sim'){
+		   alert('Aviso: A imagem precisa ter no mínimo 640 x 200 pixels.')
+	       }else{
+		   $("#pagina").fadeOut();
+		   $(".pag").fadeOut().html('');
+		   $("#fundo_box").fadeOut();
+		   $(".capa #telinha").html('').html('<img id="photoc" data-he="'+resp.height+'" data-wi="'+resp.width+'" src="'+ur+'/capa/tmp_'+resp.url+'">'+'<input type="hidden" name="fotoc" value="'+resp.url+'">');
 	       }
 	   }
 	});
@@ -281,6 +396,78 @@ $(document).ready(function(){
 	dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sab'],
 	dayNamesMin: ['Do','Se','Te','Qu','Qu','Se','Sa'],
 	minDate: '+1',
+    });
+    
+    $(document).on('click','#salvar', function(){
+	var html = '';
+	var imagem = $("input[name='fotoc']").val();
+	var codigo = $("input[name='cod_count']").val();
+	var central = $("#optimgc").val();
+	var posicao = coordsCapa();
+	 
+	var larimg = $("#photoc").width();
+	var altimg = $("#photoc").height();
+	 
+	var dados = 'codigo='+codigo+'&img='+imagem+'&central='+central+'&largura='+larimg+'&altura='+altimg+'&posicao='+posicao;
+	 
+	$.ajax({
+	    type: 'post',
+	    dataType: 'json',
+	    data: dados,
+	    async: false,
+	    url: ur+'web/grava_capa',
+	    success: function(resp){
+		if(resp.erro !== "sim"){
+		    $("#opcoes_capa").fadeOut();
+		    
+		    html = '<img src="'+resp.msg+'" width="320" height="100">';
+		    
+		    $(".capa #telinha").html('').html(html);
+		    
+		    $('#photoc').draggable( "destroy" );
+		}
+	    }
+	});
+    });
+    
+    $(document).on('click','#redimensionar', function(){
+	var opt = $("#optimgc");
+	var img = $("#photoc");
+	var h = '';
+	var w = '';
+	var eixo = '';
+	if(opt.val() === 's'){
+	    opt.val('n');
+	    $("#photoc").attr({
+		height: '',
+		width: '',
+	    }).css({
+		top: '0px',
+		left: '0px',
+	    }).draggable({
+		axis: ''
+	    });
+	}else{
+	    opt.val('s');
+	    if(img.data('wi') > img.data('he')){
+		h = '';
+		w = '320';
+		eixo = 'y';
+	    }else{
+		h = '100';
+		w = '';
+		eixo = 'x';
+	    }
+	    $("#photoc").attr({
+		height: h,
+		width: w,
+	    }).css({
+		top: '0px',
+		left: '0px',
+	    }).draggable({
+		axis: eixo
+	    });
+	}
     });
     
     $(document).on('click','#ajuste_automatico', function(){

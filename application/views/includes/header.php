@@ -2,9 +2,6 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta property="og:title" content="TilTheDay" />
-	<meta property="og:description" content="Siga nossa count no celular" />
-	<meta property="og:image" content="thumbnail_image" />
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css">
         <script src="<?php echo base_url(); ?>js/jquery-1.7.2.min.js"></script>
         <script src="<?php echo base_url(); ?>js/jquery-ui-1.8.21.custom.min.js"></script>
@@ -15,7 +12,6 @@
         <script src="<?php echo base_url(); ?>js/funcoes.js" type="text/javascript"></script>
 	<script src="<?php echo base_url(); ?>js/jquery.prettyPhoto.js" type="text/javascript"></script>
 	<script src="<?php echo base_url(); ?>js/jquery.Jcrop.js" type="text/javascript"></script>
-	
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/prettyPhoto.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/estilo.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/jquery.Jcrop.css">

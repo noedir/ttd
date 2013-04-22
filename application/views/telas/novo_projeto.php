@@ -28,7 +28,7 @@ if(form_error('nomeunico')){
             
             <div class="formNovoCountDias">
                 <label for="Dias">Quantos dias terá seu projeto?</label>
-                <br /><br /><input type="text" size="45" <?php if(form_error('dias_projeto')){ echo 'style="border: 1px solid #900" placeholder="Dias do projeto é obrigatório"'; }else{ echo 'placeholder="Dias do projeto"'; } ?> name="dias_projeto" id="dias_projeto" value="<?php echo set_value('dias_projeto'); ?>">
+                <br /><br /><input type="text" style="width: 20%" <?php if(form_error('dias_projeto')){ echo 'style="border: 1px solid #900" placeholder="Dias do projeto é obrigatório"'; }else{ echo 'placeholder="Dias do projeto"'; } ?> name="dias_projeto" id="dias_projeto" value="<?php echo set_value('dias_projeto'); ?>">
                 <div id="baseValores">
                     <input type="hidden" name="valor_projeto" id="vlr_proj" value="">
                     <div class="startfee">

@@ -68,7 +68,7 @@ class Auth extends CI_Controller{
 	redirect('web/tips');
     }
     
-    private function list_photo($url){
+    private function list_photo($url,$loc){
 	$saida = '';
 	$img = '';
 	foreach($url as $k => $v){
@@ -76,16 +76,18 @@ class Auth extends CI_Controller{
 	    $low = $v->images->thumbnail->url;
 	    $hei = $v->images->standard_resolution->height;
 	    $wid = $v->images->standard_resolution->width;
-	    $saida .= '<div class="pfti"><img class="fti" data-wi="'.$wid.'" data-he="'.$hei.'" data-local="instagram" data-alta="'.$img.'" src="'.$low.'"></div>';
+	    $saida .= '<div class="pfti"><img class="fti'.$loc.'" data-wi="'.$wid.'" data-he="'.$hei.'" data-local="instagram" data-alta="'.$img.'" src="'.$low.'"></div>';
 	}
 	return $saida;
     }
     
-    private function photo_face($url,$baixa,$hei,$wid){
-	return '<div class="pfti"><img class="fti" data-he="'.$hei.'" data-wi="'.$wid.'" data-local="facebook" data-alta="'.$url.'" src="'.$baixa.'"><span class="size">'.$wid.'x'.$hei.'</span></div>';
+    private function photo_face($url,$baixa,$hei,$wid,$loc){
+	return '<div class="pfti"><img class="fti'.$loc.'" data-he="'.$hei.'" data-wi="'.$wid.'" data-local="facebook" data-alta="'.$url.'" src="'.$baixa.'"><span class="size">'.$wid.'x'.$hei.'</span></div>';
     }
     
     public function fotos_instagram(){
+	$local = $this->uri->segment(3);
+	
 	$query = $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result();
 	$c = 0;
 	$next = '';
@@ -100,7 +102,7 @@ class Auth extends CI_Controller{
 	    $get = file_get_contents($url);
 	    $dados = json_decode($get);
 	    
-	    $photos .= $this->list_photo($dados->data);
+	    $photos .= $this->list_photo($dados->data,$local);
 	    
 	    if(isset(json_decode($get)->pagination->next_max_id)){
 		$next = json_decode($get)->pagination->next_max_id;
@@ -114,6 +116,7 @@ class Auth extends CI_Controller{
     }
     
     public function fotos_facebook(){
+	$local = $this->uri->segment(3);
 	$query = $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result_array();
 	$saida = '';
 	
@@ -128,7 +131,7 @@ class Auth extends CI_Controller{
 	    foreach($dec as $ph){
 		$src = $ph->images[0];
 		$low = $ph->images[4];
-		$saida .= $this->photo_face($src->source,$low->source,$src->height,$src->width);
+		$saida .= $this->photo_face($src->source,$low->source,$src->height,$src->width,$local);
 	    }
 	}
 	echo $saida;
@@ -137,7 +140,7 @@ class Auth extends CI_Controller{
     
     public function facebook(){
 	$token = $this->id_secret('facebook');
-	$url = 'https://www.facebook.com/dialog/oauth?client_id='.$token['id'].'&redirect_uri='.$token['redirect'].'&scope=user_photos,email,read_friendlists&display=page';
+	$url = 'https://www.facebook.com/dialog/oauth?client_id='.$token['id'].'&redirect_uri='.$token['redirect'].'&scope=user_photos,email,read_friendlists&display=iframe';
 	
 	redirect($url,'location');
     }
@@ -158,6 +161,7 @@ class Auth extends CI_Controller{
     
     public function send_dialog_face(){
 	$tk = $this->id_secret('facebook');
+	$query = $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result_array();
 	$iduser = $this->uri->segment(3);
 	$idcount = $this->uri->segment(4);
 	
@@ -165,7 +169,7 @@ class Auth extends CI_Controller{
 	
 	$txt = 'O link para o aplicativo é tiltheday://'.$idcount;
 		
-	$url = 'https://www.facebook.com/dialog/feed?app_id='.$tk['id'].'&display=popup&name=People%20Argue%20Just%20to%20Win&link=http://www.dcanm.mobi/count/&picture=http://www.dcam.mobi/count/img/logotipo_header.jpg&name=TilTheDay&caption=Contagem%20Regressiva&description=fa%C3%A7a%20uma%20contagem%20dos%20seus%20eventos%20'.$txt.'&redirect_uri=http://www.dcanm.mobi/count/auth/token_facebook&to='.$iduser.'&properties={tiltheday://'.$idcount.',tiltheday://'.$idcount.'}';
+	$url = 'https://www.facebook.com/dialog/apprequests?app_id='.$tk['id'].'&link=tiltheday://'.$idcount.'&picture=http://www.dcam.mobi/count/img/logotipo_header.jpg&name=TilTheDay&caption=Contagem%20Regressiva&message=fa%C3%A7a%20uma%20contagem%20dos%20seus%20eventos%20'.$txt.'&redirect_uri=http://www.dcanm.mobi/count/auth/token_facebook&to='.$iduser.'&display=iframe&access_token='.$query[0]['oa_facebook_access_token'];
 	
 	redirect($url);
     }
