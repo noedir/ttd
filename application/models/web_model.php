@@ -72,6 +72,7 @@ class Web_model extends CI_Model {
 	    if(isset($dados['codigo']) && $dados['codigo'] > 0){
 		$upd = array(
 		    'co_titulo'		=> $dados['nome_projeto'],
+                    'co_descricao'      => $dados['ocasiao_projeto'],
 		    'co_privado'	=> $dados['privado'],
 		    'co_dias'		=> $dados['dias_projeto'],
 		    'co_data_expira'	=> $exp,
@@ -85,6 +86,7 @@ class Web_model extends CI_Model {
 		    'co_data_compra'	=> date("Y-m-d"),
 		    'co_data_expira'	=> $exp,
 		    'co_titulo'		=> $dados['nome_projeto'],
+                    'co_descricao'      => $dados['ocasiao_projeto'],
 		    'co_privado'	=> $dados['privado'],
 		    'co_pago'		=> 's',
 		    'co_nomeunico'	=> $dados['nomeunico'],

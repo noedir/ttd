@@ -74,6 +74,10 @@ if(form_error('nomeunico')){
 		    <input type="text" size="45" <?php if(form_error('nome_projeto')){ echo 'style="border: 1px solid #900" placeholder="Nome do projeto é obrigatório"'; }else{ echo 'placeholder="Nome do Projeto"'; } ?> name="nome_projeto" value="<?php echo set_value('nome_projeto'); ?>">
                 </div>
                 
+                <div class="formNovoCount">
+                <input type="text" size="45" <?php if(form_error('ocasiao_projeto')){ echo 'style="border: 1px solid #900" placeholder="Ocasião do projeto é obrigatório"'; }else{ echo 'placeholder="Ocasião do Projeto"'; } ?> name="ocasiao_projeto" value="<?php echo set_value('ocasiao_projeto'); ?>">
+            </div>
+                
                 <div class="formNovoCountDias">
                     <label for="Dias">Quantos dias terá seu projeto?</label>
 		    <br /><br /><input type="text" size="45" <?php if(form_error('dias_projeto')){ echo 'style="border: 1px solid #900" placeholder="Dias do projeto é obrigatório"'; }else{ echo 'placeholder="Dias do projeto"'; } ?> name="dias_projeto" id="dias_projeto" value="<?php echo set_value('dias_projeto'); ?>">
@@ -100,7 +104,7 @@ if(form_error('nomeunico')){
 		
                 <div class="formNovoCount">    
                     <label for="nomeunico">Identificador desse Projeto</label>
-                    <br /><br /><input type="text" <?php if(form_error('nomeunico')){ echo 'style="border: 1px solid #900" placeholder="Identificador é obrigatório e deve ser único"'; } ?> onblur='retornaValor(this.name)' name="nomeunico" id="nomeunico" value="<?php echo set_value('nomeunico'); ?>"><input type="hidden" name="unique" value="v"> <?php echo $avi; ?>
+                    <br /><br /><input type="text" <?php if(form_error('nomeunico')){ echo 'style="border: 1px solid #900" placeholder="Identificador é obrigatório e deve ser único"'; }else{ echo 'placeholder="Identificador do Projeto"'; } ?> onblur='retornaValor(this.name)' name="nomeunico" id="nomeunico" value="<?php echo set_value('nomeunico'); ?>"><input type="hidden" name="unique" value="v"> <?php echo $avi; ?>
                 </div>
                 <button type="submit" class="criarProjeto">Criar Projeto</button>
         </div>
