@@ -165,7 +165,7 @@ class Auth extends CI_Controller{
 	
 	$txt = 'O link para o aplicativo é tiltheday://'.$idcount;
 		
-	$url = 'https://www.facebook.com/dialog/feed?app_id='.$tk['id'].'&display=popup&name=People%20Argue%20Just%20to%20Win&link=http://www.dcanm.mobi/count/&picture=http://www.dcam.mobi/count/img/logotipo_header.jpg&name=TilTheDay&caption=Contagem%20Regressiva&description=fa%C3%A7a%20uma%20contagem%20dos%20seus%20eventos%20'.$txt.'&redirect_uri=http://www.dcanm.mobi/count/auth/token_facebook&to='.$iduser.'';
+	$url = 'https://www.facebook.com/dialog/feed?app_id='.$tk['id'].'&display=popup&name=People%20Argue%20Just%20to%20Win&link=http://www.dcanm.mobi/count/&picture=http://www.dcam.mobi/count/img/logotipo_header.jpg&name=TilTheDay&caption=Contagem%20Regressiva&description=fa%C3%A7a%20uma%20contagem%20dos%20seus%20eventos%20'.$txt.'&redirect_uri=http://www.dcanm.mobi/count/auth/token_facebook&to='.$iduser.'&properties={tiltheday://'.$idcount.',tiltheday://'.$idcount.'}';
 	
 	redirect($url);
     }
