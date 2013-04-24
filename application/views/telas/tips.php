@@ -1,18 +1,34 @@
 <div id="container">
     <div id="tip-container">
-	<h3><?php echo $count[0]->co_titulo; ?></h3>
 	<div class="tip-box iphone">
 	    <div id="tela_fundo"></div>
 	    <div class="tela">
-		<div id="tela"><img id="get_up" width="219" src="<?php echo base_url(); ?>tips/no_image.jpg"></div>
+		<div id="tela"><img id="get_up" width="256" src="<?php echo base_url(); ?>tips/no_image.jpg"></div>
 		<p id="num_tip"></p>
 		<p id="tit_tip"></p>
 		<p id="sub_tip"></p>
 		<p id="men_tip"></p>
 	    </div>
-	    <div id="ajuste_automatico"></div>
 	    <div class="menu_foto">
-		<?php if(count($oauth) > 0 && $oauth[0]['oa_facebook_access_token'] != ''){
+		<div id="triggerSelect">
+		    Opções<br />de Foto
+		</div>
+		<div id="baseDock">
+		    <div id="metodosUpload">        
+			<div class="upload" id="uploadpc"><input type="hidden" value="s" name="central" id="optimg">Computador</div>
+			<?php if(count($oauth) > 0 && $oauth[0]['oa_instagram_access_token'] != ''){
+			    echo '<div class="instagram" id="pega_instagram">Instagram</div>';
+			}else{
+			    echo '<div class="instagram"><a href="https://api.instagram.com/oauth/authorize/?client_id=4df5f47cf2fa4da98b0d0f91beb158fb&redirect_uri='.base_url().'auth/token&response_type=code">Instagram</a></div>';
+			} ?>
+			<div class="ajustar" id="ajuste_automatico">Ajustar</div>
+			<div class="barraup"><progress value="0" max="100"></progress><span id="porcentagem">0%</span></div>
+		    </div>
+		</div>
+		
+		<?php
+		// DESATIVADO TEMPORARIAMENTE
+		/*if(count($oauth) > 0 && $oauth[0]['oa_facebook_access_token'] != ''){
 		    echo '<div class="facebook" id="pega_facebook"><img src="'.base_url().'img/facebook.png"></div>';
 		}else{
 		    echo '<div class="facebook"><a href="'.base_url().'facebook?inv='.current_url().'"><img src="'.base_url().'img/facebook.png"></a></div>';
@@ -22,8 +38,9 @@
 		}else{
 		    echo '<div class="instagram"><a href="https://api.instagram.com/oauth/authorize/?client_id=4df5f47cf2fa4da98b0d0f91beb158fb&redirect_uri='.base_url().'auth/token&response_type=code"><img src="'.base_url().'img/up_instagram.png"></a></div>';
 		}
+		 * 
+		 */
 		?>
-		<div id="uploadpc"><input type="hidden" value="s" name="central" id="optimg"><img src="<?php echo base_url(); ?>/img/upload_icon.png"></div>
 		<div id="FileUpload">
 		    <form id="formtip" action="<?php echo base_url(); ?>web/img_upload" method="post" enctype="multipart/form-data">
 			<input type="file" name="imagem" style="width: 0px;" id="BrowserHidden">
@@ -35,31 +52,35 @@
 		<div id="telinha"></div>
 	    </div>
 	</div>
-	<div class="tip-box">
-	    <h3 class="esconde">Edição de Tips</h3>
-	    <p class="esconde" id="ntip"></p>
+	<div class="tip-box" style="width: 330px;">
+	    <p class="esconde thin" style="margin-bottom: 5px;">Projeto: <span class="thinbold"><?php echo $count[0]->co_titulo; ?></span></p>
+	    <p class="esconde" id="ntip"></p><br>
 	    <input type="hidden" name="count" value="<?php echo $count[0]->co_codigo; ?>">
 	    <input type="hidden" name="codigo_tip" id="codigo_tip">
 	    <input type="hidden" id="posicao" name="posicao" value="0/0" />
-	    <p class="esconde"><label>Título:<br><input maxlength="16" placeholder="Limite de 16 caracteres" type="text" name="titulo" id="tit"></label></p>
-	    <p class="esconde"><label>Sub título:<br><input maxlength="32" placeholder="Limite de 32 caracteres" type="text" name="subtitulo" id="sub"></label></p>
-	    <p class="esconde"><label>Descrição:<br><textarea maxlength="2000" placeholder="Limite de 2000 caracteres" wrap="hard" rows="10" cols="30" name="descricao" id="men"></textarea></label></p>
-	    <button id="addtip" type="submit" class="esconde">Salvar</button>
-	    <button id="cantip" type="cancel" class="esconde">Cancelar</button>
+	    <p class="esconde"><input class="campos" maxlength="16" placeholder="Título (Máximo 16 caracteres)" type="text" name="titulo" id="tit"></p><br>
+	    <p class="esconde"><input class="campos" maxlength="32" placeholder="Sub-título (Máximo 32 caracteres)" type="text" name="subtitulo" id="sub"></p><br>
+	    <p class="esconde"><textarea class="campos" maxlength="2000" placeholder="Descrição (Máximo 2000 caracteres)" wrap="hard" rows="15" cols="30" name="descricao" id="men"></textarea></p>
+	    <br>
+	    <p class="esconde">
+		<input type="hidden" value="n" id="mudou">
+		<button id="addtip" type="submit" class="esconde">Salvar</button>
+		<button id="cantip" type="cancel" class="esconde">Cancelar</button>
+	    </p>
 	</div>
 	<div class="tip-maior">
-	    <h5>Capa da Contagem</h5>
+	    <h5 class="projetoTitle">Capa da Contagem</h5>
 	    <div id="controle_capa">Opções</div>
 	    <div id="opcoes_capa">
 		    <ul>
 			<li id="computador">Computador</li>
-			<li id="get_facebook">Facebook</li>
+			<!-- <li id="get_facebook">Facebook</li> -->
 			<li id="get_instagram">Instagram</li>
 			<li id="redimensionar">Redimensionar</li>
-			<li id="salvar">Salvar</li>
+			<li id="salvar">Finalizar</li>
 		    </ul>
 		</div>
-	    <div class="capa" title="Clique para escolher uma foto para esse count">
+	    <div class="capa" title="Clique para escolher uma capa para esse Count">
 		<form id="formcapa" action="<?php echo base_url(); ?>web/img_upload/capa" method="post" enctype="multipart/form-data">
 		    <input type="hidden" name="optimgc" id="optimgc" value="n">
 		    <div id="FileUploadc">
@@ -79,16 +100,20 @@
 	    <div class="tags_projeto">
 		<input type="text" name="tags" id="temas" class="hastags" data-codigo="<?php echo $count[0]->co_codigo; ?>" value="<?php echo $count[0]->co_tags; ?>">
 	    </div>
+	    
+	    <!-- MOSTRA A DATA DE INÍCIO E FIM DO PROJETO -->
 	    <div class="dt_projeto">
 		<?php if($count[0]->co_data_inicio == '' || $count[0]->co_data_inicio == '0000-00-00'){ ?>
 		<?php echo form_open('web/gravadata'); ?>
 		<p>Início do projeto: <input size="15" type="text" id="calendario" name="calendario"><input type="hidden" name="cd_count" value="<?php echo $count[0]->co_codigo; ?>"><input type="hidden" name="dias_count" value="<?php echo $count[0]->co_dias; ?>"> <button type="submit" id="ok_data">OK</button></p>
 		<?php echo form_close(); ?>
 		<?php }else{ ?>
-		    <p>Início: <?php echo date("d/m/Y", strtotime($count[0]->co_data_inicio)); ?> - Término: <?php echo date("d/m/Y", strtotime($count[0]->co_data_inicio." + ".($count[0]->co_dias - 1)." days")); ?></p>
+		<span class="inidata">Início: <?php echo date("d/m/Y", strtotime($count[0]->co_data_inicio)); ?></span><span class="fimdata">Término: <?php echo date("d/m/Y", strtotime($count[0]->co_data_inicio." + ".($count[0]->co_dias - 1)." days")); ?></span>
 		<?php } ?>
 	    </div>
-	    <h5>Calendário de Tips</h5>
+	    <!-- FIM DA DATA -->
+	    <br><br><br>
+	    <h5 class="projetoTitle">Calendário de Tips</h5>
 	    <?php if($count[0]->co_data_inicio == '' || $count[0]->co_data_inicio == '0000-00-00'){ ?>
 	    <p class="sdt_projeto">Escolha a data de início da count para gerenciar as Tips.</p>
 	    <?php }else{ ?>
@@ -98,18 +123,20 @@
 		foreach($tips as $t){
 		    if($t->ti_data_mostra <= date("Y-m-d")){
 			$dis = 'data-disabled="yes"';
+			$txt = 'Tip antiga';
 		    }else{
 			$dis = 'data-disabled="no"';
+			$txt = 'Clique para editar essa tip';
 		    }
 		    ?>
-		<div class="mozaico" <?php echo $dis; ?> data-central="<?php echo $t->ti_imgcentral; ?>" data-mostra="<?php echo date("d/m/Y", strtotime($t->ti_data_mostra)); ?>" data-codigo="<?php echo $t->ti_codigo; ?>" data-tip="<?php echo $c; ?>" data-dias="<?php echo $count[0]->co_dias; ?>" data-titulo="<?php echo $t->ti_titulo; ?>" data-sub="<?php echo $t->ti_subtitulo; ?>" data-descricao="<?php echo $t->ti_descricao; ?>" data-imagem="<?php
+		<div title="<?php echo $txt; ?>" class="mozaico poshy" <?php echo $dis; ?> data-central="<?php echo $t->ti_imgcentral; ?>" data-mostra="<?php echo date("d/m/Y", strtotime($t->ti_data_mostra)); ?>" data-codigo="<?php echo $t->ti_codigo; ?>" data-tip="<?php echo $c; ?>" data-dias="<?php echo $count[0]->co_dias; ?>" data-titulo="<?php echo $t->ti_titulo; ?>" data-sub="<?php echo $t->ti_subtitulo; ?>" data-descricao="<?php echo $t->ti_descricao; ?>" data-imagem="<?php
 		if($t->ti_imagem != ''){
 		    echo $t->ti_imagem;
 		}else{
 		    echo 'no_image.jpg';
 		}
 		?>">
-		    <img title="Clique para editar essa tip" width="100" src="<?php
+		    <img width="100" src="<?php
 		    if($t->ti_imagem != ''){
 			echo base_url().'tips/thumb_'.$t->ti_imagem;
 		    }else{
@@ -125,9 +152,6 @@
 		} ?>
 	    </div>
 	    <?php } ?>
-	    <div class="invite">
-		<h5><?php if($count[0]->co_privado == 's'){ echo anchor('web/invites/'.$count[0]->co_codigo,'Invites','class="black"').' |'; } ?> <?php echo anchor('web/estatisticas/'.$count[0]->co_codigo,'Estatísticas','class="black"'); ?></h5>
-	    </div>
 	</div>
     </div>
 </div>

@@ -123,13 +123,18 @@ class Mobile_model extends CI_Model {
     }
     
     public function get_countpublica($busca=''){
-	if($busca != ''){
-	    $where = " AND c.co_tags LIKE '%".$busca['busca']."%' OR c.co_nomeunico = '".$busca."' ";
+	if($busca['busca'] != ''){
+	    $where = " AND (c.co_tags LIKE '%".$busca['busca']."%' OR c.co_nomeunico = '".$busca['busca']."') OR c.co_titulo LIKE '%".$busca['busca']."%'";
 	}else{
 	    $where = '';
 	}
-	return $this->db->query("SELECT c.co_codigo id, c.co_titulo nome, c.co_capa image, c.co_premium premium, c.co_tags tags, c.co_dias dias_total, c.co_data_inicio inicio, (SELECT COUNT(*) FROM tbl_convidados i WHERE i.con_count = c.co_codigo AND i.con_aceitou = 's') AS inscritos FROM tbl_count c WHERE c.co_privado = 'n' AND c.co_data_expira > '".date("Y-m-d")."' AND c.co_excluido = 'n' AND c.co_finalizado = 'n' AND c.co_pago = 's' AND c.co_data_inicio <= '".date("Y-m-d")."' $where ORDER BY c.co_premium DESC");
-	#return $this->db->get('tbl_count');
+	
+	if($busca['busca_id'] != ''){
+	    $arr = " AND c.co_codigo IN (".$busca['busca_id'].") ";
+	}else{
+	    $arr = '';
+	}
+	return $this->db->query("SELECT c.co_codigo id, c.co_titulo nome, c.co_capa image, c.co_premium premium, c.co_tags tags, c.co_dias dias_total, c.co_data_inicio inicio, (SELECT COUNT(*) FROM tbl_convidados i WHERE i.con_count = c.co_codigo AND i.con_aceitou = 's') AS inscritos FROM tbl_count c WHERE c.co_privado = 'n' AND c.co_data_expira > '".date("Y-m-d")."' AND c.co_excluido = 'n' AND c.co_finalizado = 'n' AND c.co_pago = 's' AND c.co_data_inicio <= '".date("Y-m-d")."' $where $arr ORDER BY c.co_premium DESC");
     }
     
     public function get_allcount($priv=NULL,$id=NULL){
@@ -186,7 +191,7 @@ class Mobile_model extends CI_Model {
 		(SELECT COUNT(*) FROM tbl_convidados s WHERE s.con_email = '".$id['email']."' AND s.con_count = ".$id['codigo'].") as seguindo
 		FROM tbl_tips t
 		LEFT JOIN tbl_count c ON c.co_codigo = t.ti_count
-		WHERE t.ti_count = ".$id['codigo']." AND t.ti_data_mostra <= '".date("Y-m-d")."' AND t.ti_titulo <> ''");
+		WHERE t.ti_count = ".$id['codigo']." AND t.ti_data_mostra <= '".date("Y-m-d")."' AND t.ti_titulo <> '' ORDER BY t.ti_data_mostra DESC");
 	}
     }
     

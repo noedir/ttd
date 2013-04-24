@@ -35,6 +35,9 @@ function nl2br (str, is_xhtml) {
 
 function processJson(data){
     if(data.status === '200'){
+	$(".barraup").fadeIn();
+	$('progress').attr('value','');
+	$('#porcentagem').html('0%');
 	$("#ajuste_automatico").fadeIn();
 	$("#tela").html('').html(data.img+'<input type="hidden" name="foto" value="'+data.arquivo+'">');
     }else{
@@ -103,6 +106,11 @@ function convida_face(){
 
 $(document).ready(function(){
     var ur = $('#ur').data('url');
+    
+    $(".countGerencia").click(function(){
+	var cod = $(this).data('count');
+	redirect(ur+'web/tips/'+cod+'.html');
+    });
     
     $(".formNovoCount").buttonset();
     
@@ -203,6 +211,8 @@ $(document).ready(function(){
     
     $(document).on('mouseover','#tela', function(){
 	if($("#ajuste_automatico").is(":visible")){
+	    $("#baseDock").fadeToggle();
+	}
 	    $("#photo").draggable({
 		cursor: "move",
 		scroll: false,
@@ -217,8 +227,8 @@ $(document).ready(function(){
 			    top: '0px',
 			},200);
 		    }
-		    if((limity + ui.position.top) < 240){
-			var alt = (limity - 240);
+		    if((limity + ui.position.top) < 228){
+			var alt = (limity - 228);
 			$(this).animate({
 			    top: '-'+alt+'px',
 			},200);
@@ -229,15 +239,15 @@ $(document).ready(function(){
 			    left: '0px',
 			},200);
 		    }
-		    if((limitx + ui.position.left) < 270){
-			var lar = (limitx - 270);
+		    if((limitx + ui.position.left) < 256){
+			var lar = (limitx - 256);
 			$(this).animate({
 			    left: '-'+lar+'px',
 			},200);
 		    }
 		}
 	    });
-	}
+	//}
     });
     
     $(".friends").tagsInput({
@@ -259,7 +269,7 @@ $(document).ready(function(){
 	$.ajax({
 	    type: 'post',
 	    dataType: 'html',
-	    url: ur+'auth/fotos_facebook/tip',
+	    url: ur+'auth/fotos_facebook/tips',
 	    beforeSend: function(){
 		$(".loader").fadeIn();
 	    },
@@ -299,7 +309,7 @@ $(document).ready(function(){
 	$.ajax({
 	    type: 'post',
 	    dataType: 'html',
-	    url: ur+'auth/fotos_instagram/tip',
+	    url: ur+'auth/fotos_instagram/tips',
 	    beforeSend: function(){
 		$(".loader").fadeIn();
 	    },
@@ -338,7 +348,7 @@ $(document).ready(function(){
 	$(this).fadeOut();
     });
     
-    $(document).on('click','.ftitip',function(){
+    $(document).on('click','.ftitips',function(){
 	var img = $(this).data('alta');
 	var local = $(this).data('local');
 	
@@ -346,7 +356,7 @@ $(document).ready(function(){
 	   type: 'post',
 	   dataType: 'json',
 	   data: 'imgi='+img+'&local='+local,
-	   url: ur+'web/img_instagram/tip',
+	   url: ur+'web/img_instagram/tips',
 	   success: function(resp){
 	       if(resp.erro === 'sim'){
 		   alert('Aviso: A imagem precisa ter no mínimo 640 x 570 pixels.')
@@ -359,6 +369,12 @@ $(document).ready(function(){
 	       }
 	   }
 	});
+    });
+    
+    $("#triggerSelect").on({
+	click: function(){
+	      $("#baseDock").fadeToggle();
+	},
     });
     
     $(document).on('click','.fticapa',function(){
@@ -438,7 +454,7 @@ $(document).ready(function(){
 	var eixo = '';
 	if(opt.val() === 's'){
 	    opt.val('n');
-	    $("#photoc").attr({
+	    img.attr({
 		height: '',
 		width: '',
 	    }).css({
@@ -449,16 +465,17 @@ $(document).ready(function(){
 	    });
 	}else{
 	    opt.val('s');
-	    if(img.data('wi') > img.data('he')){
+	    
+	    if(img.data('he') > 100){
 		h = '';
 		w = '320';
 		eixo = 'y';
 	    }else{
-		h = '100';
+		h = '';
 		w = '';
 		eixo = 'x';
 	    }
-	    $("#photoc").attr({
+	    img.attr({
 		height: h,
 		width: w,
 	    }).css({
@@ -491,12 +508,12 @@ $(document).ready(function(){
 	}else{
 	    opt.val('s');
 	    if(img.data('wi') > img.data('he')){
-		h = '240';
+		h = '228';
 		w = '';
 		eixo = 'x';
 	    }else{
 		h = '';
-		w = '270';
+		w = '256';
 		eixo = 'y';
 	    }
 	    $("#photo").attr({
@@ -511,7 +528,22 @@ $(document).ready(function(){
 	}
     });
     
+    $(document).on('change','.campos', function(){
+	$("#mudou").val('s');
+    });
+    
     $(".mozaico").click(function(){
+	if($("#mudou").val() === 's'){
+	    if(!confirm("Os dados dessa tip serão perdidos. Continuar assim mesmo?")){
+		return false;
+	    }
+	}
+	
+	$("#mudou").val('n');
+	$(".campos").css({
+	    border: '1px solid #ddd',
+	});
+	
 	var dis = $(this).data("disabled");
 	
 	$("#codigo_tip").val($(this).data('codigo'));
@@ -520,14 +552,14 @@ $(document).ready(function(){
 	$("textarea[name='descricao']").val($(this).data("descricao"));
 	if($(this).data("imagem") !== "no_image.jpg"){
 	    $("input[name='foto']").val($(this).data('imagem'));
-	    $("#tela").html('<img id="photo" width="270" height="240" src="'+ur+'tips/'+$(this).data('imagem')+'">').fadeIn();
+	    $("#tela").html('<img id="photo" width="256" height="228" src="'+ur+'tips/'+$(this).data('imagem')+'">').fadeIn();
 	}else{
-	    $("#tela").html('<img height="240" width="270" src="'+ur+'tips/no_image.jpg">').fadeIn();
+	    $("#tela").html('<img height="228" width="256" src="'+ur+'tips/no_image.jpg">').fadeIn();
 	}
 	$("#optimg").val('n');
 
-	$("#ntip").html('<h5>Tip <strong>#'+$(this).data('tip')+'</strong> - Dia '+$(this).data('mostra')+'</h5>');
-	$("#num_tip").html($(this).data('tip')+'/'+$(this).data('dias'));
+	$("#ntip").html('<p>Edição de Tips - Tip #'+$(this).data('tip')+' - '+$(this).data('mostra')+'</p>');
+	$("#num_tip").html($(this).data('tip')+'/'+$(this).data('dias')).fadeIn();
 	$("#tit_tip").html($(this).data("titulo"));
 	$("#sub_tip").html($(this).data("sub"));
 	$("#men_tip").html(nl2br($(this).data("descricao")));
@@ -557,7 +589,7 @@ $(document).ready(function(){
 	$("#men_tip").html('');
 	$("#tela").html('');
 	$(".menu_foto").fadeOut();
-	$("#num_tip").html('');
+	$("#num_tip").html('').hide();
 	$(".esconde").fadeOut();
     });
     
@@ -572,6 +604,11 @@ $(document).ready(function(){
 	$("#FileField").val(valor);
 	$('#formtip').ajaxForm({
 	    dataType: 'json',
+	    uploadProgress: function(event, position, total, percentComplete) {
+		$(".barraup").fadeIn();
+                $('progress').attr('value',percentComplete);
+                $('#porcentagem').html(percentComplete+'%');
+            },
 	    success:   processJson
         }).submit();
      });
@@ -585,11 +622,66 @@ $(document).ready(function(){
         }).submit();
      });
      
+     $(document).on('blur','#tit', function(){
+	 if($("#tit").val() !== ''){
+	     $("#tit").css({
+		 border: '1px solid #090',
+	     });
+	 }
+     });
+     
+     $(document).on('blur','#sub', function(){
+	 if($("#sub").val() !== ''){
+	     $("#sub").css({
+		 border: '1px solid #090',
+	     });
+	 }
+     });
+     
+     $(document).on('blur','#men', function(){
+	 if($("#men").val() !== ''){
+	     $("#men").css({
+		 border: '1px solid #090',
+	     });
+	 }
+     });
+     
      $("#addtip").click(function(){
 	 var imagem = $("input[name='foto']").val();
 	 var titulo = $("input[name='titulo']").val();
 	 var sub = $("input[name='subtitulo']").val();
 	 var mensagem = $("#men").val();
+	 $("#mudou").val('n');
+	 
+	 if(imagem === ''){
+	     alert("Sua Tip precisa de uma imagem");
+	     return false;
+	 }
+	 
+	 if(titulo === ''){
+	     alert("Sua Tip precisa de um título");
+	     $("input[name='titulo']").focus().css({
+		 border: '1px solid #900',
+	     });
+	     return false;
+	 }
+	 
+	 if(sub === ''){
+	     alert("Sua Tip precisa de um sub-título");
+	     $("input[name='subtitulo']").focus().css({
+		 border: '1px solid #900',
+	     });
+	     return false;
+	 }
+	 
+	 if(mensagem === ''){
+	     alert("Sua Tip precisa de uma descrição");
+	     $("#men").focus().css({
+		 border: '1px solid #900',
+	     });
+	     return false;
+	 }
+	 
 	 var codigo = $("input[name='count']").val();
 	 var id_tip = $("#codigo_tip").val();
 	 var central = $("#optimg").val();

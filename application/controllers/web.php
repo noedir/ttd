@@ -32,7 +32,8 @@ class Web extends CI_Controller {
 	}
     }
     private function ver_conta(){
-	if($this->session->userdata('us_codigo') == ''){
+	if($this->session->userdata('us_codigo') === ''){
+	    $this->session->sess_destroy();
 	    redirect(index_page());
 	}
     }
@@ -68,7 +69,6 @@ class Web extends CI_Controller {
     }
     
     public function disponivel(){
-	#header('content-type: application/json');
 	$nome = $this->input->post('nome');
 	$query = $this->wdb->get_disponivel($nome)->result_array();
 	
@@ -364,6 +364,7 @@ class Web extends CI_Controller {
 	$local = $this->input->post('local');
 	$exp = array_reverse(explode("/",$img));
 	$loc = date("YmdHis").'_'.$exp[0];
+	$im = 'n';
 	
 	$in=    fopen($img, "rb");
 	$out=   fopen('./'.$loca.'/'.$loc, "wb");
@@ -372,6 +373,21 @@ class Web extends CI_Controller {
 	}
 	fclose($in);
 	fclose($out);
+	
+	if($loca === 'tips' && $local === 'instagram'){
+	    $config = array(
+		'image_library'	    => 'gd2',
+		'source_image'	    => './'.$loca.'/'.$loc,
+		'width'		    => 640,
+		'height'	    => 640,
+		'quality'	    => '100%',
+		'maintain_ratio'    => TRUE,
+	    );
+	    $this->load->library('image_lib',$config);
+	    $this->image_lib->resize();
+	    $this->image_lib->clear();
+	    $im = 's';
+	}
 	
 	$tam = getimagesize('./'.$loca.'/'.$loc);
 	
@@ -386,41 +402,53 @@ class Web extends CI_Controller {
 	
 	if($local === 'facebook' && $loca === 'capa'){
 	    if($tam[0] < 640 || $tam[1] < 200){
-		unlink($loc);
+		//unlink($loc);
 		$data['erro'] = 'sim';
 		echo json_encode($data);
 		die();
 	    }
 	}
 	
-	$lar = $tam[0] / 2;
-	$alt = $tam[1] / 2;
-	
-	if($local === 'instagram' && $loca === 'capa'){
+	if($local === 'instagram' && $loca === 'capa'){	    
 	    $config = array(
-		'image_library' => 'gd2',
-		'source_image' => './'.$loca.'/'.$loc,
-		'new_image' => './'.$loca.'/'.'tmp_'.$loc,
-		'width' => 320,
-		'height' => 320,
-		'maintain_ratio' => TRUE,
+		'image_library'	    => 'gd2',
+		'source_image'	    => './'.$loca.'/'.$loc,
+		'new_image'	    => './'.$loca.'/'.'tmp_'.$loc,
+		'width'		    => 320,
+		'height'	    => 320,
+		'quality'	    => '100%',
+		'maintain_ratio'    => TRUE,
 	    );
 	}else{
+	    $lar = $tam[0] / 2.5;
+	    $alt = $tam[1] / 2.5;
+	    
 	    $config = array(
 		'image_library' => 'gd2',
 		'source_image' => './'.$loca.'/'.$loc,
 		'new_image' => './'.$loca.'/'.'tmp_'.$loc,
 		'width' => $lar,
 		'height' => $alt,
+		'quality' => '75',
 		'maintain_ratio' => FALSE,
 	    );
 	}
 
-	$this->load->library('image_lib',$config);
+	if($im === 'n'){
+	    $this->load->library('image_lib',$config);
+	}else{
+	    $this->image_lib->initialize($config);
+	}
 	$this->image_lib->resize();
+	$this->image_lib->clear();
 
-	$data['width'] = $tam[0];
-	$data['height'] = $tam[1];
+	if($local === 'instagram' && $loca === 'tips'){
+	    $data['width'] = 640;
+	    $data['height'] = 640;
+	}else{
+	    $data['width'] = $tam[0];
+	    $data['height'] = $tam[1];
+	}
 	$data['url'] = $loc;
 	$data['erro'] = '';
 	
@@ -445,16 +473,16 @@ class Web extends CI_Controller {
 	}
 	$this->load->helper('file');
 	$config['upload_path']   = FCPATH.$path.'/';
-	$config['allowed_types'] = 'jpg|png';
+	$config['allowed_types'] = 'jpg|jpeg|png';
 	$config['file_name'] = md5(date("YmdHis"));
 	if($path === 'tips'){
-	    $config['min_width'] = 640;
-	    $config['min_height'] = 570;
+	    $config['min_width'] = 512;
+	    $config['min_height'] = 456;
 	}else if($path === 'capa'){
 	    $config['min_width'] = 640;
 	    $config['min_height'] = 200;
 	}
-	$config['overwrite'] = TRUE;
+	
 	$this->load->library('upload', $config);
 	
 	if($this->upload->do_upload('imagem')){
@@ -463,8 +491,13 @@ class Web extends CI_Controller {
 	    $data['arquivo'] = $file['file_name'];
 	    $temp = 'tmp_'.$file['file_name'];
 	    
-	    $lar = ($file['image_width'] / 2);
-	    $alt = ($file['image_height'] / 2);
+	    if($path === 'tips'){
+		$lar = ($file['image_width'] / 2.5);
+		$alt = ($file['image_height'] / 2.5);
+	    }else{
+		$lar = ($file['image_width'] / 2);
+		$alt = ($file['image_height'] / 2);
+	    }
 	    
 	    $config = array(
 		'image_library' => 'gd2',
@@ -472,6 +505,7 @@ class Web extends CI_Controller {
 		'new_image' => './'.$path.'/'.'tmp_'.$file['file_name'],
 		'width' => $lar,
 		'height' => $alt,
+		'quality' => '75',
 		'maintain_ratio' => FALSE,
 	    );
 
@@ -524,6 +558,7 @@ class Web extends CI_Controller {
 		    'source_image' => './capa/tmp_'.$input['img'],
 		    'width' => $posiw,
 		    'height' => $posih,
+		    'quality' => '75',
 		    'maintain_ratio' => FALSE,
 		);
 		$this->load->library('image_lib',$config);
@@ -540,6 +575,7 @@ class Web extends CI_Controller {
 		    'source_image' => './capa/'.$input['img'],
 		    'width' => $tmpw,
 		    'height' => $tmph,
+		    'quality' => '75',
 		    'maintain_ratio' => FALSE,
 		);
 		$this->image_lib->initialize($config);
@@ -556,6 +592,7 @@ class Web extends CI_Controller {
 		    'y_axis' => ($post * 2),
 		    'width'  => 640, //$input['largura'],
 		    'height' => 200, //$input['altura'],
+		    'quality' => '75',
 		    'maintain_ratio' => FALSE,
 		);
 
@@ -583,6 +620,7 @@ class Web extends CI_Controller {
 		    'y_axis' => $posit,
 		    'width'  => 640,
 		    'height' => 200,
+		    'quality' => '75',
 		    'maintain_ratio' => FALSE,
 		);
 		
@@ -619,14 +657,14 @@ class Web extends CI_Controller {
 	$posiw = ($input['largura']);
 	
 	if(file_exists('./tips/tmp_'.$input['img'])){
-	    
 	    // FAZ O RESIZE DA IMAGEM
 	    if($input['central'] === 's'){
 		$config = array(
 		    'image_library' => 'gd2',
 		    'source_image' => './tips/tmp_'.$input['img'],
-		    'width' => ($posiw * 1.19),
-		    'height' => ($posih * 1.187),
+		    'width' => $posiw,
+		    'height' => $posih,
+		    'quality' => '75',
 		    'maintain_ratio' => FALSE,
 		);
 		$this->load->library('image_lib',$config);
@@ -635,8 +673,8 @@ class Web extends CI_Controller {
 
 		$img = getimagesize('./tips/tmp_'.$input['img']);
 		
-		$tmpw = ($img[0] * 2);
-		$tmph = ($img[1] * 2);
+		$tmpw = ($img[0] * 2.5);
+		$tmph = ($img[1] * 2.5);
 
 		$config = array(
 		    'image_library' => 'gd2',
@@ -649,16 +687,17 @@ class Web extends CI_Controller {
 		$this->image_lib->resize();
 		$this->image_lib->clear();
 		
-		$posl = abs($crd[0]) * 1.19;
-		$post = abs($crd[1]) * 1.187; 
+		$posl = abs($crd[0]);
+		$post = abs($crd[1]);
 
 		$config = array(
 		    'image_library' => 'gd2',
 		    'source_image' => './tips/'.$input['img'],
-		    'x_axis' => ($posl * 2),
-		    'y_axis' => ($post * 2),
+		    'x_axis' => ($posl * 2.5),
+		    'y_axis' => ($post * 2.5),
 		    'width'  => 640, //$input['largura'],
 		    'height' => 570, //$input['altura'],
+		    'quality' => '75',
 		    'maintain_ratio' => FALSE,
 		);
 
@@ -669,8 +708,8 @@ class Web extends CI_Controller {
 		// FAZ O CROP DA IMAGEM
 	    }else{
 		
-		$posil = ((abs($crd[0]) - 100) * 2.37);
-		$posit = ((abs($crd[1]) - 90) * 2.45);
+		$posil = abs($crd[0]) * 2.5;
+		$posit = abs($crd[1]) * 2.5;
 
 		if($posil < 0){
 		    $posil = 0;
@@ -686,6 +725,7 @@ class Web extends CI_Controller {
 		    'y_axis' => $posit,
 		    'width'  => 640,
 		    'height' => 570,
+		    'quality' => '75',
 		    'maintain_ratio' => FALSE,
 		);	    
 		$this->load->library('image_lib',$config);
@@ -699,16 +739,12 @@ class Web extends CI_Controller {
 	    $config['maintain_ratio'] = FALSE;
 	    $config['width'] = 200;
 	    $config['height'] = 200;
-	    $config['quality'] = '75';
+	    $config['quality'] = '100%';
 	    $this->image_lib->initialize($config);
 	    $this->image_lib->resize();
 
 	    $resp['altura'] = $input['altura'];
 	    $resp['largura'] = $input['largura'];
-
-	    $this->wdb->set_tip($input);
-	    $resp['msg'] = 'Gravada com sucesso';
-	    $resp['erro'] = 'ok';
 
 	    if(file_exists('./tips/tmp_'.$input['img'])){
 		unlink('./tips/tmp_'.$input['img']);
@@ -717,10 +753,14 @@ class Web extends CI_Controller {
 	    if($this->image_lib->display_errors()){
 		$resp['msg'] = $this->image_lib->display_errors();
 	    }
+	    $resp['msg'] = '';
+	    $resp['erro'] = 'ok';
 	}else{
 	    $resp['msg'] = '';
 	    $resp['erro'] = 'ok';
 	}
+	
+	$this->wdb->set_tip($input);
 	
 	echo json_encode($resp);
     }
@@ -888,8 +928,11 @@ class Web extends CI_Controller {
 	stream_context_set_option($ctx, 'ssl', 'passphrase', $passphrase);
 
 	// Open a connection to the APNS server
+	// Open a connection to the APNS server
 	$fp = stream_socket_client(
-		'ssl://gateway.sandbox.push.apple.com:2195', $err, $errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
+		'ssl://gateway.sandbox.push.apple.com:2195', $err,
+		$errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
+
 
 	/*if (!$fp)
 		exit("Failed to connect: $err $errstr" . PHP_EOL);

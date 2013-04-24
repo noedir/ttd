@@ -66,7 +66,7 @@
 body{
     background: #fff;
     color: #333;
-    font-family: Verdana, Arial, cursive, sans-serif;
+    font-family: 'ColaborateRegular', Verdana, Arial, cursive, sans-serif;
     margin: 0px;
     padding: 0px;
 }
@@ -75,13 +75,17 @@ body{
 }
 .poshy_style{
     font-size: 11px;
-    font-weight: bold;
+    background: #E8FFF7;
+    border: 2px solid #21B482;
 }
 a{
     text-decoration: none;
 }
 a.white{
     color: #fff;
+}
+a.white:hover{
+    color: #ddd;
 }
 a.black{
     color: #333;
@@ -133,6 +137,13 @@ a.black:hover{
     width: 750px;
     height: 400px;
     z-index: 100001;
+}
+.thin{
+    font-family: 'ColaborateThinRegular';
+    font-size: 20px;
+}
+.thinbold{
+    font-family: 'ColaborateBoldRegular';
 }
 .pag .pfti{
     position: relative;
@@ -231,6 +242,10 @@ a.black:hover{
 
 #baseMenuAdmin .linksAdmin a{
     color: #afafaf;
+}
+
+#baseMenuAdmin .linksAdmin a:hover{
+    color: #eee;
 }
 
 #baseMenuAdmin .linksAdmin ul{
@@ -394,8 +409,8 @@ a.black:hover{
     position: relative;
     float: left;
     margin: 0px 10px;
-    width: 330px;
-    height: 680px;
+    width: 315px;
+    height: 656px;
 }
 .tip-box .menu_foto{
     position:relative;
@@ -414,38 +429,36 @@ a.black:hover{
 .tip-box #tit_tip, .tip-box #sub_tip, .tip-box #men_tip{
     color: #fff;
     z-index: 13;
-    width: 200px;
+    width: 256px;
     margin: 0px;
 }
 #tit_tip{
-    font-size: 13px;
+    font-size: 14px;
     font-weight: bold;
-    padding-top: 5px;
+    padding-top: 12px;
 }
 #sub_tip{
-    font-size: 11px;
+    font-size: 12px;
+    font-weight: bold;
 }
 #men_tip{
+    font-family: 'ColaborateRegular';
     padding-top: 10px;
-    font-size: 10px;
+    font-size: 12px;
 }
 .tip-box #tela_fundo{
     position: absolute;
-    top: 149px;
+    top: 143px;
     left: 31px;
-    width: 270px;
-    height: 240px;
+    width: 256px;
+    height: 228px;
     background: #333;
     z-index: 4;
 }
-.tip-box h3, .tip-box h5{
-    font-weight: normal;
-    color: #666;
-}
 .tip-box #ajuste_automatico{
     position: absolute;
-    top: 125px;
-    right: 35px;
+    top: 108px;
+    right: -56px;
     width: 16px;
     height: 16px;
     z-index: 19;
@@ -453,12 +466,15 @@ a.black:hover{
     cursor: pointer;
     background: url(../img/reduce_image.png) no-repeat;
 }
+.tip-box .campos{
+    padding: 20px 5px;
+}
 .tip-box .tela{
     position: absolute;
-    top: 149px;
+    top: 143px;
     left: 31px;
-    width: 287px;
-    height: 429px;
+    width: 271px;
+    height: 409px;
     color: #fff;
     z-index: 5;
     overflow: hidden;
@@ -466,19 +482,22 @@ a.black:hover{
 }
 .tela #num_tip{
     position: absolute;
-    top: 235px;
-    left: 224px;
+    top: 240px;
+    left: 211px;
     width: 40px;
-    background: #666;
-    font-size: 11px;
+    background: #333;
+    display: none;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 6px 0px;
     padding-left: 6px;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
 }
 .tela #tela{
     overflow: hidden;
-    width: 270px;
-    height: 240px;
+    width: 256px;
+    height: 228px;
     text-align: center;
     display: none;
 }
@@ -489,19 +508,18 @@ a.black:hover{
 .tip-maior{
     position: relative;
     float: right;
-    margin-top: -63px;
+    margin-top: -40px;
     margin-right: -22px;
-    width: 350px !important;
+    width: 355px !important;
     background: #ddd;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    padding: 0px 0px 0px 7px;
-    height: 710px;
+    padding: 0px 0px 0px 11px;
+    height: 652px;
 }
 .tip-maior h3,  .tip-maior h5{
     margin: 10px;
     color: #666;
-    font-weight: normal;
 }
 .tip-maior #controle_capa{
     position: absolute;
@@ -523,23 +541,31 @@ a.black:hover{
 }
 .tip-maior #opcoes_capa{
     position: absolute;
-    top: 135px;
-    left: 22px;
+    top: 123px;
+    left: 18px;
     width: 320px;
-    list-style: none;
-    display: none;
+    height: 22px;    
+    padding: 0px 0px 0px 4px;
     z-index: 987;
+    display: none;
+    text-align: center;
+}
+#opcoes_capa ul{
+    list-style: none;
+    background: url(../img/fundo.png);
+    height: 25px;
 }
 #opcoes_capa li{
     display: inline;
-    padding: 2px;
+    padding: 6px 4px;
     color: #fff;
-    background: #333;
-    border: 1px solid #666;
-    margin: 0px 2px;
-    font-size: 9px;
-    border-radius: 5px;
+    margin: 0px 1px;
+    font-size: 10px;
     cursor: pointer;
+}
+#opcoes_capa li:hover{
+    background: #0f0f0f;
+    border-top: 2px solid #fff;
 }
 .capa #telinha{
     width: 320px;
@@ -548,11 +574,33 @@ a.black:hover{
 }
 .tip-maior .dt_projeto{
     position: relative;
-    width: 330px;
+    float: left;
+    width: 336px;
     text-align: center;
+    font-size: 11px;
     margin: 5px 3px;
-    border: 3px solid #CCEDE2;
-    background: #E8FFF7;
+}
+.dt_projeto  .inidata{
+    position: relative;
+    float: left;
+    width: 160px;
+    padding: 8px 0px;
+    background: #e8fff7;
+    border: 2px solid #C8EEE1;
+}
+h5.projetoTitle {
+    font-family: 'ColaborateThinRegular';
+    font-size: 18px;
+    color: #000;
+    
+}
+.dt_projeto .fimdata{
+    position: relative;
+    float: right;
+    width: 160px;
+    padding: 8px 0px;
+    background: #fbedda;
+    border: 2px solid #FFDDAD;
 }
 .tip-maior .tags_projeto{
     position: relative;
@@ -581,8 +629,11 @@ a.black:hover{
 .tip-maior .box-tip{
     position: relative;
     float: left;
-    width: 349px;
-    height: 305px;
+    width: 317px;
+    height: 295px;
+    padding: 10px;
+    margin-left: 5px;
+    background: #ebebeb;
     overflow: auto;
 }
 .tip-maior .invite{
@@ -601,10 +652,9 @@ a.black:hover{
 .box-tip .mozaico{
     position: relative;
     float: left;
-    width: 100px;
-    height:100px;
+    width: 90px;
+    height: 90px;
     margin: 5px;
-    background: #333;
     text-align: center;
     overflow: hidden;
     border-radius: 7px;
@@ -626,16 +676,16 @@ a.black:hover{
 }
 
 .mozaico img{
-    max-height: 100px;
-    max-width: 100px;
+    max-height: 90px;
+    max-width: 90px;
 }
 
 .iphone{
-    background: url(../img/iphone_mock.png) no-repeat;
+    background: url(../img/iphone_mock3.png) no-repeat;
 }
 #container input, #container textarea, #container select{
     border-radius: 5px;
-    padding: 5px;
+    padding: 10px 5px;
     border: 1px solid #ddd;
     width: 100%;
     background: #fff;
@@ -725,8 +775,8 @@ button[type='reset']:hover, button[type='cancel']:hover{
 }
 .menu_foto .facebook{
     position: absolute;
-    top: 123px;
-    right: 85px;
+    top: 120px;	
+    right: 100px;
     z-index: 28;
 }
 .facebook img{
@@ -735,8 +785,8 @@ button[type='reset']:hover, button[type='cancel']:hover{
 }
 .menu_foto .instagram{
     position: absolute;
-    top: 123px;
-    right: 45px;
+    top: 54px;
+    right: -56px;
     z-index: 23;
 }
 .instagram img{
@@ -745,8 +795,8 @@ button[type='reset']:hover, button[type='cancel']:hover{
 }
 .menu_foto #uploadpc{
     position: absolute;
-    top: 123px;
-    right: 66px;
+    top: 0px;
+    right: -56px;
     z-index: 25px;
     cursor: pointer;
 }
@@ -853,139 +903,256 @@ div.tagsinput div { display: block; float: left; }
 }
 
 .baseNovoCount label{
-	margin-top: 20px;
+    margin-top: 20px;
 }
 
 .baseNovoCount input{
-	width: 690px; height: 25px;
-	padding: 10px;
-	border: 2px solid #ebebeb;
+    width: 690px; height: 25px;
+    padding: 10px;
+    border: 2px solid #ebebeb;
 }
 
 .formNovoCount {
-	margin-top: 15px;
+    margin-top: 15px;
 }
 
 .formNovoCountDias {
-	margin-top: 15px;
-	position:relative;
+    margin-top: 15px;
+    position:relative;
 }
 
 #baseValores {
-	position:absolute;
-	width: 310px;
-	height: 30px;
-	top: 33px;
-	right: -5px;
-	color: #fff;
-	text-align: center;
-	font-size: 13px;
+    position:absolute;
+    width: 310px;
+    height: 30px;
+    top: 33px;
+    right: -5px;
+    color: #fff;
+    text-align: center;
+    font-size: 13px;
 }
 
 #baseValores .startfee{
-	background: #b2b2b2;
-	width: 70px;
-	float:left;
-	border-top-left-radius: 5px;
-	border-bottom-left-radius: 5px;
-	margin: 9px 0px 0px 0px;
-	padding: 1px 10px 2px 10px;
+    background: #b2b2b2;
+    width: 70px;
+    float:left;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    margin: 9px 0px 0px 0px;
+    padding: 1px 10px 2px 10px;
 }
 
 #baseValores .cadaDia{
-	background: #d18c28;
-	width: 70px;
-	float:left;
-	margin: 9px 0px 0px 0px;
-	padding: 1px 10px 2px 10px;
+    background: #d18c28;
+    width: 70px;
+    float:left;
+    margin: 9px 0px 0px 0px;
+    padding: 1px 10px 2px 10px;
 }
 
 #baseValores .valorFinal {
-	background: #eaa138;
-	width: 110px;
-	float:left;
-	border-top-right-radius: 5px;
-	border-bottom-right-radius: 5px;
-	margin: 9px 0px 0px 0px;
-	padding: 1px 10px 2px 10px;
+    background: #eaa138;
+    width: 110px;
+    float:left;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin: 9px 0px 0px 0px;
+    padding: 1px 10px 2px 10px;
 }
 
 .formNovoCountDataInicio{
-	margin-top: 15px;
-	float:left
+    margin-top: 15px;
+    float:left
 }
 
 .formNovoCountDataFim {
-	margin-top: 15px;
-	float:right;
+    margin-top: 15px;
+    float:right;
 }
 
 .baseNovoCount .inicioTermino{
-	width: 300px; height: 25px;
-	padding: 10px;
-	border: 2px solid #ebebeb;
+    width: 300px; height: 25px;
+    padding: 10px;
+    border: 2px solid #ebebeb;
 }
 
 .baseNovoCount .criarProjeto {
-	width: 200px; height: 50px;
-	float: right;
-	margin-top: 15px;
-	cursor: pointer;
-	background: #15e09b;
-	border: 0px;
-	color: #fff;
-	font-size: 14px;
+    width: 200px; height: 50px;
+    float: right;
+    margin-top: 15px;
+    cursor: pointer;
+    background: #15e09b;
+    border: 0px;
+    color: #fff;
+    font-size: 14px;
 }
 
 #baseMinhasCounts {
-	margin: 0 auto;
-	margin-top: 35px;
+    margin: 0 auto;
+    margin-top: 35px;
 }
 
 #tabelaCount {
-	font-size: 14px;
+    font-size: 14px;
+    font-family: 'ColaborateRegular';
 }
-
+.zebra:hover{
+    cursor: pointer;
+    background: #E8FFF7;
+}
 .categorias {
-	height: 35px;
-	color: #9b9b9b;
+    height: 35px;
+    color: #9b9b9b;
 }
-
+.countGerencia{
+    font-family: 'ColaborateRegular';
+}
 .tdCounts {
-	font-size: 12px;
-	padding-top: 15px;
-	padding-bottom: 15px;
-	border-top: 1px solid #dadada;
+    font-size: 12px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-top: 1px solid #dadada;
 }
 
 .tdCounts a{
-	color:#000;
+    color:#000;
 }
 
 .tdCounts a:hover{
-	color:#21b482;
+    color:#21b482;
 }
 
 .tdCountsDiasContagem {
-	font-size: 16px;
-	border-top: 1px solid #dadada;
-	font-weight: bold;
-	color: #21b482;
-	text-align:center;
+    font-size: 16px;
+    border-top: 1px solid #dadada;
+    font-weight: bold;
+    color: #21b482;
+    text-align:center;
 }
 
 .tdCountsDiasIniFim {
-	font-size: 12px;
-	border-top: 1px solid #dadada;
-	text-align:center;
+    font-size: 12px;
+    border-top: 1px solid #dadada;
+    text-align:center;
 }
 
 .tdCountsAcoes {
-	font-size: 12px;
-	border-top: 1px solid #dadada;
-	text-align: center;
+    font-size: 12px;
+    border-top: 1px solid #dadada;
+    text-align: center;
 }
 
 .tdCountsAcoes img {
-	margin-left: 20px;
+    margin-left: 20px;
+}
+
+/*** DOCK ***/
+
+#triggerSelect {
+	position:absolute;
+	display: block;
+	cursor: pointer;
+	padding: 5px;
+	top: 110px;
+	right: 30px;
+	text-align:center;
+	color: #fff;
+	font-size: 11px;
+}
+
+#triggerSelect:hover{
+	text-decoration:underline;
+}
+
+#baseDock {
+	position: absolute;
+	width: 113px;
+	height: 228px;
+	top: 143px;
+	right: 30px;
+	z-index: 87;
+	overflow:hidden;
+}
+
+#metodosUpload {
+	position: absolute;
+	width: 113px;
+	height: 228px;
+	right: 0px;
+	background: url(../img/fundo.png);
+	z-index: 200;
+}
+
+#metodosUpload .barraup{
+    position: absolute;
+    top: 122px;
+    right: -8px;
+    width: 110px;
+    padding: 5px;
+    display: none;
+    color: #fff;
+    border-bottom: 1px solid #181818;
+    z-index: 200;
+}
+.barraup progress{
+    width: 100px;
+}
+
+#metodosUpload .upload {
+	background: url(../img/icon_upload.png) no-repeat left;
+	color: #fff;
+	font-size: 12px;
+	width: 110px;
+	padding: 20px;
+	padding-left: 40px;
+	border-bottom: 1px solid #181818;
+	z-index: 201;
+}
+
+#metodosUpload .facebook{
+	background: url(../img/icon_facebook.png) no-repeat left;
+	color: #fff;
+	font-size: 12px;
+	width: 110px;
+	padding: 20px;
+	padding-left: 40px;
+	border-bottom: 1px solid #181818;
+	z-index: 202;
+}
+
+#metodosUpload .instagram{
+	background: url(../img/icon_instagram.png) no-repeat left;
+	color: #fff;
+	font-size: 12px;
+	width: 110px;
+	padding: 20px;
+	padding-left: 40px;
+	border-bottom: 1px solid #181818;
+	z-index: 203;
+}
+
+#metodosUpload .reposicionar{
+	background: url(../img/icon_reposicionar.png) no-repeat left;
+	color: #fff;
+	font-size: 12px;
+	width: 110px;
+	padding: 20px;
+	padding-left: 40px;
+	border-bottom: 1px solid #181818;
+	z-index: 204;
+}
+
+#metodosUpload .ajustar{
+	background: url(../img/icon_ajustar.png) #000 no-repeat left;
+	color: #fff;
+	font-size: 12px;
+	width: 110px;
+	padding: 19px;
+	padding-left: 40px;
+	border-bottom: 1px solid #181818;
+	z-index: 205;
+}
+
+#metodosUpload .upload:hover, #metodosUpload .instagram:hover, #metodosUpload .facebook:hover, #metodosUpload .ajustar:hover, #metodosUpload .reposicionar:hover{
+	background-color:#0f0f0f;
 }

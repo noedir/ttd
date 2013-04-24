@@ -74,8 +74,8 @@ class Auth extends CI_Controller{
 	foreach($url as $k => $v){
 	    $img = $v->images->standard_resolution->url;
 	    $low = $v->images->thumbnail->url;
-	    $hei = $v->images->standard_resolution->height;
-	    $wid = $v->images->standard_resolution->width;
+	    $hei = 640; //$v->images->standard_resolution->height;
+	    $wid = 640; //$v->images->standard_resolution->width;
 	    $saida .= '<div class="pfti"><img class="fti'.$loc.'" data-wi="'.$wid.'" data-he="'.$hei.'" data-local="instagram" data-alta="'.$img.'" src="'.$low.'"></div>';
 	}
 	return $saida;

@@ -184,10 +184,17 @@ class Mobile extends CI_Controller {
     
     public function count_public(){
 	header("content-type: application/json");
+	$input = array();
 	if($this->input->post('busca') != ''){
-	    $input = array('busca'=>$this->input->post('busca'));
+	    $input['busca'] = $this->input->post('busca');
 	}else{
-	    $input = '';
+	    $input['busca'] = '';
+	}
+	
+	if($this->input->post('busca_id') != ''){
+	    $input['busca_id'] = $this->input->post('busca_id');
+	}else{
+	    $input['busca_id'] = '';
 	}
 	$query = $this->mdb->get_countpublica($input)->result_array();
 	if(count($query) > 0){
