@@ -3,15 +3,13 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css">
+	<script src="<?php echo base_url(); ?>js/load-image.min.js" type="text/javascript"></script>
         <script src="<?php echo base_url(); ?>js/jquery-1.7.2.min.js"></script>
         <script src="<?php echo base_url(); ?>js/jquery-ui-1.8.21.custom.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/imgareaselect-default.css" />
-	<script type="text/javascript" src="<?php echo base_url(); ?>scripts/jquery.imgareaselect.pack.js"></script>
 	<script src="<?php echo base_url(); ?>js/jquery.form.js"></script>
 	<script src="<?php echo base_url(); ?>js/jquery.tagsinput.js" type="text/javascript"></script>
         <script src="<?php echo base_url(); ?>js/funcoes.js" type="text/javascript"></script>
 	<script src="<?php echo base_url(); ?>js/jquery.prettyPhoto.js" type="text/javascript"></script>
-	<script src="<?php echo base_url(); ?>js/jquery.Jcrop.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/prettyPhoto.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/estilo.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/jquery.Jcrop.css">

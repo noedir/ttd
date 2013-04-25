@@ -105,7 +105,47 @@ function convida_face(){
 }
 
 $(document).ready(function(){
-    var ur = $('#ur').data('url');
+    var ur = $('#ur').data('url');    
+    $("#file-up").on('change', function(e){
+	var lar;
+	var alt;
+	
+	$("#ajuste_automatico").fadeIn();
+	$("#tela").html('');
+	
+	var files = e.target.files;
+	var f = files[0];
+        var reader = new FileReader();
+	reader.onload = (function () {
+	    return function (e) {
+		window.loadImage(
+		    e.target.result,
+		    function (img) {
+			$(img).appendTo("#tela").attr({
+			    id: 'photo',
+			    width: img.width,
+			    height: img.height,
+			});
+			$('<input id="arq" data-wi="'+img.width+'" data-he="'+img.height+'" type="hidden" name="foto" value="'+img.src+'">').appendTo("#tela");
+
+			lar = img.width / 2.5;
+			alt = img.height / 2.5;
+
+			$("#photo").attr({
+			    width: lar,
+			    height: alt,
+			});
+		    },
+		    {
+			minWidth: 640,
+			minHeight: 570,
+		    }
+		);
+	    };
+	})(f);
+	reader.readAsDataURL(f);
+    });
+    
     
     $(".countGerencia").click(function(){
 	var cod = $(this).data('count');
@@ -160,7 +200,7 @@ $(document).ready(function(){
     });
     
     $(document).on('click','#uploadpc', function(){
-	$("#BrowserHidden").click();
+	$("#file-up").click();
     });
     
     $("#controle_capa").click(function(){
@@ -489,7 +529,7 @@ $(document).ready(function(){
     
     $(document).on('click','#ajuste_automatico', function(){
 	var opt = $("#optimg");
-	var img = $("#photo");
+	var img = $("input[name='foto']");
 	var h = '';
 	var w = '';
 	var eixo = '';
@@ -497,8 +537,8 @@ $(document).ready(function(){
 	if(opt.val() === 's'){
 	    opt.val('n');
 	    $("#photo").attr({
-		height: '',
-		width: '',
+		height: img.data('he') / 2.5,
+		width: img.data('wi') / 2.5,
 	    }).css({
 		top: '0px',
 		left: '0px',
@@ -545,6 +585,8 @@ $(document).ready(function(){
 	});
 	
 	var dis = $(this).data("disabled");
+	$("#baseDock").fadeIn();
+	$("#ajuste_automatico").fadeOut();
 	
 	$("#codigo_tip").val($(this).data('codigo'));
 	$("input[name='titulo']").val($(this).data("titulo"));
@@ -599,7 +641,7 @@ $(document).ready(function(){
 	return false;
     });
     
-    $('#BrowserHidden').on('change',function(){
+    /*$('#BrowserHidden').on('change',function(){
 	var valor = $(this).val();
 	$("#FileField").val(valor);
 	$('#formtip').ajaxForm({
@@ -611,7 +653,7 @@ $(document).ready(function(){
             },
 	    success:   processJson
         }).submit();
-     });
+     });*/
      
      $('#BrowserHiddenc').on('change',function(){
 	var valor = $(this).val();

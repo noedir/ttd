@@ -37,6 +37,7 @@ class Mobile extends CI_Controller {
             }else{
                 $query = $this->mdb->set_usuario($input);
 		$query = $this->mdb->get_loginuser($ver)->result_array();
+		$this->mdb->set_cleartokenpush($input);
 		$this->mdb->set_tokenpush($tk);
 		foreach($query as $v){
 		    $user['login'] = $v;
@@ -105,6 +106,7 @@ class Mobile extends CI_Controller {
 	if($input['email'] != ""){
 	    $query = $this->mdb->get_loginuser($input)->result_array();
 	    if(count($query) > 0){
+		$this->mdb->set_cleartokenpush($input);
 		$this->mdb->set_tokenpush($input);
 		foreach($query as $v){
 		    $user['login'] = $v;

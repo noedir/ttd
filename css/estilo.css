@@ -412,6 +412,12 @@ a.black:hover{
     width: 315px;
     height: 656px;
 }
+.tip-box #canvas{
+    position: absolute;
+    top: 142px;
+    left: 30px;
+    z-index: -1;
+}
 .tip-box .menu_foto{
     position:relative;
     float: left;

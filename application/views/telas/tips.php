@@ -1,9 +1,10 @@
 <div id="container">
     <div id="tip-container">
 	<div class="tip-box iphone">
+	    <canvas id="canvas" width="640" height="570"></canvas>
 	    <div id="tela_fundo"></div>
 	    <div class="tela">
-		<div id="tela"><img id="get_up" width="256" src="<?php echo base_url(); ?>tips/no_image.jpg"></div>
+		<div id="tela"></div>
 		<p id="num_tip"></p>
 		<p id="tit_tip"></p>
 		<p id="sub_tip"></p>
@@ -28,6 +29,7 @@
 		
 		<?php
 		// DESATIVADO TEMPORARIAMENTE
+		//<img id="get_up" width="256" src="<?php echo base_url(); tips/no_image.jpg">
 		/*if(count($oauth) > 0 && $oauth[0]['oa_facebook_access_token'] != ''){
 		    echo '<div class="facebook" id="pega_facebook"><img src="'.base_url().'img/facebook.png"></div>';
 		}else{
@@ -43,13 +45,13 @@
 		?>
 		<div id="FileUpload">
 		    <form id="formtip" action="<?php echo base_url(); ?>web/img_upload" method="post" enctype="multipart/form-data">
-			<input type="file" name="imagem" style="width: 0px;" id="BrowserHidden">
+			<input type="file" name="imagem" style="width: 0px;" id="file-up">
 			<div id="BrowserVisible">
 			    <input type="text" id="FileField" style="width: 50px;" name="foto">
 			</div>
 		    </form>
 		</div>
-		<div id="telinha"></div>
+		
 	    </div>
 	</div>
 	<div class="tip-box" style="width: 330px;">
@@ -80,6 +82,7 @@
 			<li id="salvar">Finalizar</li>
 		    </ul>
 		</div>
+	    <div id="telinha"></div>
 	    <div class="capa" title="Clique para escolher uma capa para esse Count">
 		<form id="formcapa" action="<?php echo base_url(); ?>web/img_upload/capa" method="post" enctype="multipart/form-data">
 		    <input type="hidden" name="optimgc" id="optimgc" value="n">
