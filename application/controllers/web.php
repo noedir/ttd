@@ -652,16 +652,28 @@ class Web extends CI_Controller {
 	$this->ver_conta();
 	$input = elements(array('id_tip','codigo','img','titulo','sub','mensagem','central','largura','altura','posicao'), $this->input->post());
 	
+	$arq = $input['img'];
+	
+	$img = str_replace('data:image/jpeg;base64,', '', $arq);
+	$img2 = str_replace(' ', '+', $img);
+	$data = base64_decode($img2);
+
+	$file = date("YmdHis")."_tip.jpg";
+
+	file_put_contents("./tips/".$file, $data);
+	
+	$input['img'] = $file;
+	
 	$crd = explode('/',$input['posicao']);
 	$posih = ($input['altura']);
 	$posiw = ($input['largura']);
-	
+	/*
 	if(file_exists('./tips/tmp_'.$input['img'])){
 	    // FAZ O RESIZE DA IMAGEM
 	    if($input['central'] === 's'){
 		$config = array(
 		    'image_library' => 'gd2',
-		    'source_image' => './tips/tmp_'.$input['img'],
+		    'source_image' => './tips/'.$input['img'],
 		    'width' => $posiw,
 		    'height' => $posih,
 		    'quality' => '75',
@@ -671,7 +683,7 @@ class Web extends CI_Controller {
 		$this->image_lib->resize();
 		$this->image_lib->clear();
 
-		$img = getimagesize('./tips/tmp_'.$input['img']);
+		$img = getimagesize('./tips/'.$input['img']);
 		
 		$tmpw = ($img[0] * 2.5);
 		$tmph = ($img[1] * 2.5);
@@ -759,6 +771,19 @@ class Web extends CI_Controller {
 	    $resp['msg'] = '';
 	    $resp['erro'] = 'ok';
 	}
+	 * 
+	 */
+	$config['image_library'] = 'gd2';
+	$config['source_image'] = './tips/'.$input['img'];
+	$config['new_image'] = './tips/thumb_'.$input['img'];
+	$config['maintain_ratio'] = FALSE;
+	$config['width'] = 200;
+	$config['height'] = 200;
+	$this->load->library('image_lib',$config);
+	$this->image_lib->resize();
+	
+	$resp['msg'] = '';
+	$resp['erro'] = 'ok';
 	
 	$this->wdb->set_tip($input);
 	

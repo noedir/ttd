@@ -134,6 +134,9 @@ $(document).ready(function(){
 			$("#photo").attr({
 			    width: lar,
 			    height: alt,
+			}).css({
+			    top: '0px',
+			    left: '0px',
 			});
 		    },
 		    {
@@ -538,7 +541,7 @@ $(document).ready(function(){
 	    opt.val('n');
 	    $("#photo").attr({
 		height: img.data('he') / 2.5,
-		width: img.data('wi') / 2.5,
+		width: img.data('wi') / 2.5
 	    }).css({
 		top: '0px',
 		left: '0px',
@@ -655,7 +658,7 @@ $(document).ready(function(){
         }).submit();
      });*/
      
-     $('#BrowserHiddenc').on('change',function(){
+    $('#BrowserHiddenc').on('change',function(){
 	var valor = $(this).val();
 	$("#FileFieldc").val(valor);
 	$('#formcapa').ajaxForm({
@@ -688,11 +691,11 @@ $(document).ready(function(){
 	 }
      });
      
-     $("#addtip").click(function(){
-	 var imagem = $("input[name='foto']").val();
+    $("#addtip").click(function(){
 	 var titulo = $("input[name='titulo']").val();
 	 var sub = $("input[name='subtitulo']").val();
 	 var mensagem = $("#men").val();
+	 var central = $("#optimg").val(); // imagem centralizada;
 	 $("#mudou").val('n');
 	 
 	 if(imagem === ''){
@@ -724,30 +727,67 @@ $(document).ready(function(){
 	     return false;
 	 }
 	 
-	 var codigo = $("input[name='count']").val();
-	 var id_tip = $("#codigo_tip").val();
-	 var central = $("#optimg").val();
-	 var posicao = updateCoords();
+	 var canvas = document.getElementById('canvas');
+	 var context = canvas.getContext('2d');
+	 var imagem = $("input[name='foto']").val();
 	 
-	 var larimg = $("#photo").width();
-	 var altimg = $("#photo").height();
+	 var imageObj = new Image();
 	 
-	 var dados = 'id_tip='+id_tip+'&codigo='+codigo+'&img='+imagem+'&central='+central+'&titulo='+titulo+'&sub='+sub+'&mensagem='+mensagem+'&largura='+larimg+'&altura='+altimg+'&posicao='+posicao;
+	 imageObj.src = imagem;
 	 
-	 $.ajax({
-	     type: 'post',
-	     dataType: 'json',
-	     data: dados,
-	     async: false,
-	     url: ur+'web/grava_tip',
-	     success: function(resp){
-		 $(".menu_foto").fadeOut();
-		 if(resp.erro === 'ok'){
-		    redirect('');
-		 }
-	     }
-	 });
-     });
+	imageObj.onload = function() {
+	    var codigo = $("input[name='count']").val(); 
+	    var id_tip = $("#codigo_tip").val();
+	    var posicao = updateCoords(); // pega LEFT x TOP
+	    var n = posicao.split('/'); // separa as posições LEFT x TOP
+	    var sx = n[0].replace("px",""); // retira o PX deixando somente o número negativo do LEFT
+	    var sy = n[1].replace("px",""); // retira o PX deixando somente o número negativo do TOP
+	    sx = sx * -1; // transforma o negativo em positivo do LEFT
+	    sy = sy * -1; // transforma o negativo em positivo do TOP
+	     
+	    var sourceX = sx * 2.5; // imagem original X
+	    var sourceY = sy * 2.5; // imagem original Y
+	     
+	    var w = 640;
+	    var h = 570;
+	     
+	    if(central === 's'){
+		w = $("#photo").width() * 2.5;
+		h = $("#photo").height() * 2.5;
+		
+		if(sx === 0){
+		    // RESIZE e CROP
+		    context.drawImage(imageObj, 0, 0, w, h, 0, 0, w, h);
+		}else if(sy === 0){
+		    // RESIZE e CROP
+		    context.drawImage(imageObj, sourceX, sourceY, w, h, 0, 0, w, h);
+		}
+	    }else{
+		// SOMENTE CROP
+		context.drawImage(imageObj, sourceX, sourceY, w, h, 0, 0, 640, 570);
+	    }
+	    var i = canvas.toDataURL('image/jpeg');
+	    var img_pronta = i;
+	     
+	    var dados = 'id_tip='+id_tip+'&codigo='+codigo+'&img='+img_pronta+'&titulo='+titulo+'&sub='+sub+'&mensagem='+mensagem;
+	     
+	    if(confirm("Deseja salvar?")){
+		$.ajax({
+		    type: 'post',
+		    dataType: 'json',
+		    data: dados,
+		    async: false,
+		    url: ur+'web/grava_tip',
+		    success: function(resp){
+		        $(".menu_foto").fadeOut();
+		        if(resp.erro === 'ok'){
+			   redirect('');
+		        }
+		    }
+		});
+	    }
+	};
+    });
      
      $("#tit").keyup(function(){
 	 var valor = $(this).val();
