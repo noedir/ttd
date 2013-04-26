@@ -476,8 +476,8 @@ class Web extends CI_Controller {
 	$config['allowed_types'] = 'jpg|jpeg|png';
 	$config['file_name'] = md5(date("YmdHis"));
 	if($path === 'tips'){
-	    $config['min_width'] = 512;
-	    $config['min_height'] = 456;
+	    $config['min_width'] = 640;
+	    $config['min_height'] = 570;
 	}else if($path === 'capa'){
 	    $config['min_width'] = 640;
 	    $config['min_height'] = 200;

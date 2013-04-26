@@ -256,41 +256,46 @@ $(document).ready(function(){
 	if($("#ajuste_automatico").is(":visible")){
 	    $("#baseDock").fadeToggle();
 	}
-	    $("#photo").draggable({
-		cursor: "move",
-		scroll: false,
-		snap: '#tela',
-		snapTolerance: 5,
-		stop: function (event,ui){
-		    var limitx = $(this).width();
-		    var limity = $(this).height();
-		    
-		    if(ui.position.top > 0){
-			$(this).animate({
-			    top: '0px',
-			},200);
-		    }
-		    if((limity + ui.position.top) < 228){
-			var alt = (limity - 228);
-			$(this).animate({
-			    top: '-'+alt+'px',
-			},200);
-		    }
-		    
-		    if(ui.position.left > 0){
-			$(this).animate({
-			    left: '0px',
-			},200);
-		    }
-		    if((limitx + ui.position.left) < 256){
-			var lar = (limitx - 256);
-			$(this).animate({
-			    left: '-'+lar+'px',
-			},200);
-		    }
+	
+	$("#photo").draggable({
+	    cursor: "move",
+	    scroll: false,
+	    snap: '#tela',
+	    snapTolerance: 5,
+	    start: function(){
+		if($("#optimg").val() === 's'){
+		    $(this).draggable( "destroy" );
 		}
-	    });
-	//}
+	    },
+	    stop: function (event,ui){
+		var limitx = $(this).width();
+		var limity = $(this).height();
+
+		if(ui.position.top > 0){
+		    $(this).animate({
+			top: '0px',
+		    },200);
+		}
+		if((limity + ui.position.top) < 228){
+		    var alt = (limity - 228);
+		    $(this).animate({
+			top: '-'+alt+'px',
+		    },200);
+		}
+
+		if(ui.position.left > 0){
+		    $(this).animate({
+			left: '0px',
+		    },200);
+		}
+		if((limitx + ui.position.left) < 256){
+		    var lar = (limitx - 256);
+		    $(this).animate({
+			left: '-'+lar+'px',
+		    },200);
+		}
+	    }
+	});
     });
     
     $(".friends").tagsInput({
@@ -535,7 +540,6 @@ $(document).ready(function(){
 	var img = $("input[name='foto']");
 	var h = '';
 	var w = '';
-	var eixo = '';
 	
 	if(opt.val() === 's'){
 	    opt.val('n');
@@ -545,19 +549,15 @@ $(document).ready(function(){
 	    }).css({
 		top: '0px',
 		left: '0px',
-	    }).draggable({
-		axis: ''
 	    });
 	}else{
 	    opt.val('s');
 	    if(img.data('wi') > img.data('he')){
 		h = '228';
 		w = '';
-		eixo = 'x';
 	    }else{
 		h = '';
 		w = '256';
-		eixo = 'y';
 	    }
 	    $("#photo").attr({
 		height: h,
@@ -565,8 +565,6 @@ $(document).ready(function(){
 	    }).css({
 		top: '0px',
 		left: '0px',
-	    }).draggable({
-		axis: eixo
 	    });
 	}
     });
@@ -692,6 +690,7 @@ $(document).ready(function(){
      });
      
     $("#addtip").click(function(){
+	$("#loader").fadeIn();
 	 var titulo = $("input[name='titulo']").val();
 	 var sub = $("input[name='subtitulo']").val();
 	 var mensagem = $("#men").val();
@@ -700,6 +699,7 @@ $(document).ready(function(){
 	 
 	 if(imagem === ''){
 	     alert("Sua Tip precisa de uma imagem");
+	     $("#loader").fadeOut();
 	     return false;
 	 }
 	 
@@ -708,6 +708,7 @@ $(document).ready(function(){
 	     $("input[name='titulo']").focus().css({
 		 border: '1px solid #900',
 	     });
+	     $("#loader").fadeOut();
 	     return false;
 	 }
 	 
@@ -716,6 +717,7 @@ $(document).ready(function(){
 	     $("input[name='subtitulo']").focus().css({
 		 border: '1px solid #900',
 	     });
+	     $("#loader").fadeOut();
 	     return false;
 	 }
 	 
@@ -724,6 +726,7 @@ $(document).ready(function(){
 	     $("#men").focus().css({
 		 border: '1px solid #900',
 	     });
+	     $("#loader").fadeOut();
 	     return false;
 	 }
 	 
@@ -754,14 +757,7 @@ $(document).ready(function(){
 	    if(central === 's'){
 		w = $("#photo").width() * 2.5;
 		h = $("#photo").height() * 2.5;
-		
-		if(sx === 0){
-		    // RESIZE e CROP
-		    context.drawImage(imageObj, 0, 0, w, h, 0, 0, w, h);
-		}else if(sy === 0){
-		    // RESIZE e CROP
-		    context.drawImage(imageObj, sourceX, sourceY, w, h, 0, 0, w, h);
-		}
+		context.drawImage(imageObj, 0, 0, w, h);
 	    }else{
 		// SOMENTE CROP
 		context.drawImage(imageObj, sourceX, sourceY, w, h, 0, 0, 640, 570);
@@ -771,7 +767,7 @@ $(document).ready(function(){
 	     
 	    var dados = 'id_tip='+id_tip+'&codigo='+codigo+'&img='+img_pronta+'&titulo='+titulo+'&sub='+sub+'&mensagem='+mensagem;
 	     
-	    if(confirm("Deseja salvar?")){
+	    //if(confirm("Deseja salvar?")){
 		$.ajax({
 		    type: 'post',
 		    dataType: 'json',
@@ -785,7 +781,7 @@ $(document).ready(function(){
 		        }
 		    }
 		});
-	    }
+	   // }
 	};
     });
      

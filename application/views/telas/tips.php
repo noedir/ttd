@@ -68,6 +68,7 @@
 		<input type="hidden" value="n" id="mudou">
 		<button id="addtip" type="submit" class="esconde">Salvar</button>
 		<button id="cantip" type="cancel" class="esconde">Cancelar</button>
+		<img src="<?php echo base_url(); ?>img/ajax-loader.gif" id="loader">
 	    </p>
 	</div>
 	<div class="tip-maior">

@@ -145,6 +145,7 @@ a.black:hover{
 .thinbold{
     font-family: 'ColaborateBoldRegular';
 }
+
 .pag .pfti{
     position: relative;
     float: left;
@@ -411,6 +412,10 @@ a.black:hover{
     margin: 0px 10px;
     width: 315px;
     height: 656px;
+}
+.tip-box #loader{
+    float: right;
+    display: none;
 }
 .tip-box #canvas{
     position: absolute;
