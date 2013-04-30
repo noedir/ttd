@@ -32,7 +32,7 @@ class Web extends CI_Controller {
 	}
     }
     private function ver_conta(){
-	if($this->session->userdata('us_codigo') === ''){
+	if($this->session->userdata('us_codigo') == ''){
 	    $this->session->sess_destroy();
 	    redirect(index_page());
 	}
@@ -357,6 +357,15 @@ class Web extends CI_Controller {
 	$this->load->view('up_view',$dados);
     }
     
+    public function encodeimg(){
+	$get = file_get_contents($this->input->post('img'));
+	$img = base64_encode($get);
+	$type = getimagesize($this->input->post('img'));
+	$resp['img64'] = 'data:'.$type['mime'].';base64,'.$img;
+	
+	echo json_encode($resp);
+    }
+    
     public function img_instagram(){
 	$this->ver_conta();
 	$loca = $this->uri->segment(3);
@@ -468,8 +477,6 @@ class Web extends CI_Controller {
 	$path = $this->uri->segment(3);
 	if($path == ''){
 	    $path = 'tips';
-	}else{
-	    $path = 'capa';
 	}
 	$this->load->helper('file');
 	$config['upload_path']   = FCPATH.$path.'/';
@@ -544,9 +551,21 @@ class Web extends CI_Controller {
     
     public function grava_capa(){
 	$this->ver_conta();
-	$input = elements(array('codigo','img','central','largura','altura','posicao'), $this->input->post());
-		
-	$crd = explode('/',$input['posicao']);
+	$input = elements(array('codigo','img'), $this->input->post());
+	
+	$arq = $input['img'];
+	
+	$img = str_replace('data:image/jpeg;base64,', '', $arq);
+	$img2 = str_replace(' ', '+', $img);
+	$data = base64_decode($img2);
+
+	$file = date("YmdHis")."_tip.jpg";
+
+	file_put_contents("./capa/".$file, $data);
+	
+	$input['img'] = $file;
+	
+	/*$crd = explode('/',$input['posicao']);
 	$posih = ($input['altura']);
 	$posiw = ($input['largura']);
 	
@@ -627,23 +646,16 @@ class Web extends CI_Controller {
 		$this->load->library('image_lib',$config);
 		$this->image_lib->crop();
 		$this->image_lib->clear();
-	    }
+	    }*/
 	    
 	    $resp['msg'] = base_url().'capa/'.$input['img'];
 	    $resp['erro'] = 'ok';
 
-	    if(file_exists('./capa/tmp_'.$input['img'])){
-		unlink('./capa/tmp_'.$input['img']);
-	    }
-
-	    if($this->image_lib->display_errors()){
-		$resp['msg'] = $this->image_lib->display_errors();
-		$resp['erro'] = 'sim';
-	    }
-	}else{
-	    $resp['msg'] = 'Arquivo não encontrado';
-	    $resp['erro'] = 'sim';
-	}
+	    $ins = array(
+		'img' => $input['img'],
+		'codigo' => $input['codigo']
+	    );
+	    $this->wdb->up_count($ins);
 	
 	echo json_encode($resp);
     }

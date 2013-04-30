@@ -182,9 +182,11 @@ class Web_model extends CI_Model {
 		    'ti_titulo'	    => $dados['titulo'],
 		    'ti_subtitulo'  => $dados['sub'],
 		    'ti_descricao'  => $dados['mensagem'],
-		    'ti_imagem'	    => $dados['img'],
 		    'ti_imgcentral' => $dados['central'],
 		);
+		if(isset($dados['img']) && $dados['img'] != ''){
+		    $ins['ti_imagem'] = $dados['img'];
+		}
 		$this->db->where(array('ti_codigo'=>$dados['id_tip']));
 		$this->db->update('tbl_tips',$ins);
 	    }else{

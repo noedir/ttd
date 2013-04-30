@@ -421,6 +421,14 @@ a.black:hover{
     position: absolute;
     top: 142px;
     left: 30px;
+    visibility: hidden;
+    z-index: -1;
+}
+.capa #canvascapa{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    visibility: hidden;
     z-index: -1;
 }
 .tip-box .menu_foto{

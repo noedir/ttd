@@ -86,24 +86,27 @@ class Auth extends CI_Controller{
     }
     
     public function fotos_instagram(){
-	$local = $this->uri->segment(3);
+	$local = $this->input->post('local');
 	
 	$query = $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result();
 	$c = 0;
 	$next = '';
 	$photos = '';
+	
+	
 	while($c <= 10){
 	    if($next == ''){
 		$url = 'https://api.instagram.com/v1/users/'.$query[0]->oa_instagram_id.'/media/recent/?access_token='.$query[0]->oa_instagram_access_token.'&count=32';
 	    }else{
 		$url .= '&max_id='.$next;
 	    }
-	
+
 	    $get = file_get_contents($url);
 	    $dados = json_decode($get);
-	    
+
 	    $photos .= $this->list_photo($dados->data,$local);
-	    
+	    $data[] = $this->list_photo($dados->data,$local);
+
 	    if(isset(json_decode($get)->pagination->next_max_id)){
 		$next = json_decode($get)->pagination->next_max_id;
 	    }else{
@@ -111,6 +114,7 @@ class Auth extends CI_Controller{
 	    }
 	    $c++;
 	}
+	
 	
 	echo $photos;
     }

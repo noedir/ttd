@@ -105,7 +105,51 @@ function convida_face(){
 }
 
 $(document).ready(function(){
-    var ur = $('#ur').data('url');    
+    var ur = $('#ur').data('url');
+    
+    $("#file-capa").on('change', function(e){
+	var lar;
+	var alt;
+	
+	$("#opcoes_capa").fadeIn();
+	$("#telinha").html('');
+	
+	var files = e.target.files;
+	var f = files[0];
+        var reader = new FileReader();
+	reader.onload = (function () {
+	    return function (e) {
+		window.loadImage(
+		    e.target.result,
+		    function (img) {
+			$(img).appendTo("#telinha").attr({
+			    id: 'photoc',
+			    width: img.width,
+			    height: img.height
+			});
+			$('<input id="arqc" data-wi="'+img.width+'" data-he="'+img.height+'" type="hidden" name="fotoc" value="'+img.src+'">').appendTo("#telinha");
+			
+			lar = img.width / 2;
+			alt = img.height / 2;
+
+			$("#photoc").attr({
+			    width: lar,
+			    height: alt
+			}).css({
+			    top: '0px',
+			    left: '0px'
+			});
+		    },
+		    {
+			minWidth: 640,
+			minHeight: 200,
+		    }
+		);
+	    };
+	})(f);
+	reader.readAsDataURL(f);
+    });
+    
     $("#file-up").on('change', function(e){
 	var lar;
 	var alt;
@@ -127,10 +171,10 @@ $(document).ready(function(){
 			    height: img.height,
 			});
 			$('<input id="arq" data-wi="'+img.width+'" data-he="'+img.height+'" type="hidden" name="foto" value="'+img.src+'">').appendTo("#tela");
-
+			
 			lar = img.width / 2.5;
 			alt = img.height / 2.5;
-
+			
 			$("#photo").attr({
 			    width: lar,
 			    height: alt,
@@ -141,7 +185,7 @@ $(document).ready(function(){
 		    },
 		    {
 			minWidth: 640,
-			minHeight: 570,
+			minHeight: 570
 		    }
 		);
 	    };
@@ -211,7 +255,7 @@ $(document).ready(function(){
     });
     
     $(document).on('click','#computador', function(){
-	$("#BrowserHiddenc").click();
+	$("#file-capa").click();
     });
     
     $(document).on('mouseover','#telinha', function(){
@@ -262,11 +306,11 @@ $(document).ready(function(){
 	    scroll: false,
 	    snap: '#tela',
 	    snapTolerance: 5,
-	    start: function(){
-		if($("#optimg").val() === 's'){
-		    $(this).draggable( "destroy" );
-		}
-	    },
+	    //start: function(){
+		//if($("#optimg").val() === 's'){
+		//    $(this).draggable( "destroy" );
+		//}
+	    //},
 	    stop: function (event,ui){
 		var limitx = $(this).width();
 		var limity = $(this).height();
@@ -357,6 +401,7 @@ $(document).ready(function(){
 	$.ajax({
 	    type: 'post',
 	    dataType: 'html',
+	    data: 'local=tips',
 	    url: ur+'auth/fotos_instagram/tips',
 	    beforeSend: function(){
 		$(".loader").fadeIn();
@@ -377,6 +422,7 @@ $(document).ready(function(){
 	$.ajax({
 	    type: 'post',
 	    dataType: 'html',
+	    data: 'local=capa',
 	    url: ur+'auth/fotos_instagram/capa',
 	    beforeSend: function(){
 		$(".loader").fadeIn();
@@ -397,26 +443,26 @@ $(document).ready(function(){
     });
     
     $(document).on('click','.ftitips',function(){
-	var img = $(this).data('alta');
-	var local = $(this).data('local');
+	var image = $(this).data('alta');
 	
-	$.ajax({
-	   type: 'post',
-	   dataType: 'json',
-	   data: 'imgi='+img+'&local='+local,
-	   url: ur+'web/img_instagram/tips',
-	   success: function(resp){
-	       if(resp.erro === 'sim'){
-		   alert('Aviso: A imagem precisa ter no mínimo 640 x 570 pixels.')
-	       }else{
-		   $("#ajuste_automatico").fadeIn();
-		    $("#pagina").fadeOut();
-		    $(".pag").fadeOut().html('');
-		    $("#fundo_box").fadeOut();
-		   $("#tela").html('').html('<img id="photo" data-he="'+resp.height+'" data-wi="'+resp.width+'" src="'+ur+'/tips/tmp_'+resp.url+'">'+'<input type="hidden" name="foto" value="'+resp.url+'">');
-	       }
-	   }
-	});
+	$.post(ur+'web/encodeimg', {img: image}, function(resp){
+	    image = resp.img64;
+	    $("#tela").html('');
+	    var html = '<img src="'+image+'">';
+	    $(html).appendTo("#tela").attr({
+		id: 'photo',
+		width: 256,
+		height: 256
+	    }).css({
+		top: '0px',
+		left: '0px',
+	    },"json");
+	    $('<input id="arq" data-wi="640" data-he="640" type="hidden" name="foto" value="'+image+'">').appendTo("#tela");
+	}, "json");
+	$("#ajuste_automatico").fadeIn();
+	$("#pagina").fadeOut();
+	$(".pag").fadeOut().html('');
+	$("#fundo_box").fadeOut();
     });
     
     $("#triggerSelect").on({
@@ -426,26 +472,20 @@ $(document).ready(function(){
     });
     
     $(document).on('click','.fticapa',function(){
-	var img = $(this).data('alta');
-	var local = $(this).data('local');
-	var cod_count = $("#cod_count").val();
+	var image = $(this).data('alta');
+	$.post(ur+'web/encodeimg', {img: image}, function(resp){
+	    image = resp.img64;
+	    $("#telinha").html('');
+	    var html = '<img id="photoc" height="" width="320" data-he="640" data-wi="640" src="'+image+'"><input type="hidden" name="fotoc" value="'+image+'">';
+	    $(html).appendTo(".capa #telinha").css({
+		top: '0px',
+		left: '0px'
+	    });
+	}, "json");
 	
-	$.ajax({
-	   type: 'post',
-	   dataType: 'json',
-	   data: 'imgi='+img+'&local='+local+'&idcount='+cod_count,
-	   url: ur+'web/img_instagram/capa',
-	   success: function(resp){
-	       if(resp.erro === 'sim'){
-		   alert('Aviso: A imagem precisa ter no mínimo 640 x 200 pixels.')
-	       }else{
-		   $("#pagina").fadeOut();
-		   $(".pag").fadeOut().html('');
-		   $("#fundo_box").fadeOut();
-		   $(".capa #telinha").html('').html('<img id="photoc" data-he="'+resp.height+'" data-wi="'+resp.width+'" src="'+ur+'/capa/tmp_'+resp.url+'">'+'<input type="hidden" name="fotoc" value="'+resp.url+'">');
-	       }
-	   }
-	});
+	$("#pagina").fadeOut();
+	$(".pag").fadeOut().html('');
+	$("#fundo_box").fadeOut();
     });
     
     $("#ok_data").click(function(){
@@ -462,7 +502,99 @@ $(document).ready(function(){
 	minDate: '+1',
     });
     
-    $(document).on('click','#salvar', function(){
+    $(document).on('click', '#salvar', function(){
+	$("#loader").fadeIn();
+	var html;
+	var central = $("#optimgc").val(); // imagem centralizada;
+	
+	if(imagem === ''){
+	    alert("Sua Capa precisa de uma imagem");
+	    $("#loader").fadeOut();
+	    return false;
+	}
+	 
+	var imagem = $("input[name='fotoc']").val();
+	var imageObj = new Image();
+	 
+	imageObj.src = imagem;
+	 
+	imageObj.onload = function() {
+	    var canvas = document.getElementById('canvascapa');
+	    var context = canvas.getContext('2d');
+	    
+	    var codigo = $("input[name='count']").val();
+	    var posicao = coordsCapa(); // pega LEFT x TOP
+	    var n = posicao.split('/'); // separa as posições LEFT x TOP
+	    var sx = n[0].replace("px",""); // retira o PX deixando somente o número negativo do LEFT
+	    var sy = n[1].replace("px",""); // retira o PX deixando somente o número negativo do TOP
+	    sx = sx * -1; // transforma o negativo em positivo do LEFT
+	    sy = sy * -1; // transforma o negativo em positivo do TOP
+	    
+	    var sourceX = sx * 2; // imagem original X
+	    var sourceY = sy * 2; // imagem original Y
+	     
+	    var w = 640;
+	    var h = 200;
+	     
+	    if(central === 's'){
+		w = $("#photoc").width() * 2;
+		h = $("#photoc").height() * 2;
+		
+		sourceX = (sx / 2) - sourceX;
+		sourceY =  (sy / 2) - sourceY;
+		
+		context.drawImage(imageObj, sourceX, sourceY, w, h);
+	    }else{
+		// SOMENTE CROP
+		if(imageObj.width < 640 || imageObj.height < 200){
+		    w = $("#photoc").width() * 2;
+		    h = $("#photoc").height() * 2;
+
+		    sourceX = (sx / 2) - sourceX;
+		    sourceY =  (sy / 2) - sourceY;
+
+		    context.drawImage(imageObj, sourceX, sourceY, w, h);
+		}else{
+		    context.drawImage(imageObj, sourceX, sourceY, w, h, 0, 0, 640, 200);
+		}
+	    }
+	     
+	    /*if(central === 's'){
+		w = $("#photoc").width() * 2;
+		h = $("#photoc").height() * 2;
+		
+		sourceX = (sx / 2) - sourceX;
+		sourceY =  (sy / 2) - sourceY;
+		
+		context.drawImage(imageObj, sourceX, sourceY, w, h);
+	    }else{
+		// SOMENTE CROP
+		context.drawImage(imageObj, sourceX, sourceY, w, h, 0, 0, 640, 200);
+	    }*/
+	    var img_pronta = canvas.toDataURL("image/jpeg");
+	    
+	    var dados = 'codigo='+codigo+'&img='+img_pronta;
+	     
+	    //if(confirm("Deseja salvar?")){
+		$.ajax({
+		    type: 'post',
+		    dataType: 'json',
+		    data: dados,
+		    async: false,
+		    url: ur+'web/grava_capa',
+		    success: function(resp){
+		        $("#opcoes_capa").fadeOut();
+			html = '<img src="'+resp.msg+'" width="320" height="100">';
+			$(".capa #telinha").html('').html(html);
+			$('#photoc').draggable( "destroy" );
+		    }
+		});
+	   // }
+	};
+    });
+    
+    
+    /*$(document).on('click','#salvar', function(){
 	var html = '';
 	var imagem = $("input[name='fotoc']").val();
 	var codigo = $("input[name='cod_count']").val();
@@ -492,19 +624,20 @@ $(document).ready(function(){
 		}
 	    }
 	});
-    });
+    });*/
     
     $(document).on('click','#redimensionar', function(){
 	var opt = $("#optimgc");
 	var img = $("#photoc");
+	var tam = $("#arqc");
 	var h = '';
 	var w = '';
 	var eixo = '';
 	if(opt.val() === 's'){
 	    opt.val('n');
 	    img.attr({
-		height: '',
-		width: '',
+		height: tam.data('he') / 2,
+		width: tam.data('wi') / 2
 	    }).css({
 		top: '0px',
 		left: '0px',
@@ -513,13 +646,12 @@ $(document).ready(function(){
 	    });
 	}else{
 	    opt.val('s');
-	    
-	    if(img.data('he') > 100){
-		h = '';
-		w = '320';
+	    if(tam.data('he') > 100){
+		h = '320';
+		w = '';
 		eixo = 'y';
 	    }else{
-		h = '';
+		h = '100';
 		w = '';
 		eixo = 'x';
 	    }
@@ -540,6 +672,7 @@ $(document).ready(function(){
 	var img = $("input[name='foto']");
 	var h = '';
 	var w = '';
+	var eixo;
 	
 	if(opt.val() === 's'){
 	    opt.val('n');
@@ -549,22 +682,28 @@ $(document).ready(function(){
 	    }).css({
 		top: '0px',
 		left: '0px',
+	    }).draggable({
+		axis: ''
 	    });
 	}else{
 	    opt.val('s');
 	    if(img.data('wi') > img.data('he')){
 		h = '228';
 		w = '';
+		eixo = 'x';
 	    }else{
 		h = '';
 		w = '256';
+		eixo = 'y';
 	    }
 	    $("#photo").attr({
 		height: h,
 		width: w,
 	    }).css({
 		top: '0px',
-		left: '0px',
+		left: '0px'
+	    }).draggable({
+		axis: eixo
 	    });
 	}
     });
@@ -578,6 +717,11 @@ $(document).ready(function(){
 	    if(!confirm("Os dados dessa tip serão perdidos. Continuar assim mesmo?")){
 		return false;
 	    }
+	}
+	
+	if (!window.File && !window.FileReader && !window.FileList && !window.Blob) {
+	    alert("Seu navegador não suporta os recursos dessa página.");
+	    return false;
 	}
 	
 	$("#mudou").val('n');
@@ -595,7 +739,7 @@ $(document).ready(function(){
 	$("textarea[name='descricao']").val($(this).data("descricao"));
 	if($(this).data("imagem") !== "no_image.jpg"){
 	    $("input[name='foto']").val($(this).data('imagem'));
-	    $("#tela").html('<img id="photo" width="256" height="228" src="'+ur+'tips/'+$(this).data('imagem')+'">').fadeIn();
+	    $("#tela").html('<img width="256" height="228" src="'+ur+'tips/'+$(this).data('imagem')+'">').fadeIn();
 	}else{
 	    $("#tela").html('<img height="228" width="256" src="'+ur+'tips/no_image.jpg">').fadeIn();
 	}
@@ -642,52 +786,29 @@ $(document).ready(function(){
 	return false;
     });
     
-    /*$('#BrowserHidden').on('change',function(){
-	var valor = $(this).val();
-	$("#FileField").val(valor);
-	$('#formtip').ajaxForm({
-	    dataType: 'json',
-	    uploadProgress: function(event, position, total, percentComplete) {
-		$(".barraup").fadeIn();
-                $('progress').attr('value',percentComplete);
-                $('#porcentagem').html(percentComplete+'%');
-            },
-	    success:   processJson
-        }).submit();
-     });*/
+    $(document).on('blur','#tit', function(){
+	if($("#tit").val() !== ''){
+	    $("#tit").css({
+		border: '1px solid #090',
+	    });
+	}
+    });
      
-    $('#BrowserHiddenc').on('change',function(){
-	var valor = $(this).val();
-	$("#FileFieldc").val(valor);
-	$('#formcapa').ajaxForm({
-	    dataType: 'json',
-	    success:   processJsonc
-        }).submit();
-     });
+    $(document).on('blur','#sub', function(){
+	if($("#sub").val() !== ''){
+	    $("#sub").css({
+		border: '1px solid #090',
+	    });
+	}
+    });
      
-     $(document).on('blur','#tit', function(){
-	 if($("#tit").val() !== ''){
-	     $("#tit").css({
-		 border: '1px solid #090',
-	     });
-	 }
-     });
-     
-     $(document).on('blur','#sub', function(){
-	 if($("#sub").val() !== ''){
-	     $("#sub").css({
-		 border: '1px solid #090',
-	     });
-	 }
-     });
-     
-     $(document).on('blur','#men', function(){
-	 if($("#men").val() !== ''){
-	     $("#men").css({
-		 border: '1px solid #090',
-	     });
-	 }
-     });
+    $(document).on('blur','#men', function(){
+	if($("#men").val() !== ''){
+	    $("#men").css({
+		border: '1px solid #090',
+	    });
+	}
+    });
      
     $("#addtip").click(function(){
 	$("#loader").fadeIn();
@@ -730,8 +851,6 @@ $(document).ready(function(){
 	     return false;
 	 }
 	 
-	 var canvas = document.getElementById('canvas');
-	 var context = canvas.getContext('2d');
 	 var imagem = $("input[name='foto']").val();
 	 
 	 var imageObj = new Image();
@@ -739,6 +858,9 @@ $(document).ready(function(){
 	 imageObj.src = imagem;
 	 
 	imageObj.onload = function() {
+	    var canvas = document.getElementById('canvas');
+	    var context = canvas.getContext('2d');
+	    
 	    var codigo = $("input[name='count']").val(); 
 	    var id_tip = $("#codigo_tip").val();
 	    var posicao = updateCoords(); // pega LEFT x TOP
@@ -753,52 +875,64 @@ $(document).ready(function(){
 	     
 	    var w = 640;
 	    var h = 570;
-	     
+	    
 	    if(central === 's'){
 		w = $("#photo").width() * 2.5;
 		h = $("#photo").height() * 2.5;
-		context.drawImage(imageObj, 0, 0, w, h);
+		
+		sourceX = (sx / 2.5) - sourceX;
+		sourceY =  (sy / 2.5) - sourceY;
+		
+		context.drawImage(imageObj, sourceX, sourceY, w, h);
 	    }else{
 		// SOMENTE CROP
-		context.drawImage(imageObj, sourceX, sourceY, w, h, 0, 0, 640, 570);
+		if(imageObj.width < 640 || imageObj.height < 570){
+		    w = $("#photo").width() * 2.5;
+		    h = $("#photo").height() * 2.5;
+
+		    sourceX = (sx / 2.5) - sourceX;
+		    sourceY =  (sy / 2.5) - sourceY;
+
+		    context.drawImage(imageObj, sourceX, sourceY, w, h);
+		}else{
+		    context.drawImage(imageObj, sourceX, sourceY, w, h, 0, 0, 640, 570);
+		}
 	    }
-	    var i = canvas.toDataURL('image/jpeg');
-	    var img_pronta = i;
+	    
+	    var img_pronta = canvas.toDataURL("image/jpeg");
 	     
 	    var dados = 'id_tip='+id_tip+'&codigo='+codigo+'&img='+img_pronta+'&titulo='+titulo+'&sub='+sub+'&mensagem='+mensagem;
 	     
-	    //if(confirm("Deseja salvar?")){
-		$.ajax({
-		    type: 'post',
-		    dataType: 'json',
-		    data: dados,
-		    async: false,
-		    url: ur+'web/grava_tip',
-		    success: function(resp){
-		        $(".menu_foto").fadeOut();
-		        if(resp.erro === 'ok'){
-			   redirect('');
-		        }
+	    $.ajax({
+		type: 'post',
+		dataType: 'json',
+		data: dados,
+		async: false,
+		url: ur+'web/grava_tip',
+		success: function(resp){
+		    $(".menu_foto").fadeOut();
+		    if(resp.erro === 'ok'){
+		       redirect('');
 		    }
-		});
-	   // }
+		}
+	    });
 	};
     });
      
-     $("#tit").keyup(function(){
-	 var valor = $(this).val();
-	 $("#tit_tip").html(valor);
-     });
+    $("#tit").keyup(function(){
+	var valor = $(this).val();
+	$("#tit_tip").html(valor);
+    });
      
-     $("#sub").keyup(function(){
-	 var valor = $(this).val();
-	 $("#sub_tip").html(valor);
-     });
+    $("#sub").keyup(function(){
+	var valor = $(this).val();
+	$("#sub_tip").html(valor);
+    });
      
-     $("#men").keyup(function(){
-	 var valor = $(this).val();
-	 $("#men_tip").html(nl2br(valor));
-     });
+    $("#men").keyup(function(){
+	var valor = $(this).val();
+	$("#men_tip").html(nl2br(valor));
+    });
     
     $(".exc").click(function(){
 	var id = $(this).data('id');

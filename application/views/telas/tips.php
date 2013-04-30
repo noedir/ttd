@@ -55,11 +55,12 @@
 	    </div>
 	</div>
 	<div class="tip-box" style="width: 330px;">
-	    <p class="esconde thin" style="margin-bottom: 5px;">Projeto: <span class="thinbold"><?php echo $count[0]->co_titulo; ?></span></p>
+	    <p class="thin" style="margin-bottom: 5px;">Projeto: <span class="thinbold"><?php echo $count[0]->co_titulo; ?></span></p>
 	    <p class="esconde" id="ntip"></p><br>
 	    <input type="hidden" name="count" value="<?php echo $count[0]->co_codigo; ?>">
 	    <input type="hidden" name="codigo_tip" id="codigo_tip">
-	    <input type="hidden" id="posicao" name="posicao" value="0/0" />
+	    <input type="hidden" id="posicao" name="posicao" value="0/0">
+	    <input type="hidden" id="suporta" value="s">
 	    <p class="esconde"><input class="campos" maxlength="16" placeholder="Título (Máximo 16 caracteres)" type="text" name="titulo" id="tit"></p><br>
 	    <p class="esconde"><input class="campos" maxlength="32" placeholder="Sub-título (Máximo 32 caracteres)" type="text" name="subtitulo" id="sub"></p><br>
 	    <p class="esconde"><textarea class="campos" maxlength="2000" placeholder="Descrição (Máximo 2000 caracteres)" wrap="hard" rows="15" cols="30" name="descricao" id="men"></textarea></p>
@@ -83,17 +84,17 @@
 			<li id="salvar">Finalizar</li>
 		    </ul>
 		</div>
-	    <div id="telinha"></div>
 	    <div class="capa" title="Clique para escolher uma capa para esse Count">
 		<form id="formcapa" action="<?php echo base_url(); ?>web/img_upload/capa" method="post" enctype="multipart/form-data">
 		    <input type="hidden" name="optimgc" id="optimgc" value="n">
 		    <div id="FileUploadc">
-			<input type="file" name="imagem" id="BrowserHiddenc">
+			<input type="file" name="imagem" id="file-capa">
 			<div id="BrowserVisiblec">
 			    <input type="text" id="FileFieldc" style="width: 0px; cursor: pointer;" name="foto">
 			    <input type="hidden" id="cod_count" name="cod_count" value="<?php echo $count[0]->co_codigo; ?>">
 			</div>
 		    </div>
+		    <canvas id="canvascapa" width="640" height="200"></canvas>
 		    <div id="telinha">
 			<?php if($count[0]->co_capa !== '' || $count[0]->co_capa != 'no_capa.png'){ ?>
 			    <img width='320' height='100' src="<?php echo base_url().'capa/'.$count[0]->co_capa; ?>">
