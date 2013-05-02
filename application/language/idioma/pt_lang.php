@@ -15,6 +15,7 @@ $lang['pt_tsenha'] = 'Senha';
 $lang['pt_pemail'] = 'Digite o seu email';
 $lang['pt_psenha'] = 'Digite a sua senha';
 $lang['pt_bentrar'] = 'Entrar';
+$lang['pt_benviar'] = 'Enviar';
 $lang['pt_errologin'] = 'Email ou senha incorretos';
 $lang['pt_tquemsomos'] = 'Quem Somos';
 $lang['pt_tcontato'] = 'Contato';

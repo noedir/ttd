@@ -22,6 +22,7 @@ $lang['pt_tsenha'] = 'Password';
 $lang['pt_pemail'] = 'Enter your email address';
 $lang['pt_psenha'] = 'Enter your password';
 $lang['pt_bentrar'] = 'Signup';
+$lang['pt_benviar'] = 'Send';
 $lang['pt_errologin'] = 'Email or password incorrect';
 $lang['pt_tquemsomos'] = 'ABOUT US';
 $lang['pt_tcontato'] = 'CONTACT';

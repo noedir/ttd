@@ -1,12 +1,12 @@
 <div id="container">
-    <h3>Convidar Amigos <small>(Eu quero mais)</small></h3>
+    <h3>Convidar Amigos <small>(<?php echo $counts[0]->co_titulo; ?>)</small></h3>
     <?php if($this->session->flashdata('total') != ''){ ?>
     <p><?php echo $this->session->flashdata('total'); ?></p>
     <?php } ?>
     <div id="tabs">
 	<ul>
-	    <li><a href="#tabs-1"><img src="<?php echo base_url(); ?>img/email_aba_invite.png"></a></li>
-	    <li><a href="#tabs-2" id="convida_face" data-volta="<?php echo $this->uri->segment(4); ?>" data-count="<?php echo $this->uri->segment(3); ?>"><img src="<?php echo base_url(); ?>img/facebook_aba_invite.png"></a></li>
+	    <li><a href="#tabs-1"><img src="<?php echo base_url(); ?>img/envelope.png"> E-mail</a></li>
+	    <li><a href="#tabs-2" id="convida_face" data-volta="<?php echo $this->uri->segment(4); ?>" data-count="<?php echo $this->uri->segment(3); ?>"><img src="<?php echo base_url(); ?>img/fa.png"> Facebook</a></li>
 	</ul>
 	
 	<div id="tabs-1">

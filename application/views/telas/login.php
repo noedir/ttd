@@ -23,17 +23,27 @@ if($sev === false){
 ?>
 <div id="container">
     <form method="post" id="form_login" action="<?php echo base_url().'web/login'?>">
-    <div class="baseNovoCount">
-	<?php
-	if($erro != ''){
-	    echo $erro;
-	}
-	?>
-	<div class="formNovoCount">
-	    <p><label><?echo $this->lang->line('pt_temail')?>: <input type="text" size="16" name="email" placeholder="<?php echo $this->lang->line('pt_pemail'); ?>" autofocus="autofocus" value="<?php echo set_value('email');?>"> <?php echo $ave; ?></label></p>
+	<div class="baseNovoCount">
+	    <h3>Faça seu Login</h3>
+	    <?php
+	    if($erro != ''){
+		echo $erro;
+	    }
+	    ?>
+	    <div class="formNovoCount">
+		<p><input type="text" size="16" name="email" placeholder="<?php echo $this->lang->line('pt_pemail'); ?>" autofocus="autofocus" value="<?php echo set_value('email');?>"> <?php echo $ave; ?></p>
+	    </div>
+	    <div class="formNovoCount">
+		<p><input type="password" size="16" name="senha" placeholder="<?php echo $this->lang->line('pt_psenha'); ?>" value="<?php echo set_value('senha'); ?>"> <?php echo $avs; ?></p>
+	    </div>
+	    <div class="formNovoCount">
+		<button type="submit"><?php echo $this->lang->line('pt_bentrar'); ?></button>
+	    </div>
+	    <ul id="esqueceu">
+		<li><?php echo anchor('web/esqueceu','Esqueceu a Senha?','class="black"'); ?></li>
+		<li>|</li>
+		<li><?php echo anchor('web/criar_projeto','Faça seu Cadastro','class="black"'); ?></li>
+	    </ul>
 	</div>
-	    <p><label><?php echo $this->lang->line('pt_tsenha'); ?>: <input type="password" size="16" name="senha" placeholder="<?php echo $this->lang->line('pt_psenha'); ?>" value="<?php echo set_value('senha'); ?>"> <?php echo $avs; ?></label></p>
-	    <button type="submit"><?php echo $this->lang->line('pt_bentrar'); ?></button>
-	</form>
-    </div>
+    </form>
 </div>

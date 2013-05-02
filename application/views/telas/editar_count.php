@@ -42,7 +42,7 @@ if(form_error('nomeunico')){
     <?php } ?>
     <form id="formcad" method="post" action="<?php echo current_url(); ?>">
         <div class="baseNovoCount">
-            Atualizar Count
+            <h3>Atualizar Count</h3>
             <div class="formNovoCount">
                 <input type="text" size="45" <?php if(form_error('nome_projeto')){ echo 'style="border: 1px solid #900" placeholder="Nome do projeto é obrigatório"'; }else{ echo 'placeholder="Nome do Projeto"'; } ?> name="nome_projeto" value="<?php echo $edcount[0]['co_titulo']; ?>"> <?php echo $avn; ?>
             </div>
@@ -51,9 +51,9 @@ if(form_error('nomeunico')){
             </div>
             <div class="formNovoCountDias">
                 <label for="Dias">Quantos dias terá seu projeto?</label>
-                <br /><br /><input type="text" style="width: 20%" <?php if(form_error('dias_projeto')){ echo 'style="border: 1px solid #900" placeholder="Dias do projeto é obrigatório"'; }else{ echo 'placeholder="Dias do projeto"'; } ?> name="dias_projeto" id="dias_projeto" value="<?php echo $edcount[0]['co_dias']; ?>">
+                <br /><br /><input type="text" style="width: 20%" <?php if(form_error('dias_projeto')){ echo 'style="border: 1px solid #900" placeholder="Dias do projeto é obrigatório"'; }else{ echo 'placeholder="Dias do projeto"'; } ?> name="dias_projeto" id="dias_projeto" disabled="disabled" value="<?php echo $edcount[0]['co_dias']; ?>">
                 <div id="baseValores">
-                    <input type="hidden" name="valor_projeto" id="vlr_proj" value="">
+                    <input type="hidden" name="valor_projeto" id="vlr_proj" value="<?php print(number_format(($edcount[0]['co_dias'] * 0.99 + 1),2,".","")) ; ?>">
                     <div class="startfee">
                         Start-Fee
                         <Br />R$ 1.00
@@ -64,7 +64,7 @@ if(form_error('nomeunico')){
                     </div>
                     <div class="valorFinal">
                         Total
-                        <Br /><div id="resultado_dias">R$ 0.00</div>
+                        <Br /><div id="resultado_dias">R$ <?php print(number_format(($edcount[0]['co_dias'] * 0.99 + 1),2,".","")) ; ?></div>
                     </div>
                 </div>
             </div>

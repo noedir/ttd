@@ -27,7 +27,7 @@ if(form_error('email_usuario')){
 <div id="container">
     <form id="formcad" method="post" action="<?php echo current_url(); ?>">
         <div class="baseNovoCount">
-            Dados do Usuário
+            <h3>Dados do Usuário</h3>
             <div class="formNovoCount">
                 <input type="text" size="45" name="nome_usuario" <?php if(form_error('nome_usuario')){ echo 'style="border: 1px solid #900" placeholder="Nome é obrigatório"'; }else{ echo 'placeholder="Nome do Usuário"'; } ?> value="<?php echo $this->session->userdata('us_nome'); ?>"> <?php echo $avn; ?>
             </div>

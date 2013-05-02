@@ -1,6 +1,6 @@
 <div id="container">
-    <h3><?php echo $this->lang->line('pt_tminhas'); ?></h3>
     <div id="baseMinhasCounts">
+	<h3><?php echo $this->lang->line('pt_tminhas'); ?></h3>
             <table cellpadding="0" cellspacing="0" border="0" width="100%" id="tabelaCount">
             	<tr class="categorias">
                     <td width="15">Ativo</td>
@@ -40,9 +40,9 @@
                     <td class="tdCountsDiasIniFim zebra"><?php echo date("d/m/Y", strtotime($k->co_data_expira)); ?></td>
                     <td style="text-align:center;" class="tdCounts zebra"><?php print($k->co_privado == 's' ? '<span class="greenn">Sim</span>' : '<span class="redd">Não</span>'); ?></td>
                     <td class="tdCountsAcoes zebra"><?php
-		    echo anchor('web/edit_count/'.$k->co_codigo,'<img style="margin-left: 0px;" src="'.base_url().'/img/editar_count.png" />');
-		    echo anchor('web/invites/'.$k->co_codigo,' <img src="'.base_url().'img/convidar_amigos.png" />');
-		    echo anchor('web/estatisticas/'.$k->co_codigo,'<img src="'.base_url().'/img/stats_count.png" />');
+		    echo anchor('web/edit_count/'.$k->co_codigo,'<img style="margin-left: 0px;" src="'.base_url().'/img/editar_count.png" title="Editar essa TIP" />');
+		    echo anchor('web/invites/'.$k->co_codigo,' <img src="'.base_url().'img/convidar_amigos.png" title="Enviar Convites para essa TIP" />');
+		    echo anchor('web/estatisticas/'.$k->co_codigo,'<img src="'.base_url().'/img/stats_count.png" title="Ver as Estatísticas dessa TIP" />');
 		    ?></td>
                     <td  style="text-align:center; border-top: none; margin-left: 0px; background: #fff;" class="tdCounts"><img title="Excluir Count" class="exc" data-ur="<?php echo base_url(); ?>" data-id="<?php echo $k->co_codigo; ?>" src="<?php echo base_url(); ?>img/excluir_count.png"></td>
                 </tr>

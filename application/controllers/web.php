@@ -92,7 +92,7 @@ class Web extends CI_Controller {
     
     public function index(){
         $dados = array(
-            'title' => 'Projeto Count',
+            'title' => 'TilTheDay',
             'tela' => 'home',
         );
         if($this->input->get('id')){
@@ -103,28 +103,127 @@ class Web extends CI_Controller {
             $dados['usuario'] = null;
         }
 	
-        $this->load->view('web_view',$dados);
+        $this->load->view('abertura',$dados);
+    }
+    
+    public function cad_email(){
+	$email = $this->input->post('email');
+	if($this->wdb->veemail($email) > 0){
+	    die("Esse email já está cadastrado");
+	}
+	$this->wdb->cademail($email);
     }
     
     public function quem_somos(){
 	$dados = array(
-	    'title' => 'Projeto Count &raquo; Quem Somos',
+	    'title' => 'TilTheDay &raquo; Quem Somos',
 	    'tela' => 'quem_somos',
 	);
 	$this->load->view('web_view',$dados);
     }
     
     public function contato(){
+	$this->load->helper('email');
+	$this->load->library('email');
 	$dados = array(
-	    'title' => 'Projeto Count &raquo; Contato',
+	    'title' => 'TilTheDay &raquo; Contato',
 	    'tela' => 'contato',
+	    'erro' => ''
 	);
+	
+	$this->form_validation->set_rules('nome_contato','NOME','trim|required');
+	$this->form_validation->set_rules('email_contato','EMAIL','trim|required|valid_email');
+	$this->form_validation->set_rules('assunto_contato','ASSUNTO','trim|required');
+	$this->form_validation->set_rules('mensagem_contato','MENSAGEM','trim|required');
+	
+	if($this->form_validation->run()){
+	
+	    $input = elements(array('nome_contato','email_contato','assunto_contato','mensagem_contato'),$this->input->post());
+	    
+	    $config['protocol']  = 'smtp';
+	    $config['charset'] = 'utf8';
+	    $config['wordwrap'] = TRUE;
+	    $config['smtp_host'] = 'mail.tiltheday.com';
+	    $config['smtp_user'] = 'contato@tiltheday.com';
+	    $config['smtp_pass'] = 'dudinha09';
+	    $config['smtp_port'] = 587;
+	    $config['smtp_timeout'] = 20;
+	    $config['mailtype'] = 'html';
+
+	    $texto = "<p>Contato enviado por ".$input['nome_contato']."</p>";
+	    $texto .= "<p>Email: ".$input['email_contato']."</p>";
+	    $texto .= "<p>Mensagem: ".$input['mensagem_contato']."</p>";
+	    $texto .= "<p><hr>Enviada em ".date("d/m/Y")." às ".date("H:i:s")."</p>";
+
+	    $this->email->initialize($config);
+	    $this->email->from($input['email_contato'], $input['nome_contato']);
+	    $this->email->to('daniel@dcanm.com.br');
+	    $this->email->subject($input['assunto_contato']);
+	    $this->email->message($texto);
+	    $em = $this->email->send();
+	    
+	    $dados['erro'] = '<small class="green">Mensagem enviada com sucesso.</small>';
+	}
+	
+	$this->load->view('web_view',$dados);
+    }
+    
+    public function esqueceu(){
+	$this->load->helper('email');
+	$this->load->library('email');
+	
+	$dados = array(
+	    'title' => 'TilTheDay &raquo; Esqueceu a Senha',
+	    'tela' => 'esqueceu',
+	    'erro' => '',
+	);
+	
+	$this->form_validation->set_rules('email','EMAIL','trim|required|valid_email');
+	
+	if($this->form_validation->run()){	
+	    $input = elements(array('email'),$this->input->post());
+	    $query = $this->wdb->get_usuariobyemail($input['email'])->result_array();
+
+	    if(count($query) > 0){
+		$novasenha = date("YmdHis");
+		$input['snh'] = $this->crypt($input['email'], $novasenha);
+		$this->wdb->troca_senha($input);
+		
+		$config['protocol']  = 'smtp';
+		$config['charset'] = 'utf8';
+		$config['wordwrap'] = TRUE;
+		$config['smtp_host'] = 'mail.tiltheday.com';
+		$config['smtp_user'] = 'noreply@tiltheday.com';
+		$config['smtp_pass'] = 'dudinha09';
+		$config['smtp_port'] = 587;
+		$config['smtp_timeout'] = 20;
+		$config['mailtype'] = 'html';
+		
+		$texto = "<p>Olá, ".$query[0]['us_nome']."</p>";
+		$texto .= "<p>Essa é uma senha gerada pelo sistema</p>";
+		$texto .= "<p><hr><strong>".$novasenha."</strong><hr></p>";
+		$texto .= "<p>Faça seu login com essa senha e clique em Atualizar Dados para personaliza-la.</p>";
+		$texto .= "<p>Equipe TilTheDay</p>";
+
+		$this->email->initialize($config);
+		$this->email->from('noreply@tiltheday.com', 'TilTheDay');
+		$this->email->to($input['email']);
+		$this->email->subject('Nova senha no TilTheDay');
+		$this->email->message($texto);
+		$em = $this->email->send();
+		
+		$dados['erro'] = '<small class="green">Sua nova senha foi enviada para seu email.</small>';
+	    }else{
+		$dados['erro'] = '<small class="red">Esse email não está cadastrado</small>';
+	    }
+	}
+	
 	$this->load->view('web_view',$dados);
     }
     
     public function login(){
 	$dados = array(
-	    'title' => 'Projeto Count &raquo; Login',
+	    'title' => 'TilTheDay &raquo; Login',
 	    'tela' => 'login',
 	    'erro' => '',
 	);
@@ -155,7 +254,7 @@ class Web extends CI_Controller {
     public function atualiza_dados(){
 	$this->ver_conta();
 	$dados = array(
-	    'title' => 'Projeto Count &raquo; Atualizar Dados',
+	    'title' => 'TilTheDay &raquo; Atualizar Dados',
 	    'tela' => 'atualiza_dados',
 	);
 	
@@ -193,7 +292,7 @@ class Web extends CI_Controller {
     
     public function criar_projeto(){
 	$dados = array(
-            'title' => 'Projeto Count &raquo; Criar Novo Projeto Count',
+            'title' => 'TilTheDay &raquo; Criar Novo TilTheDay',
             'tela' => 'cadprojeto',
         );
         
@@ -239,7 +338,7 @@ class Web extends CI_Controller {
     public function criar_novo_projeto(){
 	$this->ver_conta();
 	$dados = array(
-            'title' => 'Projeto Count &raquo; Criar Novo Projeto Count',
+            'title' => 'TilTheDay &raquo; Criar Novo TilTheDay',
             'tela' => 'novo_projeto',
         );
 	
@@ -268,7 +367,7 @@ class Web extends CI_Controller {
     
     public function estatisticas(){
 	$dados = array(
-	    'title'	=> 'Projeto Count &raquo; Estatísticas',
+	    'title'	=> 'TilTheDay &raquo; Estatísticas',
 	    'tela'	=> 'estatistica',
 	);
 	
@@ -277,7 +376,7 @@ class Web extends CI_Controller {
     
     public function politica(){
 	$dados = array(
-	    'title'	=> 'Projeto Count &raquo; Política de Privacidade',
+	    'title'	=> 'TilTheDay &raquo; Política de Privacidade',
 	    'tela'	=> 'privacidade',
 	);
 	
@@ -288,7 +387,7 @@ class Web extends CI_Controller {
 	$this->ver_conta();
 	$id = $this->uri->segment(3);
 	$dados = array(
-	    'title'	=> 'Projeto Count &raquo; Editar Count',
+	    'title'	=> 'TilTheDay &raquo; Editar Count',
 	    'tela'	=> 'editar_count',
 	    'edcount'	=> $this->wdb->get_count($id)->result_array(),
 	);
@@ -316,7 +415,7 @@ class Web extends CI_Controller {
     public function counts(){
 	$this->ver_conta();
 	$dados = array(
-	    'title' => 'Projeto Count &raquo; Minhas Counts',
+	    'title' => 'TilTheDay &raquo; Minhas Counts',
 	    'tela' => 'counts',
 	    'counts' => $this->wdb->get_counts($this->session->userdata('us_codigo'))->result(),
 	);
@@ -334,7 +433,7 @@ class Web extends CI_Controller {
 	}
 	
 	$dados = array(
-	    'title'	=> 'Projeto Count &raquo; Tips',
+	    'title'	=> 'TilTheDay &raquo; Tips',
 	    'tela'	=> 'tips',
 	    'count'	=> $this->wdb->get_tcount($id)->result(),
 	    'tips'	=> $this->wdb->get_tips($id)->result(),
@@ -350,7 +449,7 @@ class Web extends CI_Controller {
     public function upphoto(){
 	$this->ver_conta();
 	$dados = array(
-	    'title' => 'Projeto Count &raquo; Fotos',
+	    'title' => 'TilTheDay &raquo; Fotos',
 	    'tela' => 'sobefoto',
 	    'instagram' => $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result(),
 	);
@@ -664,135 +763,32 @@ class Web extends CI_Controller {
 	$this->ver_conta();
 	$input = elements(array('id_tip','codigo','img','titulo','sub','mensagem','central','largura','altura','posicao'), $this->input->post());
 	
-	$arq = $input['img'];
+	if($input['img'] != 'sem'){
+	    $arq = $input['img'];
+
+	    $img = str_replace('data:image/jpeg;base64,', '', $arq);
+	    $img2 = str_replace(' ', '+', $img);
+	    $data = base64_decode($img2);
+
+	    $file = date("YmdHis")."_tip.jpg";
+
+	    file_put_contents("./tips/".$file, $data);
+
+	    $input['img'] = $file;
+
+	    $crd = explode('/',$input['posicao']);
+	    $posih = ($input['altura']);
+	    $posiw = ($input['largura']);
 	
-	$img = str_replace('data:image/jpeg;base64,', '', $arq);
-	$img2 = str_replace(' ', '+', $img);
-	$data = base64_decode($img2);
-
-	$file = date("YmdHis")."_tip.jpg";
-
-	file_put_contents("./tips/".$file, $data);
-	
-	$input['img'] = $file;
-	
-	$crd = explode('/',$input['posicao']);
-	$posih = ($input['altura']);
-	$posiw = ($input['largura']);
-	/*
-	if(file_exists('./tips/tmp_'.$input['img'])){
-	    // FAZ O RESIZE DA IMAGEM
-	    if($input['central'] === 's'){
-		$config = array(
-		    'image_library' => 'gd2',
-		    'source_image' => './tips/'.$input['img'],
-		    'width' => $posiw,
-		    'height' => $posih,
-		    'quality' => '75',
-		    'maintain_ratio' => FALSE,
-		);
-		$this->load->library('image_lib',$config);
-		$this->image_lib->resize();
-		$this->image_lib->clear();
-
-		$img = getimagesize('./tips/'.$input['img']);
-		
-		$tmpw = ($img[0] * 2.5);
-		$tmph = ($img[1] * 2.5);
-
-		$config = array(
-		    'image_library' => 'gd2',
-		    'source_image' => './tips/'.$input['img'],
-		    'width' => $tmpw,
-		    'height' => $tmph,
-		    'maintain_ratio' => FALSE,
-		);
-		$this->image_lib->initialize($config);
-		$this->image_lib->resize();
-		$this->image_lib->clear();
-		
-		$posl = abs($crd[0]);
-		$post = abs($crd[1]);
-
-		$config = array(
-		    'image_library' => 'gd2',
-		    'source_image' => './tips/'.$input['img'],
-		    'x_axis' => ($posl * 2.5),
-		    'y_axis' => ($post * 2.5),
-		    'width'  => 640, //$input['largura'],
-		    'height' => 570, //$input['altura'],
-		    'quality' => '75',
-		    'maintain_ratio' => FALSE,
-		);
-
-		$this->image_lib->initialize($config);
-		$this->image_lib->crop();
-		$this->image_lib->clear();
-		
-		// FAZ O CROP DA IMAGEM
-	    }else{
-		
-		$posil = abs($crd[0]) * 2.5;
-		$posit = abs($crd[1]) * 2.5;
-
-		if($posil < 0){
-		    $posil = 0;
-		}
-		if($posit < 0){
-		    $posit = 0;
-		}
-		
-		$config = array(
-		    'image_library' => 'gd2',
-		    'source_image' => './tips/'.$input['img'],
-		    'x_axis' => $posil,
-		    'y_axis' => $posit,
-		    'width'  => 640,
-		    'height' => 570,
-		    'quality' => '75',
-		    'maintain_ratio' => FALSE,
-		);	    
-		$this->load->library('image_lib',$config);
-		$this->image_lib->crop();
-		$this->image_lib->clear();
-	    }
-
 	    $config['image_library'] = 'gd2';
 	    $config['source_image'] = './tips/'.$input['img'];
 	    $config['new_image'] = './tips/thumb_'.$input['img'];
 	    $config['maintain_ratio'] = FALSE;
 	    $config['width'] = 200;
 	    $config['height'] = 200;
-	    $config['quality'] = '100%';
-	    $this->image_lib->initialize($config);
+	    $this->load->library('image_lib',$config);
 	    $this->image_lib->resize();
-
-	    $resp['altura'] = $input['altura'];
-	    $resp['largura'] = $input['largura'];
-
-	    if(file_exists('./tips/tmp_'.$input['img'])){
-		unlink('./tips/tmp_'.$input['img']);
-	    }
-
-	    if($this->image_lib->display_errors()){
-		$resp['msg'] = $this->image_lib->display_errors();
-	    }
-	    $resp['msg'] = '';
-	    $resp['erro'] = 'ok';
-	}else{
-	    $resp['msg'] = '';
-	    $resp['erro'] = 'ok';
 	}
-	 * 
-	 */
-	$config['image_library'] = 'gd2';
-	$config['source_image'] = './tips/'.$input['img'];
-	$config['new_image'] = './tips/thumb_'.$input['img'];
-	$config['maintain_ratio'] = FALSE;
-	$config['width'] = 200;
-	$config['height'] = 200;
-	$this->load->library('image_lib',$config);
-	$this->image_lib->resize();
 	
 	$resp['msg'] = '';
 	$resp['erro'] = 'ok';
@@ -840,7 +836,7 @@ class Web extends CI_Controller {
     
     public function computador(){
 	$dados = array(
-	    'title' => 'Projeto Count &raquo; Meu Computador',
+	    'title' => 'TilTheDay &raquo; Meu Computador',
 	    'tela' => 'micro',
 	);
 	
@@ -851,7 +847,7 @@ class Web extends CI_Controller {
 	$this->ver_conta();
 	$access = $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result_array();
 	$dados = array(
-	    'title' => 'Projeto Count &raquo; Invites',
+	    'title' => 'TilTheDay &raquo; Invites',
 	    'tela' => 'convites',
 	    'counts' => $this->wdb->get_counts($this->session->userdata('us_codigo'))->result(),
 	    'facebook' => base_url().'facebook',
@@ -864,6 +860,31 @@ class Web extends CI_Controller {
 	    $dados['facebook'] = '';
 	}
 	$this->load->view('web_view',$dados);
+    }
+    
+    public function convite_enviado(){
+	$this->ver_conta();
+	$saida = '<script src="http://code.jquery.com/jquery-1.9.1.js"></script>';
+	$saida .= '<script src="'.base_url().'js/jquery.prettyPhoto.js" type="text/javascript"></script>';
+	    $saida .= '<script>';
+	    $saida .= "$(document).ready(function(){";
+		$saida .= 'alert("Invite enviado com sucesso");';
+		$saida .= 'window.parent.$.prettyPhoto.close();';
+	    $saida .= "});";
+	$saida .= "</script>";
+	echo $saida;
+    }
+    
+    public function convite_enviadonao(){
+	$this->ver_conta();
+	$saida = '<script src="http://code.jquery.com/jquery-1.9.1.js"></script>';
+	$saida .= '<script src="'.base_url().'js/jquery.prettyPhoto.js" type="text/javascript"></script>';
+	    $saida .= '<script>';
+	    $saida .= "$(document).ready(function(){";
+		$saida .= 'window.parent.$.prettyPhoto.close();';
+	    $saida .= "});";
+	$saida .= "</script>";
+	echo $saida;
     }
     
     public function grava_convite(){
@@ -903,15 +924,15 @@ class Web extends CI_Controller {
 		    $config['protocol']  = 'smtp';
 		    $config['charset'] = 'utf8';
 		    $config['wordwrap'] = TRUE;
-		    $config['smtp_host'] = 'mail.dcanm.mobi';
-		    $config['smtp_user'] = 'tiltheday@dcanm.mobi';
+		    $config['smtp_host'] = 'mail.tiltheday.com';
+		    $config['smtp_user'] = 'invite@tiltheday.com.br';
 		    $config['smtp_pass'] = 'dudinha';
 		    $config['smtp_port'] = 587;
 		    $config['smtp_timeout'] = 20;
 		    $config['mailtype'] = 'html';
 		    
 		    $this->email->initialize($config);
-		    $this->email->from('tiltheday@dcanm.mobi', 'TilTheDay');
+		    $this->email->from($this->session->userdata('us_email'), $this->session->userdata('nomecurto'));
 		    $this->email->to($valid);
 		    $this->email->subject('Você está a receber um invite de '.$this->session->userdata('nomecurto'));
 		    $this->email->message($texto);

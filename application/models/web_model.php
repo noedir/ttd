@@ -13,6 +13,22 @@ class Web_model extends CI_Model {
 	}
     }
     
+    public function cademail($email){
+	if($email != ''){
+	    $ins = array(
+		'cad_email' => $email,
+		'cad_datacadastro' => date("Y-m-d H:i:s")
+	    );
+	    $this->db->insert('tbl_cadastro',$ins);
+	}
+    }
+    
+    public function veemail($email){
+	$this->db->from('tbl_cadastro');
+	$this->db->where('cad_email',$email);
+	return $this->db->count_all_results();
+    }
+    
     public function set_faceoauth($id,$access){
 	if($access != NULL){
 	    $conta = $this->db->query("SELECT COUNT(*) AS total FROM tbl_oauth WHERE oa_usuario = ".$this->session->userdata('us_codigo'))->result_array();
@@ -166,6 +182,16 @@ class Web_model extends CI_Model {
 	}
     }
     
+    public function troca_senha($dados=NULL){
+	if($dados != NULL){
+	    $this->db->where('us_email',$dados['email']);
+	    $up = array(
+		'us_senha' => $dados['snh']
+	    );
+	    $this->db->update('tbl_usuario',$up);
+	}
+    }
+    
     public function get_totaltips($id=NULL){
 	if($id != NULL){
 	    $this->db->where(array('ti_count' => $id));
@@ -184,7 +210,7 @@ class Web_model extends CI_Model {
 		    'ti_descricao'  => $dados['mensagem'],
 		    'ti_imgcentral' => $dados['central'],
 		);
-		if(isset($dados['img']) && $dados['img'] != ''){
+		if(isset($dados['img']) && $dados['img'] != '' && $dados['img'] != 'sem'){
 		    $ins['ti_imagem'] = $dados['img'];
 		}
 		$this->db->where(array('ti_codigo'=>$dados['id_tip']));

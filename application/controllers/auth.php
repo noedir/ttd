@@ -4,8 +4,6 @@ class Auth extends CI_Controller{
     
     public function __construct() {
 	parent::__construct();
-	$this->load->helper('url');
-	$this->load->helper('url_helper');
 	$this->load->model('web_model','wdb');
     }
     
@@ -16,7 +14,7 @@ class Auth extends CI_Controller{
 		$provider = array(
 		    'id' => '4df5f47cf2fa4da98b0d0f91beb158fb',
 		    'secret' => '4664a8ef7e3142e4bb12fb19fd4aa4d3',
-		    'redirect' => 'http://www.dcanm.mobi/count/auth/token',
+		    'redirect' => 'http://www.tiltheday.com/auth/token',
 		);
 		break;
 	    
@@ -24,7 +22,7 @@ class Auth extends CI_Controller{
 		$provider = array(
 		    'id' => '445876232159922',
 		    'secret' => '4e8db7c42234a9eac60854309e35a986',
-		    'redirect' => 'http://www.dcanm.mobi/count/auth/token_facebook',
+		    'redirect' => 'http://www.tiltheday.com/auth/token_facebook',
 		);
 		break;
 	}
@@ -150,16 +148,16 @@ class Auth extends CI_Controller{
     }
         
     public function token_facebook(){
-	if(isset($_GET['code']) && $_GET['code'] != ''){
-	    redirect('http://www.dcanm.mobi/count/facebook/confirm?code='.$_GET['code']);
+	if($this->input->get('code') != ''){
+	    redirect('http://www.tiltheday.com/facebook/confirm?code='.$this->input->get('code'));
 	}else
-	if(isset($_GET['access_token']) && $_GET['access_token'] != ''){
-	    redirect('http://www.dcanm.mobi/count/facebook/confirm?access_token='.$_GET['access_token']);
+	if($this->input->get('access_token') != ''){
+	    redirect('http://www.tiltheday.com/facebook/confirm?access_token='.$this->input->get('access_token'));
 	}else	
-	if(isset($_GET['post_id']) && $_GET['post_id'] != ''){
-	    redirect(base_url().'/web/invites/'.$this->session->userdata('idcount').'/sim');
+	if($this->input->get('request') != ''){
+	    redirect(base_url().'/web/convite_enviado/'.$this->input->get('post_id'));
 	}else{
-	    redirect(base_url().'/web/invites/'.$this->session->userdata('idcount').'/sim');
+	    redirect(base_url().'/web/convite_enviadonao');
 	}
     }
     
@@ -169,11 +167,13 @@ class Auth extends CI_Controller{
 	$iduser = $this->uri->segment(3);
 	$idcount = $this->uri->segment(4);
 	
+	$count = $this->wdb->get_count($idcount)->result_array();
+	
 	$this->session->set_userdata('idcount',$idcount);
 	
-	$txt = 'O link para o aplicativo é tiltheday://'.$idcount;
+	$txt = 'Estou te convidando para seguir meu evento '.$count[0]['co_titulo'].'. Instale o aplicativo TilTheDay no seu Iphone ou Android. Caso já possua o aplicativo, basta clicar aqui tiltheday://'.$idcount;
 		
-	$url = 'https://www.facebook.com/dialog/apprequests?app_id='.$tk['id'].'&link=tiltheday://'.$idcount.'&picture=http://www.dcam.mobi/count/img/logotipo_header.jpg&name=TilTheDay&caption=Contagem%20Regressiva&message=fa%C3%A7a%20uma%20contagem%20dos%20seus%20eventos%20'.$txt.'&redirect_uri=http://www.dcanm.mobi/count/auth/token_facebook&to='.$iduser.'&display=iframe&access_token='.$query[0]['oa_facebook_access_token'];
+	$url = 'https://www.facebook.com/dialog/apprequests?app_id='.$tk['id'].'&link=tiltheday://'.$idcount.'&picture=http://www.tiltheday.com/img/logotipo_header.jpg&name=TilTheDay&caption=TilTheDay&message='.$txt.'&redirect_uri='.$tk['redirect'].'&to='.$iduser.'&display=iframe&access_token='.$query[0]['oa_facebook_access_token'];
 	
 	redirect($url);
     }

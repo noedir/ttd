@@ -63,6 +63,7 @@ function instagram(ur){
 	    $(".loader").fadeOut();
 	}
     });
+    $(".loader").fadeOut();
 }
 
 function addTag(valor,codigo,ur){
@@ -97,15 +98,24 @@ function convida_face(){
     $.getJSON(ur+'auth/get_amigos', function(resp){
 	$.each(resp, function(index, value){
 	    url = ur+'auth/send_dialog_face/'+value['id']+'/'+count;
-	    html += '<div class="fb"><img class="pict" src="'+value['pic']+'"><p>'+value['nome']+'</p><a rel="prettyPhoto[face]" href="'+url+'"><img class="inv" src="'+ur+'img/invite_facebook.jpg"></a></div>';
+	    html += '<div class="fb"><img class="pict" src="'+value['pic']+'"><p>'+value['nome']+'</p><img data-url="'+url+'?iframe=true&height=300&width=450" class="inv" src="'+ur+'img/invite_facebook.jpg"></div>';
 	});
 
-	$("#lista_facebook").html(html);
+	$(html).appendTo("#lista_facebook");
     });
 }
 
 $(document).ready(function(){
     var ur = $('#ur').data('url');
+    
+    $(document).on('click','.inv',function(){
+	var api_images = [$(this).data('url')];
+	$.prettyPhoto.open(api_images);
+    })
+    
+    $("#ok_contato").click(function(){
+	$(".loader").fadeIn();
+    });
     
     $("#file-capa").on('change', function(e){
 	var lar;
@@ -349,7 +359,6 @@ $(document).ready(function(){
     });
     
     $("a[rel^='prettyPhoto']").prettyPhoto({
-	modal: true,
 	social_tools: false
     });
     
@@ -371,6 +380,7 @@ $(document).ready(function(){
 		$(".loader").fadeOut();
 	    }
 	});
+	$(".loader").fadeOut();
     });
     
     $("#get_facebook").click(function(){
@@ -391,6 +401,7 @@ $(document).ready(function(){
 		$(".loader").fadeOut();
 	    }
 	});
+	$(".loader").fadeOut();
     });
     
     $("#pega_instagram").click(function(){
@@ -412,6 +423,7 @@ $(document).ready(function(){
 		$(".loader").fadeOut();
 	    }
 	});
+	$(".loader").fadeOut();
     });
     
     $("#get_instagram").click(function(){
@@ -433,6 +445,7 @@ $(document).ready(function(){
 		$(".loader").fadeOut();
 	    }
 	});
+	$(".loader").fadeOut();
     });
     
     
@@ -558,73 +571,29 @@ $(document).ready(function(){
 		    context.drawImage(imageObj, sourceX, sourceY, w, h, 0, 0, 640, 200);
 		}
 	    }
-	     
-	    /*if(central === 's'){
-		w = $("#photoc").width() * 2;
-		h = $("#photoc").height() * 2;
-		
-		sourceX = (sx / 2) - sourceX;
-		sourceY =  (sy / 2) - sourceY;
-		
-		context.drawImage(imageObj, sourceX, sourceY, w, h);
-	    }else{
-		// SOMENTE CROP
-		context.drawImage(imageObj, sourceX, sourceY, w, h, 0, 0, 640, 200);
-	    }*/
 	    var img_pronta = canvas.toDataURL("image/jpeg");
 	    
 	    var dados = 'codigo='+codigo+'&img='+img_pronta;
 	     
-	    //if(confirm("Deseja salvar?")){
-		$.ajax({
-		    type: 'post',
-		    dataType: 'json',
-		    data: dados,
-		    async: false,
-		    url: ur+'web/grava_capa',
-		    success: function(resp){
-		        $("#opcoes_capa").fadeOut();
-			html = '<img src="'+resp.msg+'" width="320" height="100">';
-			$(".capa #telinha").html('').html(html);
-			$('#photoc').draggable( "destroy" );
-		    }
-		});
-	   // }
-	};
-    });
-    
-    
-    /*$(document).on('click','#salvar', function(){
-	var html = '';
-	var imagem = $("input[name='fotoc']").val();
-	var codigo = $("input[name='cod_count']").val();
-	var central = $("#optimgc").val();
-	var posicao = coordsCapa();
-	 
-	var larimg = $("#photoc").width();
-	var altimg = $("#photoc").height();
-	 
-	var dados = 'codigo='+codigo+'&img='+imagem+'&central='+central+'&largura='+larimg+'&altura='+altimg+'&posicao='+posicao;
-	 
-	$.ajax({
-	    type: 'post',
-	    dataType: 'json',
-	    data: dados,
-	    async: false,
-	    url: ur+'web/grava_capa',
-	    success: function(resp){
-		if(resp.erro !== "sim"){
+	    
+	    $.ajax({
+		type: 'post',
+		dataType: 'json',
+		data: dados,
+		async: false,
+		url: ur+'web/grava_capa',
+		success: function(resp){
 		    $("#opcoes_capa").fadeOut();
-		    
+		    $(".loader").fadeOut();
 		    html = '<img src="'+resp.msg+'" width="320" height="100">';
-		    
 		    $(".capa #telinha").html('').html(html);
-		    
 		    $('#photoc').draggable( "destroy" );
 		}
-	    }
-	});
-    });*/
+	    });
+	    $(".loader").fadeOut();
+	};
+	$(".loader").fadeOut();
+    });
     
     $(document).on('click','#redimensionar', function(){
 	var opt = $("#optimgc");
@@ -812,81 +781,72 @@ $(document).ready(function(){
      
     $("#addtip").click(function(){
 	$("#loader").fadeIn();
-	 var titulo = $("input[name='titulo']").val();
-	 var sub = $("input[name='subtitulo']").val();
-	 var mensagem = $("#men").val();
-	 var central = $("#optimg").val(); // imagem centralizada;
-	 $("#mudou").val('n');
+	var titulo = $("input[name='titulo']").val();
+	var sub = $("input[name='subtitulo']").val();
+	var mensagem = $("#men").val();
+	var codigo = $("input[name='count']").val(); 
+	var id_tip = $("#codigo_tip").val();
+	var central = $("#optimg").val(); // imagem centralizada;
+	var imagem = $("input[name='foto']").val();
+	$("#mudou").val('n');
 	 
-	 if(imagem === ''){
-	     alert("Sua Tip precisa de uma imagem");
-	     $("#loader").fadeOut();
-	     return false;
-	 }
+	if(imagem === ''){
+	    alert("Sua Tip precisa de uma imagem");
+	    $("#loader").fadeOut();
+	    return false;
+	}
 	 
-	 if(titulo === ''){
-	     alert("Sua Tip precisa de um título");
-	     $("input[name='titulo']").focus().css({
-		 border: '1px solid #900',
-	     });
-	     $("#loader").fadeOut();
-	     return false;
-	 }
+	if(titulo === ''){
+	    alert("Sua Tip precisa de um título");
+	    $("input[name='titulo']").focus().css({
+		border: '1px solid #900',
+	    });
+	    $("#loader").fadeOut();
+	    return false;
+	}
 	 
-	 if(sub === ''){
-	     alert("Sua Tip precisa de um sub-título");
-	     $("input[name='subtitulo']").focus().css({
-		 border: '1px solid #900',
-	     });
-	     $("#loader").fadeOut();
-	     return false;
-	 }
+	if(sub === ''){
+	    alert("Sua Tip precisa de um sub-título");
+	    $("input[name='subtitulo']").focus().css({
+		border: '1px solid #900',
+	    });
+	    $("#loader").fadeOut();
+	    return false;
+	}
 	 
-	 if(mensagem === ''){
-	     alert("Sua Tip precisa de uma descrição");
-	     $("#men").focus().css({
-		 border: '1px solid #900',
-	     });
-	     $("#loader").fadeOut();
-	     return false;
-	 }
-	 
-	 var imagem = $("input[name='foto']").val();
-	 
-	 var imageObj = new Image();
-	 
-	 imageObj.src = imagem;
-	 
-	imageObj.onload = function() {
-	    var canvas = document.getElementById('canvas');
-	    var context = canvas.getContext('2d');
+	if(mensagem === ''){
+	    alert("Sua Tip precisa de uma descrição");
+	    $("#men").focus().css({
+		border: '1px solid #900',
+	    });
+	    $("#loader").fadeOut();
+	    return false;
+	}
+	
+	var n = imagem.match("/*_tip*");
+	
+	if(n === null){
+	    var imageObj = new Image();
+	    imageObj.src = imagem;
 	    
-	    var codigo = $("input[name='count']").val(); 
-	    var id_tip = $("#codigo_tip").val();
-	    var posicao = updateCoords(); // pega LEFT x TOP
-	    var n = posicao.split('/'); // separa as posições LEFT x TOP
-	    var sx = n[0].replace("px",""); // retira o PX deixando somente o número negativo do LEFT
-	    var sy = n[1].replace("px",""); // retira o PX deixando somente o número negativo do TOP
-	    sx = sx * -1; // transforma o negativo em positivo do LEFT
-	    sy = sy * -1; // transforma o negativo em positivo do TOP
-	     
-	    var sourceX = sx * 2.5; // imagem original X
-	    var sourceY = sy * 2.5; // imagem original Y
-	     
-	    var w = 640;
-	    var h = 570;
-	    
-	    if(central === 's'){
-		w = $("#photo").width() * 2.5;
-		h = $("#photo").height() * 2.5;
-		
-		sourceX = (sx / 2.5) - sourceX;
-		sourceY =  (sy / 2.5) - sourceY;
-		
-		context.drawImage(imageObj, sourceX, sourceY, w, h);
-	    }else{
-		// SOMENTE CROP
-		if(imageObj.width < 640 || imageObj.height < 570){
+	    imageObj.onload = function() {
+		var canvas = document.getElementById('canvas');
+		var context = canvas.getContext('2d');
+
+		var posicao = updateCoords(); // pega LEFT x TOP
+		var n = posicao.split('/'); // separa as posições LEFT x TOP
+		var sx = n[0].replace("px",""); // retira o PX deixando somente o número negativo do LEFT
+		var sy = n[1].replace("px",""); // retira o PX deixando somente o número negativo do TOP
+		sx = sx * -1; // transforma o negativo em positivo do LEFT
+		sy = sy * -1; // transforma o negativo em positivo do TOP
+
+		var sourceX = sx * 2.5; // imagem original X
+		var sourceY = sy * 2.5; // imagem original Y
+
+		var w = 640;
+		var h = 570;
+
+		if(central === 's'){
 		    w = $("#photo").width() * 2.5;
 		    h = $("#photo").height() * 2.5;
 
@@ -895,14 +855,43 @@ $(document).ready(function(){
 
 		    context.drawImage(imageObj, sourceX, sourceY, w, h);
 		}else{
-		    context.drawImage(imageObj, sourceX, sourceY, w, h, 0, 0, 640, 570);
+		    // SOMENTE CROP
+		    if(imageObj.width < 640 || imageObj.height < 570){
+			w = $("#photo").width() * 2.5;
+			h = $("#photo").height() * 2.5;
+
+			sourceX = (sx / 2.5) - sourceX;
+			sourceY =  (sy / 2.5) - sourceY;
+
+			context.drawImage(imageObj, sourceX, sourceY, w, h);
+		    }else{
+			context.drawImage(imageObj, sourceX, sourceY, w, h, 0, 0, 640, 570);
+		    }
 		}
-	    }
+
+		var img_pronta = canvas.toDataURL("image/jpeg");
+
+		var dados = 'id_tip='+id_tip+'&codigo='+codigo+'&img='+img_pronta+'&titulo='+titulo+'&sub='+sub+'&mensagem='+mensagem;
+
+		$.ajax({
+		    type: 'post',
+		    dataType: 'json',
+		    data: dados,
+		    async: false,
+		    url: ur+'web/grava_tip',
+		    success: function(resp){
+			$(".loader").fadeOut();
+			$(".menu_foto").fadeOut();
+			if(resp.erro === 'ok'){
+			   redirect('');
+			}
+		    }
+		});
+		$(".loader").fadeOut();
+	    };
+	}else{
+	    var dados = 'id_tip='+id_tip+'&codigo='+codigo+'&img=sem&titulo='+titulo+'&sub='+sub+'&mensagem='+mensagem;
 	    
-	    var img_pronta = canvas.toDataURL("image/jpeg");
-	     
-	    var dados = 'id_tip='+id_tip+'&codigo='+codigo+'&img='+img_pronta+'&titulo='+titulo+'&sub='+sub+'&mensagem='+mensagem;
-	     
 	    $.ajax({
 		type: 'post',
 		dataType: 'json',
@@ -910,13 +899,16 @@ $(document).ready(function(){
 		async: false,
 		url: ur+'web/grava_tip',
 		success: function(resp){
+		    $(".loader").fadeOut();
 		    $(".menu_foto").fadeOut();
 		    if(resp.erro === 'ok'){
 		       redirect('');
 		    }
 		}
 	    });
-	};
+	    $(".loader").fadeOut();
+	}
+	$(".loader").fadeOut();
     });
      
     $("#tit").keyup(function(){

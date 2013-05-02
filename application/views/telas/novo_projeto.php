@@ -17,7 +17,7 @@ if(form_error('nomeunico')){
 <div id="container">
     <form id="formcad" method="post" action="<?php echo current_url(); ?>">
         <div class="baseNovoCount">
-            Novo Count
+            <h3>Novo Count</h3>
             <div class="formNovoCount">
                 <input type="text" size="45" <?php if(form_error('nome_projeto')){ echo 'style="border: 1px solid #900" placeholder="Nome do projeto é obrigatório"'; }else{ echo 'placeholder="Nome do Projeto"'; } ?> name="nome_projeto" value="<?php echo set_value('nome_projeto'); ?>">
             </div>

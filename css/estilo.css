@@ -75,6 +75,7 @@ body{
 }
 .poshy_style{
     font-size: 11px;
+    color: #363;
     background: #E8FFF7;
     border: 2px solid #21B482;
 }
@@ -339,6 +340,9 @@ a.black:hover{
     padding: 10px;
     padding-bottom: 40px;
 }
+#container p{
+    margin: 10px 0px;
+}
 #container #tabs{
     position: relative;
     float: left;
@@ -356,13 +360,14 @@ a.black:hover{
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 8px;
-    margin: 8px;
+    margin: 8px 18px;
     padding: 5px;
 }
 .fb .inv{
     position: absolute;
     bottom: 4px;
     right: 4px;
+    cursor: pointer;
 }
 .fb .pict{
     float: left;
@@ -370,6 +375,7 @@ a.black:hover{
 }
 .fb p{
     font-size: 10px;
+    color: #000;
 }
 #container #login{
     position: relative;
@@ -415,6 +421,11 @@ a.black:hover{
 }
 .tip-box #loader{
     float: right;
+    display: none;
+}
+.loader{
+    float: right;
+    margin-top: -40px;
     display: none;
 }
 .tip-box #canvas{
@@ -916,11 +927,20 @@ div.tagsinput div { display: block; float: left; }
 .not_valid { background: #FBD8DB !important; color: #90111A !important;}
 
 .baseNovoCount {
-    width: 715px;
+    width: 515px;
     margin: 0px auto;
     margin-top: 35px;
 }
-
+.baseNovoCount #esqueceu{
+    list-style: none;
+    font-size: 12px;
+    margin-top: -20px;
+    float: right;
+}
+#esqueceu li{
+    margin: 0px 5px;
+    display: inline;
+}
 .baseNovoCount label{
     margin-top: 20px;
 }
@@ -1008,7 +1028,6 @@ div.tagsinput div { display: block; float: left; }
 
 #baseMinhasCounts {
     margin: 0 auto;
-    margin-top: 35px;
 }
 
 #tabelaCount {
