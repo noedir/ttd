@@ -9,7 +9,7 @@
 		    <td>Identificador</td>
                     <td style="text-align: center;">Dias</td>
                     <td style="text-align: center;">Início em</td>
-                    <td style="text-align: center;">Expira em</td>
+                    <td style="text-align: center;">Finaliza em</td>
                     <td style="text-align: center;">Privado</td>
                     <td style="text-align: center;">Ações</td>
                     <td></td>
@@ -36,8 +36,18 @@
                     <td class="tdCounts zebra"><?php echo $k->co_titulo; ?></td>
 		    <td class="tdCounts zebra"><?php echo $k->co_nomeunico; ?></td>
                     <td class="tdCountsDiasContagem zebra"><?php echo $k->co_dias; ?></td>
-                    <td class="tdCountsDiasIniFim zebra"><?php echo date("d/m/Y", strtotime($k->co_data_compra)); ?></td>
-                    <td class="tdCountsDiasIniFim zebra"><?php echo date("d/m/Y", strtotime($k->co_data_expira)); ?></td>
+                    <td class="tdCountsDiasIniFim zebra"><?php
+		    if($k->co_data_inicio == ''){
+			echo '---';
+		    }else{
+			echo date("d/m/Y", strtotime($k->co_data_inicio));
+		    }?></td>
+                    <td class="tdCountsDiasIniFim zebra"><?php
+		    if($k->co_data_inicio == ''){
+			echo '---';
+		    }else{
+			echo date("d/m/Y", strtotime($k->co_data_inicio .' + '. ($k->co_dias - 1).' days'));
+		    }?></td>
                     <td style="text-align:center;" class="tdCounts zebra"><?php print($k->co_privado == 's' ? '<span class="greenn">Sim</span>' : '<span class="redd">Não</span>'); ?></td>
                     <td class="tdCountsAcoes zebra"><?php
 		    echo anchor('web/edit_count/'.$k->co_codigo,'<img style="margin-left: 0px;" src="'.base_url().'/img/editar_count.png" title="Editar essa TIP" />');

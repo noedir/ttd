@@ -35,10 +35,10 @@ class Mobile extends CI_Controller {
                 $user['status'] = '201';
                 $user['msg'] = 'Email existente';
             }else{
-                $query = $this->mdb->set_usuario($input);
-		$query = $this->mdb->get_loginuser($ver)->result_array();
-		$this->mdb->set_cleartokenpush($input);
+                $this->mdb->set_usuario($input);
+		$this->mdb->set_cleartokenpush($tk);
 		$this->mdb->set_tokenpush($tk);
+		$query = $this->mdb->get_loginuser($ver)->result_array();
 		foreach($query as $v){
 		    $user['login'] = $v;
 		}
@@ -281,6 +281,7 @@ class Mobile extends CI_Controller {
 	
 	if(count($query) > 0){
 	    $ret['count']['titulo'] = $query[0]['co_titulo'];
+	    $ret['count']['data_inicio'] = $query[0]['co_data_inicio'];
 	    $ret['count']['total_data'] = $query[0]['co_dias'];
 	    $ret['count']['total_tips'] = strval(count($query));
 	    if($query[0]['seguindo'] > 0){
@@ -302,6 +303,7 @@ class Mobile extends CI_Controller {
 		unset($ret['count']['tips'][$k]['ti_imgposicao']);
 		unset($ret['count']['tips'][$k]['ti_imgcentral']);
 		unset($ret['count']['tips'][$k]['co_titulo']);
+		unset($ret['count']['tips'][$k]['co_data_inicio']);
 		unset($ret['count']['tips'][$k]['co_dias']);
 		unset($ret['count']['tips'][$k]['ti_titulo']);
 		unset($ret['count']['tips'][$k]['ti_subtitulo']);
@@ -419,8 +421,6 @@ class Mobile extends CI_Controller {
 	$this->mdb->set_seguircount($input);
 	
 	$query = $this->mdb->get_tipcount($input)->result_array();
-	
-	unset($input['id_count']);
 	
 	$user['status'] = '200';
 	$user['msg'] = 'Você deixou de seguir a count '.$query[0]['co_titulo'];

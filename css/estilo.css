@@ -580,6 +580,7 @@ a.black:hover{
     display: none;
     text-align: center;
 }
+
 #opcoes_capa ul{
     list-style: none;
     background: url(../img/fundo.png);
@@ -593,9 +594,16 @@ a.black:hover{
     font-size: 10px;
     cursor: pointer;
 }
+#opcoes_capa li.oculto{
+    display: none;
+}
 #opcoes_capa li:hover{
     background: #0f0f0f;
-    border-top: 2px solid #fff;
+    border-top: 2px solid #999;
+}
+#opcoes_capa #salvar{
+    border-top-color: #090;
+    color: yellow;
 }
 .capa #telinha{
     width: 320px;
@@ -640,6 +648,10 @@ h5.projetoTitle {
     border: 3px solid #eee;
     background: #fff;
 }
+.tags_projeto #temas{
+    text-align: center;
+    font-size: 14px;
+}
 .tip-maior .sdt_projeto{
     position: relative;
     width: 330px;
@@ -649,6 +661,11 @@ h5.projetoTitle {
     color: #900;
     border: 3px solid #ffd9d9;
     background: #fee;
+}
+.dt_projeto #calendario{
+    width: 100px;
+    text-align: center;
+    font-size: 14px;
 }
 .dt_projeto p{
     margin: 7px 10px;
@@ -715,7 +732,7 @@ h5.projetoTitle {
 }
 #container input, #container textarea, #container select{
     border-radius: 5px;
-    padding: 10px 5px;
+    padding: 5px;
     border: 1px solid #ddd;
     width: 100%;
     background: #fff;
@@ -964,7 +981,7 @@ div.tagsinput div { display: block; float: left; }
     position:absolute;
     width: 310px;
     height: 30px;
-    top: 33px;
+    top: 15px;
     right: -5px;
     color: #fff;
     text-align: center;

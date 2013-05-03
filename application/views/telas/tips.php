@@ -17,11 +17,13 @@
 		<div id="baseDock">
 		    <div id="metodosUpload">        
 			<div class="upload" id="uploadpc"><input type="hidden" value="s" name="central" id="optimg">Computador</div>
-			<?php if(count($oauth) > 0 && $oauth[0]['oa_instagram_access_token'] != ''){
-			    echo '<div class="instagram" id="pega_instagram">Instagram</div>';
+			<?php
+			if(!is_numeric($instagram)){
+			    echo '<div class="instagram"><a class="white" href="https://api.instagram.com/oauth/authorize/?client_id=4df5f47cf2fa4da98b0d0f91beb158fb&redirect_uri='.base_url().'auth/token&response_type=code">Instagram</a></div>';
 			}else{
-			    echo '<div class="instagram"><a href="https://api.instagram.com/oauth/authorize/?client_id=4df5f47cf2fa4da98b0d0f91beb158fb&redirect_uri='.base_url().'auth/token&response_type=code">Instagram</a></div>';
-			} ?>
+			    echo '<div class="instagram" id="pega_instagram">Instagram</div>';
+			}
+			?>
 			<div class="ajustar" id="ajuste_automatico">Ajustar</div>
 			<div class="barraup"><progress value="0" max="100"></progress><span id="porcentagem">0%</span></div>
 		    </div>
@@ -74,17 +76,22 @@
 	</div>
 	<div class="tip-maior">
 	    <h5 class="projetoTitle">Capa da Contagem</h5>
-	    <div id="controle_capa">Opções</div>
 	    <div id="opcoes_capa">
 		    <ul>
 			<li id="computador">Computador</li>
 			<!-- <li id="get_facebook">Facebook</li> -->
-			<li id="get_instagram">Instagram</li>
-			<li id="redimensionar">Redimensionar</li>
-			<li id="salvar">Finalizar</li>
+			<?php
+			if(!is_numeric($instagram)){
+			    echo '<li class="instagram"><a class="white" href="https://api.instagram.com/oauth/authorize/?client_id=4df5f47cf2fa4da98b0d0f91beb158fb&redirect_uri='.base_url().'auth/token&response_type=code">Instagram</a></li>';
+			}else{
+			    echo '<li id="get_instagram">Instagram</li>';
+			}
+			?>
+			<li class="oculto" id="redimensionar">Ajustar</li>
+			<li class="oculto" id="salvar">Salvar</li>
 		    </ul>
 		</div>
-	    <div class="capa" title="Clique para escolher uma capa para esse Count">
+	    <div class="capa" title="Clique para mais opções">
 		<form id="formcapa" action="<?php echo base_url(); ?>web/img_upload/capa" method="post" enctype="multipart/form-data">
 		    <input type="hidden" name="optimgc" id="optimgc" value="n">
 		    <div id="FileUploadc">
@@ -95,10 +102,14 @@
 			</div>
 		    </div>
 		    <canvas id="canvascapa" width="640" height="200"></canvas>
-		    <div id="telinha">
-			<?php if($count[0]->co_capa !== '' || $count[0]->co_capa != 'no_capa.png'){ ?>
-			    <img width='320' height='100' src="<?php echo base_url().'capa/'.$count[0]->co_capa; ?>">
-			<?php } ?>
+		    <div id="telinha" class="controle_capa <?php if($this->uri->segment(3) == 'ret'){ echo 'retcapa'; } ?>">
+			<?php if($count[0]->co_capa != '' && $count[0]->co_capa != 'escolher_foto_capa.png'){
+			    $opc = 'width="320" height="100"';
+			}else{
+			    $opc = 'style="margin-top: 25px; cursor: pointer;"';
+			}
+			?>
+			<img <?php echo $opc; ?> src="<?php echo base_url().'capa/'.$count[0]->co_capa; ?>">
 		    </div>
 		</form>
 	    </div>
@@ -134,7 +145,7 @@
 			$txt = 'Clique para editar essa tip';
 		    }
 		    ?>
-		<div title="<?php echo $txt; ?>" class="mozaico poshy" <?php echo $dis; ?> data-central="<?php echo $t->ti_imgcentral; ?>" data-mostra="<?php echo date("d/m/Y", strtotime($t->ti_data_mostra)); ?>" data-codigo="<?php echo $t->ti_codigo; ?>" data-tip="<?php echo $c; ?>" data-dias="<?php echo $count[0]->co_dias; ?>" data-titulo="<?php echo $t->ti_titulo; ?>" data-sub="<?php echo $t->ti_subtitulo; ?>" data-descricao="<?php echo $t->ti_descricao; ?>" data-imagem="<?php
+		<div title="<?php echo $txt; ?>" class="mozaico poshy" id="tip_<?php echo $t->ti_codigo ;?>" <?php echo $dis; ?> data-central="<?php echo $t->ti_imgcentral; ?>" data-mostra="<?php echo date("d/m/Y", strtotime($t->ti_data_mostra)); ?>" data-codigo="<?php echo $t->ti_codigo; ?>" data-tip="<?php echo $c; ?>" data-dias="<?php echo $count[0]->co_dias; ?>" data-titulo="<?php echo $t->ti_titulo; ?>" data-sub="<?php echo $t->ti_subtitulo; ?>" data-descricao="<?php echo $t->ti_descricao; ?>" data-imagem="<?php
 		if($t->ti_imagem != ''){
 		    echo $t->ti_imagem;
 		}else{

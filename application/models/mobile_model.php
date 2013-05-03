@@ -191,11 +191,11 @@ class Mobile_model extends CI_Model {
     
     public function get_tipcount($id=NULL){
 	if($id != NULL){
-	    return $this->db->query("SELECT c.co_titulo, c.co_dias, t.*,
+	    return $this->db->query("SELECT c.co_titulo, c.co_dias, c.co_data_inicio, t.*,
 		(SELECT COUNT(*) FROM tbl_convidados s WHERE s.con_email = '".$id['email']."' AND s.con_count = ".$id['codigo'].") as seguindo
 		FROM tbl_tips t
 		LEFT JOIN tbl_count c ON c.co_codigo = t.ti_count
-		WHERE t.ti_count = ".$id['codigo']." AND t.ti_data_mostra <= '".date("Y-m-d")."' AND t.ti_titulo <> '' ORDER BY t.ti_data_mostra DESC");
+		WHERE t.ti_count = ".$id['codigo']." AND t.ti_data_mostra <= '".date("Y-m-d", strtotime('+5 days'))."' AND t.ti_titulo <> '' ORDER BY t.ti_data_mostra DESC");
 	}
     }
     

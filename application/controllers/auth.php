@@ -63,7 +63,7 @@ class Auth extends CI_Controller{
 	);
 	
 	$this->wdb->set_oauth_instagram($put);
-	redirect('web/tips');
+	redirect('web/tips/ret');
     }
     
     private function list_photo($url,$loc){
@@ -214,7 +214,7 @@ class Auth extends CI_Controller{
 	$access = $token[0]['oa_facebook_access_token'];
 	$usuario = $token[0]['oa_facebook_usuario'];
 	#https://graph.facebook.com/100001933896128/feed?message=Mensagem%20da%20DCANM%20Mobil&link=http%3A%2F%2Fwww.dcanm.mobi%2Fcount
-	$data['link'] = 'http://www.dcanm.mobi/count/';
+	$data['link'] = 'http://www.tiltheday.com/';
 	$data['message'] = 'Essa é uma mensagem de teste';
 	$data['caption'] = 'Caption';
 	$data['description'] = 'Description';

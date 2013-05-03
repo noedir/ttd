@@ -83,19 +83,16 @@ class Web_model extends CI_Model {
     
     public function set_count($dados=NULL){
 	if($dados != NULL){
-	    $exp = date("Y-m-d", strtotime("+".$dados['dias_projeto']." days"));
-	    	    
 	    if(isset($dados['codigo']) && $dados['codigo'] > 0){
 		$upd = array(
 		    'co_titulo'		=> $dados['nome_projeto'],
                     'co_descricao'      => $dados['ocasiao_projeto'],
 		    'co_privado'	=> $dados['privado'],
-		    'co_dias'		=> $dados['dias_projeto'],
-		    'co_data_expira'	=> $exp,
 		);
 		$this->db->where(array('co_codigo' => $dados['codigo']));
 		$this->db->update('tbl_count',$upd);
 	    }else{
+		$exp = date("Y-m-d", strtotime("+".$dados['dias_projeto']." days"));
 		$ins = array(
 		    'co_master'		=> $dados['user_id'],
 		    'co_dias'		=> $dados['dias_projeto'],
@@ -171,8 +168,10 @@ class Web_model extends CI_Model {
         return $this->db->get('tbl_usuario');
     }
     
-    public function get_allcount(){
-        return $this->db->query('');
+    public function get_all($tabela=NULL){
+	if($tabela != NULL){
+	    return $this->db->get($tabela);
+	}
     }
     
     public function get_tips($id=NULL){
@@ -239,11 +238,7 @@ class Web_model extends CI_Model {
     }
     
     public function grava_invite($email,$count){
-	$ins = array(
-	    'con_count' => $count,
-	    'con_email' => $email,
-	);
-	$this->db->insert('tbl_convidados',$ins);
+	$this->db->query("INSERT IGNORE INTO tbl_convidados (con_count, con_email) VALUES('".$count."','".$email."')");
     }
     public function set_convite($id=NULL){
 	if($id != NULL){
@@ -288,5 +283,13 @@ class Web_model extends CI_Model {
     }
     public function get_disponivel($nome){
 	return $this->db->get_where('tbl_count',array('co_nomeunico'=>$nome));
+    }
+    
+    public function set_expira($codigo){
+	$ins = array(
+	    'co_finalizado' => 's'
+	);
+	$this->db->where('co_codigo',$codigo);
+	$this->db->update('tbl_count',$ins);
     }
 }

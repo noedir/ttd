@@ -29,11 +29,11 @@ if(form_error('email_usuario')){
         <div class="baseNovoCount">
             <h3>Dados do Usuário</h3>
             <div class="formNovoCount">
-                <input type="text" size="45" name="nome_usuario" <?php if(form_error('nome_usuario')){ echo 'style="border: 1px solid #900" placeholder="Nome é obrigatório"'; }else{ echo 'placeholder="Nome do Usuário"'; } ?> value="<?php echo $this->session->userdata('us_nome'); ?>"> <?php echo $avn; ?>
+                <label>Nome: <br><input type="text" size="45" name="nome_usuario" <?php if(form_error('nome_usuario')){ echo 'style="border: 1px solid #900" placeholder="Nome é obrigatório"'; }else{ echo 'placeholder="Nome do Usuário"'; } ?> value="<?php echo $this->session->userdata('us_nome'); ?>"></label> <?php echo $avn; ?>
             </div>
             
             <div class="formNovoCount">
-            <input type="text" size="45" name="email_usuario" <?php if(form_error('email_usuario')){ echo 'style="border: 1px solid #900" placeholder="Email é obrigatório"'; }else{ echo 'placeholder="Email do Usuário"'; } ?> value="<?php echo $this->session->userdata('us_email'); ?>"> <?php echo $ave; ?>
+		<label>Email: <br><input type="text" size="45" name="email_usuario" <?php if(form_error('email_usuario')){ echo 'style="border: 1px solid #900" placeholder="Email é obrigatório"'; }else{ echo 'placeholder="Email do Usuário"'; } ?> value="<?php echo $this->session->userdata('us_email'); ?>"></label> <?php echo $ave; ?>
             </div>
             
             <div class="formNovoCount">
@@ -44,7 +44,7 @@ if(form_error('email_usuario')){
                 </select>
             </div>
             <div class="formNovoCount">
-                <input type="password" size="45" <?php if(form_error('senha_usuario')){ echo 'style="border: 1px solid #900" placeholder="Senha é obrigatória"'; } ?> name="senha_usuario" placeholder="Caso não queira mudar, deixe em branco">
+                <label>Senha: <br><input type="password" size="45" <?php if(form_error('senha_usuario')){ echo 'style="border: 1px solid #900" placeholder="Senha é obrigatória"'; } ?> name="senha_usuario" placeholder="Caso não queira mudar, deixe em branco"></label>
             </div>
             <input type="hidden" name="senhaatual" value="<?php echo $this->session->userdata('us_senha'); ?>">
             <button type="submit" class="criarProjeto">Atualizar</button>

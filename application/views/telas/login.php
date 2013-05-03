@@ -31,10 +31,10 @@ if($sev === false){
 	    }
 	    ?>
 	    <div class="formNovoCount">
-		<p><input type="text" size="16" name="email" placeholder="<?php echo $this->lang->line('pt_pemail'); ?>" autofocus="autofocus" value="<?php echo set_value('email');?>"> <?php echo $ave; ?></p>
+		<p><label>Email: <br><input type="text" size="16" name="email" placeholder="<?php echo $this->lang->line('pt_pemail'); ?>" autofocus="autofocus" value="<?php echo set_value('email');?>"> <?php echo $ave; ?></label></p>
 	    </div>
 	    <div class="formNovoCount">
-		<p><input type="password" size="16" name="senha" placeholder="<?php echo $this->lang->line('pt_psenha'); ?>" value="<?php echo set_value('senha'); ?>"> <?php echo $avs; ?></p>
+		<p><label>Senha: <br><input type="password" size="16" name="senha" placeholder="<?php echo $this->lang->line('pt_psenha'); ?>" value="<?php echo set_value('senha'); ?>"> <?php echo $avs; ?></label></p>
 	    </div>
 	    <div class="formNovoCount">
 		<button type="submit"><?php echo $this->lang->line('pt_bentrar'); ?></button>

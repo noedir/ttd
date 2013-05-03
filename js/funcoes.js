@@ -60,10 +60,10 @@ function instagram(ur){
 	url: ur+'auth/fotos_instagram',
 	success: function(resp){
 	    $('#list_foto').html(resp);
-	    $(".loader").fadeOut();
+	    $("#loader").fadeOut();
 	}
     });
-    $(".loader").fadeOut();
+    $("#loader").fadeOut();
 }
 
 function addTag(valor,codigo,ur){
@@ -107,100 +107,110 @@ function convida_face(){
 
 $(document).ready(function(){
     var ur = $('#ur').data('url');
-    
+        
     $(document).on('click','.inv',function(){
 	var api_images = [$(this).data('url')];
 	$.prettyPhoto.open(api_images);
     })
     
     $("#ok_contato").click(function(){
-	$(".loader").fadeIn();
+	$("#loader").fadeIn();
     });
     
     $("#file-capa").on('change', function(e){
 	var lar;
 	var alt;
 	
-	$("#opcoes_capa").fadeIn();
-	$("#telinha").html('');
-	
 	var files = e.target.files;
 	var f = files[0];
-        var reader = new FileReader();
-	reader.onload = (function () {
-	    return function (e) {
-		window.loadImage(
-		    e.target.result,
-		    function (img) {
-			$(img).appendTo("#telinha").attr({
-			    id: 'photoc',
-			    width: img.width,
-			    height: img.height
-			});
-			$('<input id="arqc" data-wi="'+img.width+'" data-he="'+img.height+'" type="hidden" name="fotoc" value="'+img.src+'">').appendTo("#telinha");
-			
-			lar = img.width / 2;
-			alt = img.height / 2;
+	
+	if(f.type === 'image/jpeg' || f.type === 'image/png'){
+	    $("#opcoes_capa").fadeIn();
+	    $("#telinha").html('<img src="'+ur+'img/loader.gif">');
+	    
+	    var reader = new FileReader();
+	    reader.onload = (function () {
+		return function (e) {
+		    window.loadImage(
+			e.target.result,
+			function (img) {
+			    $("#telinha").html('');
+			    $(img).appendTo("#telinha").attr({
+				id: 'photoc',
+				width: img.width,
+				height: img.height
+			    });
+			    $('<input id="arqc" data-wi="'+img.width+'" data-he="'+img.height+'" type="hidden" name="fotoc" value="'+img.src+'">').appendTo("#telinha");
 
-			$("#photoc").attr({
-			    width: lar,
-			    height: alt
-			}).css({
-			    top: '0px',
-			    left: '0px'
-			});
-		    },
-		    {
-			minWidth: 640,
-			minHeight: 200,
-		    }
-		);
-	    };
-	})(f);
-	reader.readAsDataURL(f);
+			    lar = img.width / 2;
+			    alt = img.height / 2;
+
+			    $("#photoc").attr({
+				width: lar,
+				height: alt
+			    }).css({
+				top: '0px',
+				left: '0px'
+			    });
+			    $("#redimensionar, #salvar").removeClass('oculto');
+			}
+		    );
+		};
+	    })(f);
+	    reader.readAsDataURL(f);
+	}else{
+	    alert("Use imagens JPG ou PNG.");
+	    return false;
+	}
     });
     
     $("#file-up").on('change', function(e){
 	var lar;
 	var alt;
 	
-	$("#ajuste_automatico").fadeIn();
-	$("#tela").html('');
-	
 	var files = e.target.files;
 	var f = files[0];
-        var reader = new FileReader();
-	reader.onload = (function () {
-	    return function (e) {
-		window.loadImage(
-		    e.target.result,
-		    function (img) {
-			$(img).appendTo("#tela").attr({
-			    id: 'photo',
-			    width: img.width,
-			    height: img.height,
-			});
-			$('<input id="arq" data-wi="'+img.width+'" data-he="'+img.height+'" type="hidden" name="foto" value="'+img.src+'">').appendTo("#tela");
-			
-			lar = img.width / 2.5;
-			alt = img.height / 2.5;
-			
-			$("#photo").attr({
-			    width: lar,
-			    height: alt,
-			}).css({
-			    top: '0px',
-			    left: '0px',
-			});
-		    },
-		    {
-			minWidth: 640,
-			minHeight: 570
-		    }
-		);
-	    };
-	})(f);
-	reader.readAsDataURL(f);
+	
+	if(f.type === 'image/jpeg' || f.type === 'image/png'){
+	    $("#ajuste_automatico").fadeIn();
+	    $("#tela").html('<img src="'+ur+'img/loader.gif">');
+	    var reader = new FileReader();
+	    reader.onload = (function () {
+		return function (e) {
+		    window.loadImage(
+			e.target.result,
+			function (img) {
+			    $("#tela").html('');
+			    $(img).appendTo("#tela").attr({
+				id: 'photo',
+				width: img.width,
+				height: img.height,
+			    });
+			    $('<input id="arq" data-wi="'+img.width+'" data-he="'+img.height+'" type="hidden" name="foto" value="'+img.src+'">').appendTo("#tela");
+
+			    lar = img.width / 2.5;
+			    alt = img.height / 2.5;
+
+			    $("#photo").attr({
+				width: lar,
+				height: alt,
+			    }).css({
+				top: '0px',
+				left: '0px',
+			    });
+			},
+			{
+			    minWidth: 640,
+			    minHeight: 570
+			}
+		    );
+		};
+	    })(f);
+	    reader.readAsDataURL(f);
+	}else{
+	    alert("Use imagens JPG ou PNG.");
+	    return false;
+	}
     });
     
     
@@ -221,19 +231,18 @@ $(document).ready(function(){
     
     $("#tabs").tabs();
     
-    $("input[name='dias_projeto']").on('blur', function(){
-	var nome = $("input[name='nome_usuario']");
-	var proj = $("input[name='nome_projeto']");
-	var dias = $("input[name='dias_projeto']");
+    $(document).on('blur', '#dias_projeto, #titulo_projeto', function(){
+	var proj = $("#titulo_projeto");
+	var dias = $("#dias_projeto");
 	
-	if(dias !== ''){
+	if(dias !== '' && proj !== ''){
 	    $.ajax({
 		type: 'post',
 		dataType: 'json',
-		data: 'nome='+nome.val()+'&proj='+proj.val()+'&dias='+dias.val(),
+		data: 'proj='+proj.val()+'&dias='+dias.val(),
 		url: ur+'web/nomeunico',
 		success: function(resp){
-		    $("input[name='nomeunico']").val(resp.result).focus();
+		    $("#nomeunico").val(resp.result).focus();
 		}
 	    });
 	}
@@ -260,8 +269,12 @@ $(document).ready(function(){
 	$("#file-up").click();
     });
     
-    $("#controle_capa").click(function(){
+    $(".controle_capa").click(function(){
 	$("#opcoes_capa").fadeToggle();
+    });
+    
+    $(document).on('show','.retcapa',function(){
+	$(".controle_capa").click();
     });
     
     $(document).on('click','#computador', function(){
@@ -372,15 +385,15 @@ $(document).ready(function(){
 	    dataType: 'html',
 	    url: ur+'auth/fotos_facebook/tips',
 	    beforeSend: function(){
-		$(".loader").fadeIn();
+		$("#loader").fadeIn();
 	    },
 	    success: function(resp){
 		var html = '<p align="center"><img src="'+ur+'img/facebook_photo.jpg"></p><hr>'+resp+''
 		$(html).appendTo('.pag');
-		$(".loader").fadeOut();
+		$("#loader").fadeOut();
 	    }
 	});
-	$(".loader").fadeOut();
+	$("#loader").fadeOut();
     });
     
     $("#get_facebook").click(function(){
@@ -393,15 +406,15 @@ $(document).ready(function(){
 	    dataType: 'html',
 	    url: ur+'auth/fotos_facebook/capa',
 	    beforeSend: function(){
-		$(".loader").fadeIn();
+		$("#loader").fadeIn();
 	    },
 	    success: function(resp){
 		var html = '<p align="center"><img src="'+ur+'img/facebook_photo.jpg"></p><hr>'+resp+''
 		$(html).appendTo('.pag');
-		$(".loader").fadeOut();
+		$("#loader").fadeOut();
 	    }
 	});
-	$(".loader").fadeOut();
+	$("#loader").fadeOut();
     });
     
     $("#pega_instagram").click(function(){
@@ -415,15 +428,15 @@ $(document).ready(function(){
 	    data: 'local=tips',
 	    url: ur+'auth/fotos_instagram/tips',
 	    beforeSend: function(){
-		$(".loader").fadeIn();
+		$("#loader").fadeIn();
 	    },
 	    success: function(resp){
 		var html = '<p align="center"><img src="'+ur+'img/instagram.png"></p><hr>'+resp+''
 		$(html).appendTo('.pag');
-		$(".loader").fadeOut();
+		$("#loader").fadeOut();
 	    }
 	});
-	$(".loader").fadeOut();
+	$("#loader").fadeOut();
     });
     
     $("#get_instagram").click(function(){
@@ -437,21 +450,24 @@ $(document).ready(function(){
 	    data: 'local=capa',
 	    url: ur+'auth/fotos_instagram/capa',
 	    beforeSend: function(){
-		$(".loader").fadeIn();
+		$("#loader").fadeIn();
 	    },
 	    success: function(resp){
 		var html = '<p align="center"><img src="'+ur+'img/instagram.png"></p><hr>'+resp+''
 		$(html).appendTo('.pag');
-		$(".loader").fadeOut();
+		$("#loader").fadeOut();
+		$("#redimensionar, #salvar").removeClass('oculto');
 	    }
 	});
-	$(".loader").fadeOut();
+	$("#loader").fadeOut();
     });
     
     
     $("#fundo_box").click(function(){
 	$("#pagina").fadeOut();
 	$(".pag").fadeOut().html('');
+	$("#loader").fadeOut();
+	$("#redimensionar, #salvar").addClass("oculto");
 	$(this).fadeOut();
     });
     
@@ -584,15 +600,16 @@ $(document).ready(function(){
 		url: ur+'web/grava_capa',
 		success: function(resp){
 		    $("#opcoes_capa").fadeOut();
-		    $(".loader").fadeOut();
+		    $("#loader").fadeOut();
 		    html = '<img src="'+resp.msg+'" width="320" height="100">';
 		    $(".capa #telinha").html('').html(html);
 		    $('#photoc').draggable( "destroy" );
 		}
 	    });
-	    $(".loader").fadeOut();
+	    $("#loader").fadeOut();
 	};
-	$(".loader").fadeOut();
+	$("#loader").fadeOut();
+	$("#redimensionar, #salvar").addClass("oculto");
     });
     
     $(document).on('click','#redimensionar', function(){
@@ -781,6 +798,8 @@ $(document).ready(function(){
      
     $("#addtip").click(function(){
 	$("#loader").fadeIn();
+	$(this).html("Processando...").delay(10);
+	
 	var titulo = $("input[name='titulo']").val();
 	var sub = $("input[name='subtitulo']").val();
 	var mensagem = $("#men").val();
@@ -822,6 +841,8 @@ $(document).ready(function(){
 	    $("#loader").fadeOut();
 	    return false;
 	}
+	
+	$("#photo").mouseover();
 	
 	var n = imagem.match("/*_tip*");
 	
@@ -879,15 +900,28 @@ $(document).ready(function(){
 		    data: dados,
 		    async: false,
 		    url: ur+'web/grava_tip',
+		    beforeSend: function(){
+			$("#loader").fadeIn();
+			$("#addtip").html('Processando...');
+		    },
 		    success: function(resp){
-			$(".loader").fadeOut();
+			$("#loader").fadeOut();
 			$(".menu_foto").fadeOut();
 			if(resp.erro === 'ok'){
-			   redirect('');
+			    var img = '<img width="100" src="'+ur+'tips/thumb_'+resp.imagem+'">';
+			    $("#tip_"+id_tip).html('').html(img);
+			    $("#tip_"+id_tip).data('titulo',titulo);
+			    $("#tip_"+id_tip).data('sub',sub);
+			    $("#tip_"+id_tip).data('descricao',mensagem);
+			    $("#tip_"+id_tip).data('imagem',resp.imagem);
+			    $(".esconde, #num_tip, #loader").fadeOut();
+			    $("#tit_tip, #sub_tip, #men_tip").html('');
+			    $("#tela").html('');
 			}
+			$("#addtip").html('Salvar');
 		    }
 		});
-		$(".loader").fadeOut();
+		$("#loader").fadeOut();
 	    };
 	}else{
 	    var dados = 'id_tip='+id_tip+'&codigo='+codigo+'&img=sem&titulo='+titulo+'&sub='+sub+'&mensagem='+mensagem;
@@ -898,17 +932,27 @@ $(document).ready(function(){
 		data: dados,
 		async: false,
 		url: ur+'web/grava_tip',
+		beforeSend: function(){
+		    $("#loader").fadeIn();
+		    $("#addtip").html('Processando...');
+		},
 		success: function(resp){
-		    $(".loader").fadeOut();
+		    $("#loader").fadeOut();
 		    $(".menu_foto").fadeOut();
-		    if(resp.erro === 'ok'){
-		       redirect('');
+		    if(resp.erro === 'ok'){			
+			$("#tip_"+id_tip).data('titulo',titulo);
+			$("#tip_"+id_tip).data('sub',sub);
+			$("#tip_"+id_tip).data('descricao',mensagem);
+			$(".esconde, #num_tip, #loader").fadeOut();
+			$("#tit_tip, #sub_tip, #men_tip").html('');
+			$("#tela").html('');
 		    }
+		    $("#addtip").html('Salvar');
 		}
 	    });
-	    $(".loader").fadeOut();
+	    $("#loader").fadeOut();
 	}
-	$(".loader").fadeOut();
+	$("#loader").fadeOut();
     });
      
     $("#tit").keyup(function(){
@@ -933,6 +977,8 @@ $(document).ready(function(){
 	if(confirm("Deseja realmente excluir esse Count? Essa ação não tem retorno.")){
 	    window.location.href=ur+"web/excluir_count/"+id;
 	}
+	
+	return false;
     });
     
     $("button[type='reset']").click(function(){
@@ -970,7 +1016,7 @@ $(document).ready(function(){
         $(this).css('border-color','#ddd');
     });
     
-    if($("input[name='dias_projeto']").val() !== ''){
+    if($("#dias_projeto").val() !== ''){
 	var valor = $(this).val();
 	if(valor !== ''){
 	    var dia = 0.99;
@@ -983,7 +1029,7 @@ $(document).ready(function(){
 	}
     }
     
-    $("input[name='dias_projeto']").blur(function(){
+    $("#dias_projeto").blur(function(){
         var valor = $(this).val();
 	if(valor !== ''){
 	    var dia = 0.99;

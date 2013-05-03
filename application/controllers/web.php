@@ -8,6 +8,7 @@ class Web extends CI_Controller {
         $this->load->helper('form');
         $this->load->helper('array');
 	$this->load->helper('html');
+	$this->load->helper('text');
 	$this->load->library('form_validation');
 	if($this->input->cookie('idioma') == ''){
 	    $this->lang->load('pt','idioma');
@@ -50,13 +51,12 @@ class Web extends CI_Controller {
     
     public function nomeunico(){
 	header('content-type: application/json');
-	$input = elements(array('nome','proj','dias'),$this->input->post());
+	$input = elements(array('proj','dias'),$this->input->post());
 	
-	if($input['nome'] !== '' && $input['proj'] !== '' && $input['dias'] !== ''){
-	    $nome = $this->nome_curto($input['nome']);
+	if($input['proj'] !== '' && $input['dias'] !== ''){
 	    $proj = str_replace(' ','',$input['proj']);
 	    $dias = date("Y", strtotime("+".$input['dias']." days"));
-	    $dados['result'] = strtolower($proj).$dias;
+	    $dados['result'] = strtolower(url_title(convert_accented_characters($proj))).$dias;
 	    	    
 	    $query = $this->wdb->get_nomeunico($dados['result'])->result_array();
 	    
@@ -157,7 +157,7 @@ class Web extends CI_Controller {
 
 	    $this->email->initialize($config);
 	    $this->email->from($input['email_contato'], $input['nome_contato']);
-	    $this->email->to('daniel@dcanm.com.br');
+	    $this->email->to('contato@tiltheday.com');
 	    $this->email->subject($input['assunto_contato']);
 	    $this->email->message($texto);
 	    $em = $this->email->send();
@@ -298,7 +298,7 @@ class Web extends CI_Controller {
         
         $this->form_validation->set_rules('nome_usuario','Nome do Usuário','trim|required');
         $this->form_validation->set_rules('email_usuario','Email do Usuário','trim|required|valid_email|is_unique[tbl_usuario.us_email]');
-        $this->form_validation->set_rules('senha_usuario','Senha','trim|required');
+        $this->form_validation->set_rules('senha_usuario','Senha','trim|required|min_length[6]|max_length[15]');
         $this->form_validation->set_rules('confirma_senha','Confirmação','trim|required|matches[senha_usuario]');
         $this->form_validation->set_rules('nome_projeto','Projeto','trim|required');
         $this->form_validation->set_rules('ocasiao_projeto','Ocasião','trim|required');
@@ -394,10 +394,9 @@ class Web extends CI_Controller {
 	
 	$this->form_validation->set_rules('nome_projeto','TITULO','trim|required');
 	$this->form_validation->set_rules('ocasiao_projeto','OCASIAO','trim|required');
-	$this->form_validation->set_rules('dias_projeto','DIAS','trim|required');
 	
 	if($this->form_validation->run()){
-	    $input = elements(array('codigo','privado','nome_projeto','ocasiao_projeto','dias_projeto'),$this->input->post());
+	    $input = elements(array('codigo','privado','nome_projeto','ocasiao_projeto'),$this->input->post());
 	    $this->wdb->set_count($input);
 	    redirect('web/counts');
 	}
@@ -425,7 +424,7 @@ class Web extends CI_Controller {
     
     public function tips(){
 	$this->ver_conta();
-	if($this->uri->segment(3) != ''){
+	if($this->uri->segment(3) != '' && $this->uri->segment(3) != 'ret'){
 	    $id = $this->uri->segment(3);
 	    $this->session->set_userdata('tips',$id);
 	}else{
@@ -438,8 +437,15 @@ class Web extends CI_Controller {
 	    'count'	=> $this->wdb->get_tcount($id)->result(),
 	    'tips'	=> $this->wdb->get_tips($id)->result(),
 	    'totaltips'	=> $this->wdb->get_totaltips($id),
-	    'oauth'	=> $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result_array(),
 	);
+	
+	$auth = $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result_array();
+	
+	if(count($auth) > 0){
+	    $dados['instagram'] = $auth[0]['oa_instagram_id'];
+	}else{
+	    $dados['instagram'] = 'oauth';
+	}
 	
 	$dados['facebook'] = base_url().'facebook';
 	
@@ -788,6 +794,11 @@ class Web extends CI_Controller {
 	    $config['height'] = 200;
 	    $this->load->library('image_lib',$config);
 	    $this->image_lib->resize();
+	    $resp['imagem'] = $file;
+	}
+	
+	if($input['img'] == 'sem'){
+	    $resp['imagem'] = 'nao';
 	}
 	
 	$resp['msg'] = '';
@@ -925,8 +936,8 @@ class Web extends CI_Controller {
 		    $config['charset'] = 'utf8';
 		    $config['wordwrap'] = TRUE;
 		    $config['smtp_host'] = 'mail.tiltheday.com';
-		    $config['smtp_user'] = 'invite@tiltheday.com.br';
-		    $config['smtp_pass'] = 'dudinha';
+		    $config['smtp_user'] = 'invite@tiltheday.com';
+		    $config['smtp_pass'] = 'dudinha09';
 		    $config['smtp_port'] = 587;
 		    $config['smtp_timeout'] = 20;
 		    $config['mailtype'] = 'html';
@@ -934,7 +945,7 @@ class Web extends CI_Controller {
 		    $this->email->initialize($config);
 		    $this->email->from($this->session->userdata('us_email'), $this->session->userdata('nomecurto'));
 		    $this->email->to($valid);
-		    $this->email->subject('Você está a receber um invite de '.$this->session->userdata('nomecurto'));
+		    $this->email->subject('Você recebeu um invite de '.$this->session->userdata('nomecurto'));
 		    $this->email->message($texto);
 		    $em = $this->email->send();
 		    
@@ -1065,5 +1076,15 @@ class Web extends CI_Controller {
 	
 	echo "<pre>";
 	print_r($ver);
+    }
+    
+    public function expira_count(){
+	$query = $this->wdb->get_all('tbl_count')->result_array();
+	
+	foreach($query as $k){
+	    if($k['co_data_inicio'] && date("Y-m-d", strtotime($k['co_data_inicio']. '+ '.$k['co_dias'].' days')) < date("Y-m-d")){
+		$this->wdb->set_expira($k['co_codigo']);
+	    }
+	}
     }
 }
