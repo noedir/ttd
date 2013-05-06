@@ -18,7 +18,7 @@
 		    <div id="metodosUpload">        
 			<div class="upload" id="uploadpc"><input type="hidden" value="s" name="central" id="optimg">Computador</div>
 			<?php
-			if(!is_numeric($instagram)){
+			if(!is_numeric($instagram) || $instagram == 0){
 			    echo '<div class="instagram"><a class="white" href="https://api.instagram.com/oauth/authorize/?client_id=4df5f47cf2fa4da98b0d0f91beb158fb&redirect_uri='.base_url().'auth/token&response_type=code">Instagram</a></div>';
 			}else{
 			    echo '<div class="instagram" id="pega_instagram">Instagram</div>';
@@ -71,6 +71,7 @@
 		<input type="hidden" value="n" id="mudou">
 		<button id="addtip" type="submit" class="esconde">Salvar</button>
 		<button id="cantip" type="cancel" class="esconde">Cancelar</button>
+		<button id="cleantip" type="reset" class="esconde">Limpar Tip</button>
 		<img src="<?php echo base_url(); ?>img/ajax-loader.gif" id="loader">
 	    </p>
 	</div>
@@ -81,7 +82,7 @@
 			<li id="computador">Computador</li>
 			<!-- <li id="get_facebook">Facebook</li> -->
 			<?php
-			if(!is_numeric($instagram)){
+			if(!is_numeric($instagram) || $instagram == 0){
 			    echo '<li class="instagram"><a class="white" href="https://api.instagram.com/oauth/authorize/?client_id=4df5f47cf2fa4da98b0d0f91beb158fb&redirect_uri='.base_url().'auth/token&response_type=code">Instagram</a></li>';
 			}else{
 			    echo '<li id="get_instagram">Instagram</li>';
@@ -106,7 +107,7 @@
 			<?php if($count[0]->co_capa != '' && $count[0]->co_capa != 'escolher_foto_capa.png'){
 			    $opc = 'width="320" height="100"';
 			}else{
-			    $opc = 'style="margin-top: 25px; cursor: pointer;"';
+			    $opc = 'class="trava" style="margin-top: 25px; cursor: pointer;"';
 			}
 			?>
 			<img <?php echo $opc; ?> src="<?php echo base_url().'capa/'.$count[0]->co_capa; ?>">
@@ -142,7 +143,7 @@
 			$txt = 'Tip antiga';
 		    }else{
 			$dis = 'data-disabled="no"';
-			$txt = 'Clique para editar essa tip';
+			$txt = 'Tip do dia '.date("d/m/Y", strtotime($t->ti_data_mostra));
 		    }
 		    ?>
 		<div title="<?php echo $txt; ?>" class="mozaico poshy" id="tip_<?php echo $t->ti_codigo ;?>" <?php echo $dis; ?> data-central="<?php echo $t->ti_imgcentral; ?>" data-mostra="<?php echo date("d/m/Y", strtotime($t->ti_data_mostra)); ?>" data-codigo="<?php echo $t->ti_codigo; ?>" data-tip="<?php echo $c; ?>" data-dias="<?php echo $count[0]->co_dias; ?>" data-titulo="<?php echo $t->ti_titulo; ?>" data-sub="<?php echo $t->ti_subtitulo; ?>" data-descricao="<?php echo $t->ti_descricao; ?>" data-imagem="<?php

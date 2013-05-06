@@ -47,6 +47,13 @@ if(form_error('email_usuario')){
                 <label>Senha: <br><input type="password" size="45" <?php if(form_error('senha_usuario')){ echo 'style="border: 1px solid #900" placeholder="Senha é obrigatória"'; } ?> name="senha_usuario" placeholder="Caso não queira mudar, deixe em branco"></label>
             </div>
             <input type="hidden" name="senhaatual" value="<?php echo $this->session->userdata('us_senha'); ?>">
+	    
+	    <?php if(count($oauth) > 0 && is_numeric($oauth[0]['oa_instagram_id']) && $oauth[0]['oa_instagram_id'] > 0){ ?>
+	    <?php echo anchor('web/sair_instagram','<img title="Sair do Instagram" style="float: left; margin-top: 15px;" src="'.base_url().'/img/up_instagram.png">'); ?>
+	    <?php } ?>
+	    <?php if($this->uri->segment(3) == 'ok'){ ?>
+	    <iframe src="https://instagram.com/accounts/logout/" width="0" height="0"></iframe>
+	    <?php } ?>
             <button type="submit" class="criarProjeto">Atualizar</button>
         </div>
     </form>

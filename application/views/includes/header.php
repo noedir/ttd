@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/eggplant/jquery-ui.css">
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/cupertino/jquery-ui.css">
 	<script src="<?php echo base_url(); ?>js/load-image.min.js" type="text/javascript"></script>
         <script src="<?php echo base_url(); ?>js/jquery-1.7.2.min.js"></script>
 	<script src="<?php echo base_url(); ?>js/jquery.html5-placeholder-shim.js"></script>
@@ -20,7 +20,7 @@
 	<div id="ur" data-url="<?php echo base_url(); ?>"></div>
 	<div id="pagina">
 	    <div id="close"></div>
-	    <img class="loader" src="<?php echo base_url(); ?>img/loader.gif">
+	    <img id="loadering" src="<?php echo base_url(); ?>img/loader.gif">
 	    <div class="pag"></div>
 	</div>
 	<div id="fundo_box"></div>

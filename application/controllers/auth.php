@@ -54,7 +54,7 @@ class Auth extends CI_Controller{
 	curl_close ($ch);
 	
 	$dados = json_decode($get);
-	
+		
 	$put = array(
 	    'usuario' => $this->session->userdata('us_codigo'),
 	    'id' => $dados->user->id,
@@ -63,6 +63,7 @@ class Auth extends CI_Controller{
 	);
 	
 	$this->wdb->set_oauth_instagram($put);
+	
 	redirect('web/tips/ret');
     }
     
@@ -72,9 +73,20 @@ class Auth extends CI_Controller{
 	foreach($url as $k => $v){
 	    $img = $v->images->standard_resolution->url;
 	    $low = $v->images->thumbnail->url;
-	    $hei = 640; //$v->images->standard_resolution->height;
-	    $wid = 640; //$v->images->standard_resolution->width;
+	    $hei = 640;
+	    $wid = 640;
 	    $saida .= '<div class="pfti"><img class="fti'.$loc.'" data-wi="'.$wid.'" data-he="'.$hei.'" data-local="instagram" data-alta="'.$img.'" src="'.$low.'"></div>';
+	}
+	return $saida;
+    }
+    
+    private function listjson($url, $loc){
+	$saida = '';
+	
+	foreach($url['src'] as $k){
+	    $imgbaixa = str_replace("_7","_5",$k);
+	    $imgalta = $k;
+	    $saida .= '<div class="pfti"><img class="fti'.$loc.'" data-wi="640" data-he="640" data-local="instagram" data-alta="'.$k.'" src="'.$imgbaixa.'"></div>';
 	}
 	return $saida;
     }
@@ -91,26 +103,45 @@ class Auth extends CI_Controller{
 	$next = '';
 	$photos = '';
 	
+	$cache = './cachejson/instagram_'.$this->session->userdata('us_codigo').'.json';
 	
-	while($c <= 10){
-	    if($next == ''){
-		$url = 'https://api.instagram.com/v1/users/'.$query[0]->oa_instagram_id.'/media/recent/?access_token='.$query[0]->oa_instagram_access_token.'&count=32';
-	    }else{
-		$url .= '&max_id='.$next;
+	if(file_exists($cache) && filemtime($cache) > time() - 60*30){
+	    // If a cache file exists, and it is newer than 1 hour, use it
+	    $photos = $this->listjson(json_decode(file_get_contents($cache),true),$local);
+	    
+	}else{
+	
+	    $images[] = array();
+	    
+	    while($c <= 10){
+		if($next == ''){
+		    $url = 'https://api.instagram.com/v1/users/'.$query[0]->oa_instagram_id.'/media/recent/?access_token='.$query[0]->oa_instagram_access_token.'&count=32';
+		}else{
+		    $url .= '&max_id='.$next;
+		}
+
+		$get = file_get_contents($url);
+		$dados = json_decode($get);
+		
+		foreach(json_decode($get)->data as $item){
+
+		    $src = $item->images->standard_resolution->url;
+		    $low = $item->images->thumbnail->url;
+		    
+		    $images['src'][] = htmlspecialchars($src);
+		}
+		
+		file_put_contents($cache,json_encode($images)); //Save as json
+
+		$photos .= $this->list_photo($dados->data,$local);
+
+		if(isset(json_decode($get)->pagination->next_max_id)){
+		    $next = json_decode($get)->pagination->next_max_id;
+		}else{
+		    break;
+		}
+		$c++;
 	    }
-
-	    $get = file_get_contents($url);
-	    $dados = json_decode($get);
-
-	    $photos .= $this->list_photo($dados->data,$local);
-	    $data[] = $this->list_photo($dados->data,$local);
-
-	    if(isset(json_decode($get)->pagination->next_max_id)){
-		$next = json_decode($get)->pagination->next_max_id;
-	    }else{
-		break;
-	    }
-	    $c++;
 	}
 	
 	

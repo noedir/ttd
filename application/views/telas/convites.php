@@ -18,7 +18,7 @@
 	</div>
 	<div id="tabs-2">
 	    <br>
-	    <?php if($facebook == ''){ ?>
+	    <?php if($appID == ''){ ?>
 	    <div id="lista_facebook"></div>
 	    <?php }else{ ?>
 	    <a href="<?php echo $facebook.'?inv='.current_url(); ?>"><img src="<?php echo base_url(); ?>img/oauth_facebook.jpg"></a>

@@ -251,11 +251,19 @@ class Web extends CI_Controller {
 	$this->load->view('web_view',$dados);
     }
     
+    public function sair_instagram(){
+	$id = $this->session->userdata('us_codigo');
+	$this->wdb->del_instagram($id);
+	
+	redirect('web/atualiza_dados/ok');
+    }
+    
     public function atualiza_dados(){
 	$this->ver_conta();
 	$dados = array(
 	    'title' => 'TilTheDay &raquo; Atualizar Dados',
 	    'tela' => 'atualiza_dados',
+	    'oauth' => $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result_array(),
 	);
 	
 	$this->form_validation->set_rules('nome_usuario','NOME','trim|required');
@@ -420,6 +428,20 @@ class Web extends CI_Controller {
 	);
 	
 	$this->load->view('web_view',$dados);
+    }
+    
+    private function limpa_imagem($id){
+	$qy = $this->wdb->get_onetip($id)->result_array();
+	$img = realpath('tips/'.$qy[0]['ti_imagem']);
+	if(file_exists($img)){
+	    unlink($img);
+	}
+    }
+    
+    public function clean_tip(){
+	$id = $this->input->post('id');
+	$this->limpa_imagem($id);
+	$this->wdb->clear_tip($id);
     }
     
     public function tips(){
@@ -865,11 +887,15 @@ class Web extends CI_Controller {
 	);
 	
 	if(count($access) === 0){
-	    $dados['facebook'] = base_url().'facebook';
+	    $dados['appID'] == '445876232159922';
 	}else{
-	    $dados['appID'] = '445876232159922';
-	    $dados['facebook'] = '';
+	    $dados['appID'] = '';
 	}
+	
+	#echo "<pre>";
+	#print_r($dados);
+	#die();
+	    
 	$this->load->view('web_view',$dados);
     }
     

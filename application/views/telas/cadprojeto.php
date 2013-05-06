@@ -113,7 +113,8 @@ if(form_error('confirma_senha')){
                     <label for="nomeunico">Identificador desse Projeto</label>
                     <br /><input type="text" placeholder="Identificador do Projeto" name="nomeunico" id="nomeunico" readonly="true" value="<?php echo set_value('nomeunico'); ?>"><input type="hidden" name="unique" value="v">
                 </div>
-                <button type="submit" class="criarProjeto">Criar Projeto</button>
+		<p style="float: left; margin-top: 25px; font-size: 12px;">* Ao clicar em Criar Projeto, você confirma que<br>aceita os <strong>Termos e Condições de Uso</strong>.</p>
+		<button style="float: right;" type="submit" class="criarProjeto">Criar Projeto</button>
         </div>
     </form>
 </div>

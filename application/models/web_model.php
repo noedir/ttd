@@ -50,6 +50,16 @@ class Web_model extends CI_Model {
 	}
     }
     
+    public function del_instagram($id){
+	$this->db->where('oa_usuario',$id);
+	$up = array(
+	    'oa_instagram_id' => '',
+	    'oa_instagram_access_token' => '',
+	    'oa_instagram_username' => '',
+	);
+	$this->db->update('tbl_oauth',$up);
+    }
+    
     public function get_oauth($id){
 	$this->db->where('oa_usuario',$id);
 	return $this->db->get('tbl_oauth');
@@ -174,10 +184,32 @@ class Web_model extends CI_Model {
 	}
     }
     
+    public function get_onetip($id){
+	if($id != NULL){
+	    $this->db->where(array('ti_codigo'=>$id));
+	    return $this->db->get('tbl_tips');
+	}
+    }
+    
     public function get_tips($id=NULL){
 	if($id != NULL){
 	    $this->db->where(array('ti_count'=>$id));
 	    return $this->db->get('tbl_tips');
+	}
+    }
+    
+    public function clear_tip($id=NULL){
+	if($id != NULL){
+	    $up = array(
+		'ti_titulo' => '',
+		'ti_subtitulo' => '',
+		'ti_descricao' => '',
+		'ti_imagem' => '',
+		'ti_imgcentral' => 'n',
+		'ti_imgposicao' => ''
+	    );
+	    $this->db->where('ti_codigo',$id);
+	    $this->db->update('tbl_tips',$up);
 	}
     }
     
