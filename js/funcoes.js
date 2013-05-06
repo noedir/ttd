@@ -112,7 +112,11 @@ function convida_face(){
 
 $(document).ready(function(){
     var ur = $('#ur').data('url');
-        
+    
+    $(".tela").scroll(function(){
+	$("#baseDock").fadeOut('fast');
+    });
+    
     $(document).on('click','.inv',function(){
 	var api_images = [$(this).data('url')];
 	$.prettyPhoto.open(api_images);
@@ -768,16 +772,13 @@ $(document).ready(function(){
 	$("#men_tip").html(nl2br($(this).data("descricao")));
 	$(".esconde").fadeIn();
 	
-	if($(this).data('titulo') === ''){
-	    $("#cleantip").hide();
-	}
-	
 	if(dis === 'yes'){
 	    $("#tit").prop("disabled", true);
 	    $("#sub").prop("disabled", true);
 	    $("#men").prop("disabled", true);
 	    $("#addtip").css({display: 'none'});
 	    $("#cantip").css({display: 'none'});
+	    $("#cleantip").css({display: 'none'});
 	    $(".menu_foto").fadeOut();
 	}else{
 	    $("#tit").prop("disabled", false);
@@ -785,6 +786,11 @@ $(document).ready(function(){
 	    $("#men").prop("disabled", false);
 	    $("#addtip").css({display: 'inline-block'});
 	    $("#cantip").css({display: 'inline-block'});
+	    if($(this).data('titulo') === ''){
+		$("#cleantip").hide();
+	    }else{
+		$("#cleantip").show();
+	    }
 	    $(".menu_foto").fadeIn();
 	}
     });
@@ -832,7 +838,7 @@ $(document).ready(function(){
      
     $("#addtip").click(function(){
 	$("#loader").fadeIn();
-	$(this).html("Processando...").delay(10);
+	$(this).html("Processando...").delay(100);
 	
 	var titulo = $("input[name='titulo']").val();
 	var sub = $("input[name='subtitulo']").val();
@@ -949,7 +955,7 @@ $(document).ready(function(){
 			$("#loader").fadeOut();
 			$(".menu_foto").fadeOut();
 			if(resp.erro === 'ok'){
-			    var img = '<img width="100" src="'+ur+'tips/thumb_'+resp.imagem+'">';
+			    var img = '<img width="100" src="'+ur+'tips/thumb_'+resp.imagem+'"><div class="fundo"><strong>'+$("#tip_"+id_tip).data('tip')+'/'+$("#tip_"+id_tip).data('dias')+'</strong></div>';
 			    $("#tip_"+id_tip).html('').html(img);
 			    $("#tip_"+id_tip).data('titulo',titulo);
 			    $("#tip_"+id_tip).data('sub',sub);

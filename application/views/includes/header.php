@@ -7,10 +7,13 @@
         <script src="<?php echo base_url(); ?>js/jquery-1.7.2.min.js"></script>
 	<script src="<?php echo base_url(); ?>js/jquery.html5-placeholder-shim.js"></script>
         <script src="<?php echo base_url(); ?>js/jquery-ui-1.8.21.custom.min.js"></script>
+	<script src="<?php echo base_url(); ?>js/jquery.mousewheel.min.js"></script>
+	<script src="<?php echo base_url(); ?>js/jquery.mCustomScrollbar.js"></script>
 	<script src="<?php echo base_url(); ?>js/jquery.form.js"></script>
 	<script src="<?php echo base_url(); ?>js/jquery.tagsinput.js" type="text/javascript"></script>
         <script src="<?php echo base_url(); ?>js/jquery.prettyPhoto.js" type="text/javascript"></script>
 	<script src="<?php echo base_url(); ?>js/funcoes.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="<?php echo base_url(); ?>css/jquery.mCustomScrollbar.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/prettyPhoto.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/estilo.css">
         <title><?php echo $title; ?></title>
