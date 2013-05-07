@@ -39,7 +39,7 @@ function processJson(data){
 	$('progress').attr('value','');
 	$('#porcentagem').html('0%');
 	$("#ajuste_automatico").fadeIn();
-	$("#tela").html('').html(data.img+'<input type="hidden" name="foto" value="'+data.arquivo+'">');
+	$("#tela").html('').html(data.img+'<input type="hidden" id="arq" name="foto" value="'+data.arquivo+'">');
     }else{
 	alert("Aviso: "+data.msg);
     }
@@ -47,7 +47,7 @@ function processJson(data){
 
 function processJsonc(data){
     if(data.status === '200'){
-	$(".capa #telinha").html('').html(data.img+'<input type="hidden" name="fotoc" value="'+data.arquivo+'">');
+	$(".capa #telinha").html('').html(data.img+'<input type="hidden" id="arqc" name="fotoc" value="'+data.arquivo+'">');
     }else{
 	alert("Aviso: "+data.msg);
     }
@@ -148,8 +148,8 @@ $(document).ready(function(){
 				id: 'photoc',
 				width: img.width,
 				height: img.height
-			    });
-			    $('<input id="arqc" data-wi="'+img.width+'" data-he="'+img.height+'" type="hidden" name="fotoc" value="'+img.src+'">').appendTo("#telinha");
+			    }).data('wi',img.width).data('he',img.height);
+			    $('<input id="arqc" type="hidden" name="fotoc" value="'+img.src+'">').appendTo("#telinha");
 
 			    lar = img.width / 2;
 			    alt = img.height / 2;
@@ -529,19 +529,20 @@ $(document).ready(function(){
     
     $(document).on('click','.fticapa',function(){
 	var image = $(this).data('alta');
+	$("#loadering").fadeIn();
 	$.post(ur+'web/encodeimg', {img: image}, function(resp){
 	    image = resp.img64;
 	    $("#telinha").html('');
-	    var html = '<img id="photoc" height="" width="320" data-he="640" data-wi="640" src="'+image+'"><input type="hidden" name="fotoc" value="'+image+'">';
+	    var html = '<img id="photoc" height="" width="320" data-he="640" data-wi="640" src="'+image+'"><input type="hidden" name="fotoc" id="arqc" value="'+image+'">';
 	    $(html).appendTo(".capa #telinha").css({
 		top: '0px',
 		left: '0px'
 	    });
+	    $("#loadering").fadeOut();
+	    $("#pagina").fadeOut();
+	    $(".pag").fadeOut().html('');
+	    $("#fundo_box").fadeOut();
 	}, "json");
-	
-	$("#pagina").fadeOut();
-	$(".pag").fadeOut().html('');
-	$("#fundo_box").fadeOut();
     });
     
     $("#ok_data").click(function(){
@@ -577,8 +578,6 @@ $(document).ready(function(){
 	imageObj.onload = function() {
 	    var canvas = document.getElementById('canvascapa');
 	    var context = canvas.getContext('2d');
-	    
-	    context.clearRect (0,0,canvas.width,canvas.height);
 	    
 	    var codigo = $("input[name='count']").val();
 	    var posicao = coordsCapa(); // pega LEFT x TOP
@@ -618,6 +617,8 @@ $(document).ready(function(){
 	    }
 	    var img_pronta = canvas.toDataURL("image/jpeg");
 	    
+	    context.clearRect(0,0,canvas.width,canvas.height);
+	    
 	    var dados = 'codigo='+codigo+'&img='+img_pronta;
 	     
 	    
@@ -644,15 +645,14 @@ $(document).ready(function(){
     $(document).on('click','#redimensionar', function(){
 	var opt = $("#optimgc");
 	var img = $("#photoc");
-	var tam = $("#arqc");
 	var h = '';
 	var w = '';
 	var eixo = '';
 	if(opt.val() === 's'){
 	    opt.val('n');
 	    img.attr({
-		height: tam.data('he') / 2,
-		width: tam.data('wi') / 2
+		height: img.data('he') / 2,
+		width: img.data('wi') / 2
 	    }).css({
 		top: '0px',
 		left: '0px',
@@ -661,14 +661,14 @@ $(document).ready(function(){
 	    });
 	}else{
 	    opt.val('s');
-	    if(tam.data('he') > 100){
-		h = '320';
-		w = '';
-		eixo = 'y';
-	    }else{
+	    if((img.data('he') / 2) < 100){
 		h = '100';
 		w = '';
 		eixo = 'x';
+	    }else{
+		h = '';
+		w = '320';
+		eixo = 'y';
 	    }
 	    img.attr({
 		height: h,

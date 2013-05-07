@@ -85,7 +85,6 @@ class Auth extends CI_Controller{
 	
 	foreach($url['src'] as $k){
 	    $imgbaixa = str_replace("_7","_5",$k);
-	    $imgalta = $k;
 	    $saida .= '<div class="pfti"><img class="fti'.$loc.'" data-wi="640" data-he="640" data-local="instagram" data-alta="'.$k.'" src="'.$imgbaixa.'"></div>';
 	}
 	return $saida;
@@ -99,29 +98,27 @@ class Auth extends CI_Controller{
 	$local = $this->input->post('local');
 	
 	$query = $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result();
-	$c = 0;
+	$l = 1;
 	$next = '';
-	$photos = '';
 	
 	$cache = './cachejson/instagram_'.$this->session->userdata('us_codigo').'.json';
 	
-	if(file_exists($cache) && filemtime($cache) > time() - 60*30){
+	if(file_exists($cache) && filemtime($cache) > time() - 60*60){
 	    // If a cache file exists, and it is newer than 1 hour, use it
-	    $photos = $this->listjson(json_decode(file_get_contents($cache),true),$local);
+	    echo $this->listjson(json_decode(file_get_contents($cache),true),$local);
 	    
 	}else{
 	
 	    $images[] = array();
 	    
-	    while($c <= 10){
+	    for($i=0;$i<$l;++$i){
 		if($next == ''){
 		    $url = 'https://api.instagram.com/v1/users/'.$query[0]->oa_instagram_id.'/media/recent/?access_token='.$query[0]->oa_instagram_access_token.'&count=32';
 		}else{
-		    $url .= '&max_id='.$next;
+		    $url = $next;
 		}
 
 		$get = file_get_contents($url);
-		$dados = json_decode($get);
 		
 		foreach(json_decode($get)->data as $item){
 
@@ -129,23 +126,17 @@ class Auth extends CI_Controller{
 		    $low = $item->images->thumbnail->url;
 		    
 		    $images['src'][] = htmlspecialchars($src);
+		    echo '<div class="pfti"><img class="fti'.$local.'" data-wi="640" data-he="640" data-local="instagram" data-alta="'.$src.'" src="'.$low.'"></div>';
 		}
 		
 		file_put_contents($cache,json_encode($images)); //Save as json
 
-		$photos .= $this->list_photo($dados->data,$local);
-
 		if(isset(json_decode($get)->pagination->next_max_id)){
-		    $next = json_decode($get)->pagination->next_max_id;
-		}else{
-		    break;
+		    $next = json_decode($get)->pagination->next_url;
+		    ++$l;
 		}
-		$c++;
 	    }
 	}
-	
-	
-	echo $photos;
     }
     
     public function fotos_facebook(){
