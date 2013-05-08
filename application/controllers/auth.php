@@ -103,11 +103,13 @@ class Auth extends CI_Controller{
 	
 	$cache = './cachejson/instagram_'.$this->session->userdata('us_codigo').'.json';
 	
-	if(file_exists($cache) && filemtime($cache) > time() - 1){
+	if(file_exists($cache) && filemtime($cache) > time() - 60*60){
 	    // If a cache file exists, and it is newer than 1 hour, use it
 	    echo $this->listjson(json_decode(file_get_contents($cache),true),$local);
 	    
 	}else{
+	    
+	    unlink($cache);
 	
 	    $images[] = array();
 	    

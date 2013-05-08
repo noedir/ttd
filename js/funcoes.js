@@ -113,8 +113,34 @@ function convida_face(){
 $(document).ready(function(){
     var ur = $('#ur').data('url');
     
-    $(".tela").scroll(function(){
-	$("#baseDock").fadeOut('fast');
+    $(".altdata").click(function(){
+	$("#altdata").datepicker({
+	    dateFormat: 'dd/mm/yy',
+	    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+	    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sab'],
+	    dayNamesMin: ['Do','Se','Te','Qu','Qu','Se','Sa'],
+	    minDate: '+1',
+	    onSelect: function(){
+		var novadata = $(this).val();
+		var dias = $("#cod_count").data('dias');
+		$.ajax({
+		    type: 'post',
+		    dataType: 'html',
+		    data: 'calendario='+novadata+'&cd_count='+$("#cod_count").val()+"&dias_count="+dias,
+		    url: ur+'web/altdata',
+		    beforeSend: function(){
+			if(!confirm("Deseja realmente alterar a data de início para "+novadata+"?")){
+			    $("#altdata").datepicker( "destroy" );
+			    return false;
+			}
+		    },
+		    success: function(){
+			$("#altdata").datepicker( "destroy" );
+			redirect('');
+		    }
+		});
+	    }
+	});
     });
     
     $(document).on('click','.inv',function(){
@@ -628,6 +654,11 @@ $(document).ready(function(){
 		data: dados,
 		async: false,
 		url: ur+'web/grava_capa',
+		beforeSend: function(){
+		    $(".progress").progressbar({
+			value: 45
+		    });
+		},
 		success: function(resp){
 		    $("#opcoes_capa").fadeOut();
 		    $("#loader").fadeOut();

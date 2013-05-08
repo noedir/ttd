@@ -860,6 +860,28 @@ class Web extends CI_Controller {
 	redirect('web/tips');
     }
     
+    public function altdata(){
+	$this->ver_conta();
+	$input = elements(array('cd_count','dias_count','calendario'),$this->input->post());
+	$c = 0;
+	
+	$input['calendario'] = $this->inverte_data($input['calendario']);
+	
+	$this->wdb->set_datacount($input);
+	
+	while($c < $input['dias_count']){
+	    $data = date("Y-m-d", strtotime($input['calendario']." +".$c." days"));
+	    $c++;
+	    
+	    $tp = array(
+		'codigo' => $input['cd_count'],
+		'data' => $data,
+		'contagem' => $c
+	    );
+	    $this->wdb->up_tip($tp);
+	}
+    }
+    
     public function gravatag(){
 	$this->ver_conta();
 	$input = elements(array('tags','codigo'),$this->input->post());

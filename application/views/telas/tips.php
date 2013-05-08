@@ -99,7 +99,7 @@
 			<input type="file" name="imagem" id="file-capa">
 			<div id="BrowserVisiblec">
 			    <input type="text" id="FileFieldc" style="width: 0px; cursor: pointer;" name="foto">
-			    <input type="hidden" id="cod_count" name="cod_count" value="<?php echo $count[0]->co_codigo; ?>">
+			    <input type="hidden" data-dias="<?php echo $count[0]->co_dias; ?>" id="cod_count" name="cod_count" value="<?php echo $count[0]->co_codigo; ?>">
 			</div>
 		    </div>
 		    <canvas id="canvascapa" width="640" height="200"></canvas>
@@ -125,7 +125,12 @@
 		<p>Início do projeto: <input size="15" type="text" id="calendario" name="calendario"><input type="hidden" name="cd_count" value="<?php echo $count[0]->co_codigo; ?>"><input type="hidden" name="dias_count" value="<?php echo $count[0]->co_dias; ?>"> <button type="submit" id="ok_data">OK</button></p>
 		<?php echo form_close(); ?>
 		<?php }else{ ?>
-		<span class="inidata">Início: <?php echo date("d/m/Y", strtotime($count[0]->co_data_inicio)); ?></span><span class="fimdata">Término: <?php echo date("d/m/Y", strtotime($count[0]->co_data_inicio." + ".($count[0]->co_dias - 1)." days")); ?></span>
+		<span class="inidata">Início: <?php echo date("d/m/Y", strtotime($count[0]->co_data_inicio)); ?></span>
+		<span class="fimdata">Término: <?php echo date("d/m/Y", strtotime($count[0]->co_data_inicio." + ".($count[0]->co_dias - 1)." days")); ?></span>
+		<?php if($count[0]->co_data_inicio > date("Y-m-d")){?>
+		    <br><br><br>
+		    <span class="altdata">Deseja alterar a data de início?<span id="altdata">&nbsp;</span></span>
+		<?php }?>
 		<?php } ?>
 	    </div>
 	    <!-- FIM DA DATA -->

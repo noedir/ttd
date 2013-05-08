@@ -621,6 +621,13 @@ a.black:hover{
     font-size: 11px;
     margin: 5px 3px;
 }
+.dt_projeto .altdata{
+    position: absolute;
+    top: 36px;
+    left: 0px;
+    z-index: 110;
+    cursor: pointer;
+}
 .dt_projeto  .inidata{
     position: relative;
     float: left;

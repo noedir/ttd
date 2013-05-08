@@ -257,6 +257,17 @@ class Web_model extends CI_Model {
 	}
     }
     
+    public function up_tip($dados=NULL){
+	if($dados != NULL){
+	    $up = array(
+		'ti_data_mostra' => $dados['data'],
+	    );
+	    $this->db->where('ti_count',$dados['codigo']);
+	    $this->db->where('ti_contagem',$dados['contagem']);
+	    $this->db->update('tbl_tips',$up);
+	}
+    }
+    
     public function set_tag($dados){
 	$ins = array(
 	    'co_tags' => $dados['tags'],
