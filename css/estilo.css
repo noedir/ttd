@@ -64,7 +64,7 @@
 }
 
 body{
-    background: #fff;
+    background: url(../img/background_textura.png) repeat;
     color: #333;
     font-family: 'ColaborateRegular', Verdana, Arial, cursive, sans-serif;
     margin: 0px;
@@ -72,6 +72,9 @@ body{
 }
 .clr {
 	clear:both;
+}
+input {
+	outline: none;
 }
 .poshy_style{
     font-size: 11px;
@@ -97,6 +100,9 @@ a.black:hover{
 .esconde{
     display: none;
 }
+.esconde p{
+    padding: 0px;
+}
 .green{
     color: #090;
     font-weight: bold;
@@ -109,7 +115,7 @@ a.black:hover{
     width: 100%;
     height: 100%;
     margin: 0px auto;
-    background: url(../img/fundo.png);
+    background: url(../img/fundo_claro.png);
     display: none;
     overflow: auto;
     z-index: 99999;
@@ -119,10 +125,9 @@ a.black:hover{
     position: fixed;
     top: 50%;
     left: 50%;
-    border: 10px solid #fff;
+    border: 10px;
     margin-top: -200px;
     margin-left: -375px;
-    background: #fff;
     width: 750px;
     height: 400px;
     display: none;
@@ -132,6 +137,8 @@ a.black:hover{
     border-radius: 10px;
 }
 #pagina #loadering{
+    width: 15px;
+    margin: 0 auto;
     text-align: center;
     display: none;
 }
@@ -340,17 +347,22 @@ a.black:hover{
     float: left;
     width: 1060px;
     min-height: 100px;
-    background: #fff;
     padding: 10px;
     padding-bottom: 40px;
 }
 #container p{
     margin: 10px 0px;
 }
+#container textarea {
+    outline: none;
+}
 #container #tabs{
     position: relative;
     float: left;
     width: 100%;
+    background: none;
+    border: none;
+    margin-top: 15px;
 }
 #tabs #lista_facebook{
     position: relative;
@@ -547,8 +559,8 @@ a.black:hover{
     background: #ddd;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    padding: 0px 0px 0px 11px;
-    height: 663px;
+    padding: 0px 0px 25px 11px;
+    min-height: 663px;
 }
 .tip-maior h3,  .tip-maior h5{
     margin: 10px;
@@ -565,20 +577,21 @@ a.black:hover{
     position: relative;
     width: 320px;
     height: 100px;
-    margin: 5px 0px 5px 4px;
-    border: 7px solid #ccc;
-    border-radius: 5px;
+    margin: 5px 0px 5px 10px;
+    border: 2px solid #eee;
+    outline: none;
     background: #FFF;
     z-index: 100;
     overflow: hidden;
+    cursor: pointer;
 }
 .tip-maior #opcoes_capa{
     position: absolute;
-    top: 123px;
-    left: 18px;
+    top: 110px;
+    left: 17px;
     width: 320px;
-    height: 22px;    
-    padding: 0px 0px 0px 4px;
+    height: 25px;    
+    padding: 0px 0px 0px 6px;
     z-index: 987;
     display: none;
     text-align: center;
@@ -588,13 +601,14 @@ a.black:hover{
     list-style: none;
     background: url(../img/fundo.png);
     height: 25px;
+	padding-top: 7px;
 }
 #opcoes_capa li{
     display: inline;
-    padding: 6px 4px;
+    padding: 8px 4px;
     color: #fff;
-    margin: 0px 1px;
-    font-size: 10px;
+    margin: 0px 2px;
+    font-size: 12px;
     cursor: pointer;
 }
 #opcoes_capa li.oculto{
@@ -616,10 +630,10 @@ a.black:hover{
 .tip-maior .dt_projeto{
     position: relative;
     float: left;
-    width: 336px;
-    text-align: center;
+    width: 324px;
+    text-align: left;
     font-size: 11px;
-    margin: 5px 3px;
+    margin: 5px 0px 5px 10px;
 }
 .dt_projeto .altdata{
     position: absolute;
@@ -631,7 +645,8 @@ a.black:hover{
 .dt_projeto  .inidata{
     position: relative;
     float: left;
-    width: 160px;
+    text-align: center;
+    width: 156px;
     padding: 8px 0px;
     background: #e8fff7;
     border: 2px solid #C8EEE1;
@@ -645,17 +660,18 @@ h5.projetoTitle {
 .dt_projeto .fimdata{
     position: relative;
     float: right;
-    width: 160px;
+    text-align: center;
+    width: 156px;
     padding: 8px 0px;
     background: #fbedda;
     border: 2px solid #FFDDAD;
 }
 .tip-maior .tags_projeto{
     position: relative;
-    width: 330px;
+    width: 320px;
     text-align: center;
-    margin: 5px 3px;
-    border: 3px solid #eee;
+    margin: 5px 0px 0px 10px;
+    border: 2px solid #eee;
     background: #fff;
 }
 .tags_projeto #temas{
@@ -664,7 +680,7 @@ h5.projetoTitle {
 }
 .tip-maior .sdt_projeto{
     position: relative;
-    width: 330px;
+    width: 320px;
     text-align: center;
     margin: 5px 3px;
     font-size: 11px;
@@ -673,13 +689,27 @@ h5.projetoTitle {
     background: #fee;
 }
 .dt_projeto #calendario{
-    width: 100px;
-    text-align: center;
-    font-size: 14px;
-}
-.dt_projeto p{
-    margin: 7px 10px;
+    direction: hidden;
+    border: 2px solid #eee;
+    width: 235px;
+    margin: 5px 5px 0px 0px;
+    padding: 5px;
+    height: 15px;
+    outline: none;
+    float:left;
     font-size: 10px;
+    letter-spacing:-0.5px;
+    font-weight: bold;
+    color: #666;
+}
+.ok_calendario{
+	margin: 5px 0 0 5px;
+	float:right;
+}
+.dt_projeto .ini_data_projeto{
+    margin: -5px 0 0 0px;
+    width: 324px;height: 15px;
+    font-size: 12px;
     font-weight: bold;
     color: #308D6E;
 }
@@ -741,8 +771,8 @@ h5.projetoTitle {
     background: url(../img/iphone_mock3.png) no-repeat;
 }
 #container input, #container textarea, #container select{
-    border-radius: 5px;
-    padding: 5px;
+    border-radius: 0px;
+    padding: 10px;
     border: 1px solid #ddd;
     width: 100%;
     background: #fff;
@@ -772,41 +802,44 @@ textarea{
     resize: none;
 }
 button[type='submit']{
-    background: #468847;
+    background: #15e09b;
+    width: 150px;
     color: #fff;
     font-size: 12px;
-    padding: 2px 5px;
-    border-radius: 7px;
+    padding: 10px;
+    border-radius: 3px;
 }
 
 button[type='submit']:hover{
     cursor: pointer;
-    background: #090;
-    box-shadow: inset 0 0 5px #000;
+    background: #24db9d;
+    box-shadow: inset 0 0 5px #1acc90;
 }
 button[type='cancel']{
     background: #994647;
+	width: 150px;
     color: #fff;
     font-size: 12px;
-    padding: 2px 5px;
-    border-radius: 7px;
+    padding: 10px;
+    border-radius: 3px;
 }
 button[type='cancel']:hover{
     cursor: pointer;
-    background: #900;
-    box-shadow: inset 0 0 5px #000;
+    background: #9d3b3c;
+    box-shadow: inset 0 0 5px #8f3334;
 }
 button[type='reset']{
     background: #66B7D5;
+	width: 150px;
     color: #fff;
     font-size: 12px;
-    padding: 2px 5px;
-    border-radius: 7px;
+    padding: 10px;
+    border-radius: 3px;
 }
 button[type='reset']:hover{
     cursor: pointer;
-    background: #05e;
-    box-shadow: inset 0 0 5px #000;
+    background: #5aadcc;
+    box-shadow: inset 0 0 5px #5aadcc;
 }
 .exc{
     cursor: pointer;
@@ -957,13 +990,13 @@ border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px;
 
 /* ===== Tags input  ===== */
 
-div.tagsinput {margin: 0px; padding: 5px; overflow-y: auto; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box; }
-div.tagsinput span.tag { border: 1px solid #a5d24a; display: block; float: left; padding: 0 8px; background: #cde69c; color: #638421; margin: 2px; font-size: 9px; }
-div.tagsinput span.tag a { font-weight: bold; color: #82ad2b; font-size: 11px; float: right; } 
+div.tagsinput { width: 300px; margin: 0px; padding: 5px; overflow-y: auto; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box; }
+div.tagsinput span.tag { border: 1px solid #fff091; display: block; float: left; padding: 0 8px; background: #fffce4; color: #878787; padding: 3px 5px 5px 5px; margin-left: 4px; margin-top: 4px; font-size: 14px; }
+div.tagsinput span.tag a { font-weight: bold; color: #878787; font-size: 16px; float: right; margin-top: -1px; } 
 div.tagsinput input { width: 30px; border: none; padding: 5px 8px 6px 8px; background: transparent; margin: 5px 5px 0 4px; }
 div.tagsinput div { display: block; float: left; } 
 .tags_clear { clear: both; width: 100%; height: 0px; }
-.not_valid { background: #FBD8DB !important; color: #90111A !important;}
+.not_valid { background: #FBD8DB !important; color: #90111A !important; border-radius: none;}
 
 .baseNovoCount {
     width: 515px;
@@ -1010,7 +1043,7 @@ div.tagsinput div { display: block; float: left; }
     position:absolute;
     width: 310px;
     height: 30px;
-    top: 15px;
+    top: 20px;
     right: -5px;
     color: #fff;
     text-align: center;
@@ -1021,28 +1054,28 @@ div.tagsinput div { display: block; float: left; }
     background: #b2b2b2;
     width: 70px;
     float:left;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    margin: 9px 0px 0px 0px;
-    padding: 1px 10px 2px 10px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    margin: 18px 0px 0px 0px;
+    padding: 6px;
 }
 
 #baseValores .cadaDia{
     background: #d18c28;
     width: 70px;
     float:left;
-    margin: 9px 0px 0px 0px;
-    padding: 1px 10px 2px 10px;
+    margin: 18px 0px 0px 0px;
+    padding: 6px;
 }
 
 #baseValores .valorFinal {
     background: #eaa138;
     width: 110px;
     float:left;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-    margin: 9px 0px 0px 0px;
-    padding: 1px 10px 2px 10px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    margin: 18px 0px 0px 0px;
+    padding: 6px;
 }
 
 .formNovoCountDataInicio{
@@ -1239,4 +1272,40 @@ div.tagsinput div { display: block; float: left; }
 
 #metodosUpload .upload:hover, #metodosUpload .instagram:hover, #metodosUpload .facebook:hover, #metodosUpload .ajustar:hover, #metodosUpload .reposicionar:hover{
 	background-color:#0f0f0f;
+}
+
+.tip-box #ui-datepicker-div {
+	width: 100px;
+	height: 200px;
+}
+
+#amigos_tagsinput {
+	padding: 10px;
+	border: 1px solid #e0e0e0;
+	margin-top: 10px;
+}
+
+#amigos_tag {
+	outline: none;
+	font-size: 12px;
+}
+
+#temas_tag {
+	outline: none;
+	font-size: 12px;
+}
+#title_lightbox {
+	float:left;
+	margin-top: 20px;	
+}
+#trocar_instagram {
+	float:right;
+	margin: 20px 25px 0 0;
+	letter-spacing: -0.4px;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+#trocar_instagram a{
+	color: #15e09b;
 }

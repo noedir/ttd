@@ -12,7 +12,7 @@
 	    </div>
 	    <div class="menu_foto">
 		<div id="triggerSelect">
-		    Opções<br />de Foto
+		    <img style="margin-top: 3px; margin-right: 6px;" src="<?php echo base_url(); ?>img/ops_fotos.png" />
 		</div>
 		<div id="baseDock">
 		    <div id="metodosUpload">        
@@ -63,15 +63,15 @@
 	    <input type="hidden" name="codigo_tip" id="codigo_tip">
 	    <input type="hidden" id="posicao" name="posicao" value="0/0">
 	    <input type="hidden" id="suporta" value="s">
-	    <p class="esconde"><input class="campos" maxlength="16" placeholder="Título (Máximo 16 caracteres)" type="text" name="titulo" id="tit"></p><br>
-	    <p class="esconde"><input class="campos" maxlength="32" placeholder="Sub-título (Máximo 32 caracteres)" type="text" name="subtitulo" id="sub"></p><br>
-	    <p class="esconde"><textarea class="campos" maxlength="2000" placeholder="Descrição (Máximo 2000 caracteres)" wrap="hard" rows="15" cols="30" name="descricao" id="men"></textarea></p>
-	    <br>
-	    <p class="esconde">
+	    <p style="padding:0px; margin:0px" class="esconde"><input class="campos" maxlength="16" placeholder="Título (Máximo 16 caracteres)" type="text" name="titulo" id="tit"></p><br>
+	    <p style="padding:0px; margin:0px" class="esconde"><input class="campos" maxlength="32" placeholder="Sub-título (Máximo 32 caracteres)" type="text" name="subtitulo" id="sub"></p><br>
+	    <p style="padding:0px; margin:0px" class="esconde"><textarea class="campos" maxlength="2000" placeholder="Descrição (Máximo 2000 caracteres)" wrap="hard" rows="25" cols="30" name="descricao" id="men"></textarea></p>
+	    
+	    <p style="width:343px" class="esconde">
 		<input type="hidden" value="n" id="mudou">
-		<button id="addtip" type="submit" class="esconde">Salvar</button>
-		<button id="cantip" type="cancel" class="esconde">Cancelar</button>
-		<button id="cleantip" type="reset" class="esconde">Limpar Tip</button>
+		<button style="width: 100px;" id="addtip" type="submit" class="esconde">Salvar</button>
+		<button style="width: 100px;" id="cantip" type="cancel" class="esconde">Cancelar</button>
+		<button style="width: 100px; float:right;" id="cleantip" type="reset" class="esconde">Limpar Tip</button>
 		<img src="<?php echo base_url(); ?>img/ajax-loader.gif" id="loader">
 	    </p>
 	</div>
@@ -122,7 +122,7 @@
 	    <div class="dt_projeto">
 		<?php if($count[0]->co_data_inicio == '' || $count[0]->co_data_inicio == '0000-00-00'){ ?>
 		<?php echo form_open('web/gravadata'); ?>
-		<p>Início do projeto: <input size="15" type="text" id="calendario" name="calendario"><input type="hidden" name="cd_count" value="<?php echo $count[0]->co_codigo; ?>"><input type="hidden" name="dias_count" value="<?php echo $count[0]->co_dias; ?>"> <button type="submit" id="ok_data">OK</button></p>
+		<div class="ini_data_projeto"><!--<span style="color: #999">Início do Projeto:</span><br />--><input size="30" type="text" placeholder="Início do Projeto" id="calendario" name="calendario"><input type="hidden" name="cd_count" value="<?php echo $count[0]->co_codigo; ?>"><input type="hidden" name="dias_count" value="<?php echo $count[0]->co_dias; ?>"> <button type="submit" class="ok_calendario" id="ok_data" style="width: 40px; padding: 9px; font-size: 10px; font-weight: bold;">OK</button></div>
 		<?php echo form_close(); ?>
 		<?php }else{ ?>
 		<span class="inidata">Início: <?php echo date("d/m/Y", strtotime($count[0]->co_data_inicio)); ?></span>

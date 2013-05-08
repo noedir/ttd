@@ -54,7 +54,7 @@
 		    echo anchor('web/invites/'.$k->co_codigo,' <img src="'.base_url().'img/convidar_amigos.png" title="Enviar Convites para essa TIP" />');
 		    echo anchor('web/estatisticas/'.$k->co_codigo,'<img src="'.base_url().'/img/stats_count.png" title="Ver as Estatísticas dessa TIP" />');
 		    ?></td>
-                    <td  style="text-align:center; border-top: none; margin-left: 0px; background: #fff;" class="tdCounts"><img title="Excluir Count" class="exc" data-ur="<?php echo base_url(); ?>" data-id="<?php echo $k->co_codigo; ?>" src="<?php echo base_url(); ?>img/excluir_count.png"></td>
+                    <td  style="text-align:center; border-top: none; margin-left: 0px;" class="tdCounts"><img title="Excluir Count" class="exc" data-ur="<?php echo base_url(); ?>" data-id="<?php echo $k->co_codigo; ?>" src="<?php echo base_url(); ?>img/excluir_count.png"></td>
                 </tr>
 		<?php } ?>
 		<?php }else{ ?>

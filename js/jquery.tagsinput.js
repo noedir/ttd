@@ -97,13 +97,24 @@
 				
 				if (value !='' && skipTag != true) { 
                     $('<span>').addClass('tag').append(
-                        $('<span>').text(value).append('&nbsp;&nbsp;'),
+                        $('<span>').addClass('essa').text(value).append('&nbsp;&nbsp;'),
                         $('<a>', {
                             href  : '#',
                             title : 'Removing tag',
-                            text  : 'x'
+                            text  : 'x',
                         }).click(function () {
-                            return $('#' + id).removeTag(escape(value));
+			    var tag = value;
+			    var cod = $("#cod_count").val();
+			    var ur = $('#ur').data('url');
+
+			    $.ajax({
+				type: 'post',
+				dataType: 'html',
+				data: 'tag='+tag+'&codigo='+cod,
+				url: ur+'web/deltag'
+			    });
+			    
+			    return $('#' + id).removeTag(escape(value));
                         })
                     ).insertBefore('#' + id + '_addTag');
 

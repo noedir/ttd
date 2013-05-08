@@ -19,7 +19,7 @@ function retornaValor(nome){
     var vai = $("input[name='"+nome+"']");
     $.post(ur+'web/disponivel',{nome:vai.val()}, function(ret){
 	if(ret === 'false'){
-	    $(vai).focus().css({border: '1px solid #900'});
+	    $(vai).focus().css({border: '1px solid #e98087', background: '#f5d4d7',});
 	    $("input[name='unique']").val('n');
 	}else{
 	    $(vai).css({border: '1px solid #ddd'});
@@ -487,7 +487,7 @@ $(document).ready(function(){
 	    },
 	    success: function(resp){
 		$("#loadering").fadeOut();
-		var html = '<p align="center"><img src="'+ur+'img/instagram.png"></p><hr>'+resp+''
+		var html = '<p align="left" id="instagram_lightbox"><img style="float:left;" src="'+ur+'img/instagram_logo.png"><div id="title_lightbox">Instagram</div><div id="trocar_instagram"><a href="#">Trocar Conta<br /> do Instagram</a></div><div style="clear:both;"></div></p><hr>'+resp+''
 		$(html).appendTo('.pag');
 	    }
 	});
@@ -508,7 +508,7 @@ $(document).ready(function(){
 	    },
 	    success: function(resp){
 		$("#loadering").fadeOut();
-		var html = '<p align="center"><img src="'+ur+'img/instagram.png"></p><hr>'+resp+''
+		var html = '<p align="left" id="instagram_lightbox"><img style="float:left;" src="'+ur+'img/instagram_logo.png"><div id="title_lightbox">Instagram</div><div id="trocar_instagram"><a href="#">Trocar Conta<br /> do Instagram</a></div><div style="clear:both;"></div></p><hr>'+resp+''
 		$(html).appendTo('.pag');
 		$("#redimensionar, #salvar").removeClass('oculto');
 	    }
@@ -583,6 +583,9 @@ $(document).ready(function(){
 	dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sab'],
 	dayNamesMin: ['Do','Se','Te','Qu','Qu','Se','Sa'],
 	minDate: '+1',
+	showOn: "button",
+	buttonImage: ur+"img/calendar.jpg",
+	buttonImageOnly: true
     });
     
     $(document).on('click', '#salvar', function(){
@@ -890,7 +893,8 @@ $(document).ready(function(){
 	if(titulo === ''){
 	    alert("Sua Tip precisa de um título");
 	    $("input[name='titulo']").focus().css({
-		border: '1px solid #900',
+		border: '1px solid #e98087',
+		background: '#f5d4d7',
 	    });
 	    $("#loader").fadeOut();
 	    $("#addtip").html('Salvar');
@@ -900,7 +904,8 @@ $(document).ready(function(){
 	if(sub === ''){
 	    alert("Sua Tip precisa de um sub-título");
 	    $("input[name='subtitulo']").focus().css({
-		border: '1px solid #900',
+		border: '1px solid #e98087',
+		background: '#f5d4d7',
 	    });
 	    $("#loader").fadeOut();
 	    $("#addtip").html('Salvar');
@@ -910,7 +915,8 @@ $(document).ready(function(){
 	if(mensagem === ''){
 	    alert("Sua Tip precisa de uma descrição");
 	    $("#men").focus().css({
-		border: '1px solid #900',
+		border: '1px solid #e98087',
+		background: '#f5d4d7',
 	    });
 	    $("#loader").fadeOut();
 	    $("#addtip").html('Salvar');

@@ -886,7 +886,27 @@ class Web extends CI_Controller {
 	$this->ver_conta();
 	$input = elements(array('tags','codigo'),$this->input->post());
 	$this->wdb->set_tag($input);
-	print_r($input);
+    }
+    
+    public function deltag(){
+	$this->ver_conta();
+	$input = elements(array('tag','codigo'),$this->input->post());
+	$count = $this->wdb->get_count($input['codigo'])->result_array();
+	
+	$tags =  explode(",",$count[0]['co_tags']);
+	$c = count($tags);
+	
+	$nova = '';
+	
+	for($i=0;$i<$c;$i++){
+	    if($tags[$i] != $input['tag']){
+		$nova .= $tags[$i].',';
+	    }
+	}
+	$t = substr($nova,0,-1);
+	$input['tags'] = $t;
+	
+	$this->wdb->set_tag($input);
     }
     
     public function computador(){
