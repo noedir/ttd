@@ -49,7 +49,7 @@ if(form_error('dias_projeto')){
             <div class="formNovoCount">
 		<!--<img id="seta_priv" src="<?php echo base_url(); ?>img/seta.gif">-->
 		<div class="clr"></div>
-                <input type="radio" id="radio1" checked="checked" name="privado" value="s"><label for="radio1">Privado</label> <input type="radio" id="radio2" name="privado" value="n"><label for="radio2">Público</label>
+                <input type="radio" id="radio1" name="privado" value="s"><label for="radio1">Privado</label> <input type="radio" id="radio2" name="privado" value="n" checked="checked"><label for="radio2">Público</label>
             </div>
 
             <div class="formNovoCount">    

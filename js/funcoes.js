@@ -113,6 +113,19 @@ function convida_face(){
 $(document).ready(function(){
     var ur = $('#ur').data('url');
     
+    if($("#louins").length){
+	var local = $("#louins").data("capa");
+	var tip = $("#louins").data('tip');
+	if(confirm("Deseja ir para o Instagram agora?")){
+	    var link = $(".instagram .white").attr('href');
+	    redirect(link);
+	}else{
+	    if(local === 'capa'){
+		$("#opcoes_capa").show();
+	    }
+	}
+    }
+    
     $(".altdata").click(function(){
 	$("#altdata").datepicker({
 	    dateFormat: 'dd/mm/yy',
@@ -477,6 +490,8 @@ $(document).ready(function(){
 	    $("#pagina").fadeIn();
 	    $(".pag").fadeIn();
 	});
+	var count = $("#cod_count").val();
+	var tip = $("#codigo_tip").val();
 	$.ajax({
 	    type: 'post',
 	    dataType: 'html',
@@ -487,7 +502,7 @@ $(document).ready(function(){
 	    },
 	    success: function(resp){
 		$("#loadering").fadeOut();
-		var html = '<p align="left" id="instagram_lightbox"><img style="float:left;" src="'+ur+'img/instagram_logo.png"><div id="title_lightbox">Instagram</div><div id="trocar_instagram"><a href="#">Trocar Conta<br /> do Instagram</a></div><div style="clear:both;"></div></p><hr>'+resp+''
+		var html = '<p align="left" id="instagram_lightbox"><img style="float:left;" src="'+ur+'img/instagram_logo.png"><div id="title_lightbox">Instagram</div><div id="trocar_instagram"><a href="'+ur+'web/sair_instagram/tips_'+count+'_'+tip+'">Trocar Conta<br /> do Instagram</a></div><div style="clear:both;"></div></p><hr>'+resp+''
 		$(html).appendTo('.pag');
 	    }
 	});
@@ -498,6 +513,7 @@ $(document).ready(function(){
 	    $("#pagina").fadeIn();
 	    $(".pag").fadeIn();
 	});
+	var count = $("#cod_count").val();
 	$.ajax({
 	    type: 'post',
 	    dataType: 'html',
@@ -508,7 +524,7 @@ $(document).ready(function(){
 	    },
 	    success: function(resp){
 		$("#loadering").fadeOut();
-		var html = '<p align="left" id="instagram_lightbox"><img style="float:left;" src="'+ur+'img/instagram_logo.png"><div id="title_lightbox">Instagram</div><div id="trocar_instagram"><a href="#">Trocar Conta<br /> do Instagram</a></div><div style="clear:both;"></div></p><hr>'+resp+''
+		var html = '<p align="left" id="instagram_lightbox"><img style="float:left;" src="'+ur+'img/instagram_logo.png"><div id="title_lightbox">Instagram</div><div id="trocar_instagram"><a href="'+ur+'web/sair_instagram/capa_'+count+'">Trocar Conta<br /> do Instagram</a></div><div style="clear:both;"></div></p><hr>'+resp+''
 		$(html).appendTo('.pag');
 		$("#redimensionar, #salvar").removeClass('oculto');
 	    }

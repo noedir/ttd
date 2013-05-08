@@ -1,3 +1,14 @@
+<?php
+if($this->uri->segment(4) != ''){
+    if($this->uri->segment(4) == 'capa'){
+	$dt = 'data-capa="'.$this->uri->segment(4).'"';
+    }else{
+	$tp = explode("_",$this->uri->segment(4));
+	$dt = 'data-tip="'.$tp[0].'_'.$tp[1].'" data-capa="'.$tp[0].'"';
+    }
+    echo '<iframe id="louins" '.$dt.' src="https://instagram.com/accounts/logout/" width="0" height="0"></iframe>';
+}
+?>
 <div id="container">
     <div id="tip-container">
 	<div class="tip-box iphone">

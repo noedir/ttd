@@ -252,10 +252,21 @@ class Web extends CI_Controller {
     }
     
     public function sair_instagram(){
+	if($this->uri->segment(3) == 'atualiza'){
+	    $loc = 'atualiza_dados/ok';
+	}else{
+	    $ge = explode("_",$this->uri->segment(3));
+	    
+	    if($ge[0] == 'tips'){
+		$loc = 'tips/'.$ge[1].'/tip_'.$ge[2];
+	    }else{
+		$loc = 'tips/'.$ge[1].'/capa';
+	    }
+	}
 	$id = $this->session->userdata('us_codigo');
 	$this->wdb->del_instagram($id);
 	
-	redirect('web/atualiza_dados/ok');
+	redirect('web/'.$loc);
     }
     
     public function atualiza_dados(){
@@ -1019,12 +1030,15 @@ class Web extends CI_Controller {
 		    
 		    $c++;
 		//}
+	    }else{
+		$em = false;
 	    }
 	}
-	if(isset($em)){
+	if(isset($em) && $em != false){
 	    $this->session->set_flashdata('total','Email enviado com sucesso para '.$c.' invites');
 	}else{
-	    $this->session->set_flashdata('total','Os emails entraram em uma fila para serem enviados.');
+	    $saldo = count($arr) - $c;
+	    $this->session->set_flashdata('total','Emails recebidos: '.count($arr).'. Enviados: '.$c.'. Inválidos: '.$saldo);
 	}
 	redirect('web/invites/'.$input['count']);
     }

@@ -106,7 +106,7 @@ if(form_error('confirma_senha')){
                 </div><?php echo $avds; ?>
                 <div class="clr"></div>
                 <div class="formNovoCount">
-                    <label>Visibilidade:</label><br><input type="radio" id="radio1" checked="checked" name="privado" value="s"><label for="radio1">Privado</label> <input type="radio" id="radio2" name="privado" value="n"><label for="radio2">Público</label>
+                    <label>Visibilidade:</label><br><input type="radio" id="radio1" name="privado" value="s"><label for="radio1">Privado</label> <input type="radio" id="radio2" name="privado" checked="checked" value="n"><label for="radio2">Público</label>
                 </div>
 		
                 <div class="formNovoCount">    
