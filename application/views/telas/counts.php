@@ -50,8 +50,8 @@
 		    }?></td>
                     <td style="text-align:center;" class="tdCounts zebra"><?php print($k->co_privado == 's' ? '<span class="greenn">Sim</span>' : '<span class="redd">Não</span>'); ?></td>
                     <td class="tdCountsAcoes zebra"><?php
-		    echo anchor('web/edit_count/'.$k->co_codigo,'<img style="margin-left: 0px;" src="'.base_url().'/img/editar_count.png" title="Editar essa TIP" />');
-		    echo anchor('web/invites/'.$k->co_codigo,' <img src="'.base_url().'img/convidar_amigos.png" title="Enviar Convites para essa TIP" />');
+		    echo anchor('web/edit_count/'.$k->co_codigo,'<img style="margin-left: 0px;" src="'.base_url().'/img/editar_count.png" title="Editar essa Count" />');
+		    echo anchor('web/invites/'.$k->co_codigo,' <img src="'.base_url().'img/convidar_amigos.png" title="Enviar Convites" />');
 		    //echo anchor('web/estatisticas/'.$k->co_codigo,'<img src="'.base_url().'/img/stats_count.png" title="Ver as Estatísticas dessa TIP" />');
 		    ?></td>
                     <td  style="text-align:center; border-top: none; margin-left: 0px;" class="tdCounts"><img title="Excluir Count" class="exc" data-ur="<?php echo base_url(); ?>" data-id="<?php echo $k->co_codigo; ?>" src="<?php echo base_url(); ?>img/excluir_count.png"></td>

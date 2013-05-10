@@ -2,19 +2,28 @@
 
 class Auth extends CI_Controller{
     
+    /*
+     * Carrega o model.
+     */
     public function __construct() {
 	parent::__construct();
 	$this->load->model('web_model','wdb');
     }
     
+    /*
+     * Método para pegar o id, secret e redirect do Instagram e do Facebook
+     * 
+     * @oauth String: instagram ou facebook
+     * @provider Array: retorno das propriedades
+     */
     private function id_secret($oauth){
 	
 	switch ($oauth){
 	    case 'instagram':
 		$provider = array(
-		    'id' => $this->config->item('instagram_id'),
-		    'secret' => $this->config->item('instagram_secret'),
-		    'redirect' => $this->config->item('instagram_redirect'),
+		    'id' => '4df5f47cf2fa4da98b0d0f91beb158fb',
+		    'secret' => '4664a8ef7e3142e4bb12fb19fd4aa4d3',
+		    'redirect' => 'http://www.tiltheday.com/auth/token',
 		);
 		break;
 	    
@@ -30,6 +39,15 @@ class Auth extends CI_Controller{
 	return $provider;
     }
     
+    /*
+     * Método que faz a requisição via cUrl na api do Instagram
+     * 
+     * @token Array: chama o método id_secret com a propriedade requisitada
+     * @post Array: array que será enviado para a api do Instagram
+     * @get Json: retorno da API
+     * @dados Array: tratamento da API
+     * @put Array: dados que serão gravados na tabela tbl_oauth
+     */
     public function token(){
 	
 	$token = $this->id_secret('instagram');
@@ -39,7 +57,7 @@ class Auth extends CI_Controller{
 	    'client_secret' => $token['secret'],
 	    'grant_type' => 'authorization_code',
 	    'redirect_uri' => $token['redirect'],
-	    'code' => $this->input->get('code'),
+	    'code' => $this->input->get_post('code'),
 	);
 	
 	$access = 'https://api.instagram.com/oauth/access_token';
@@ -67,19 +85,12 @@ class Auth extends CI_Controller{
 	redirect('web/tips/ret');
     }
     
-    private function list_photo($url,$loc){
-	$saida = '';
-	$img = '';
-	foreach($url as $k => $v){
-	    $img = $v->images->standard_resolution->url;
-	    $low = $v->images->thumbnail->url;
-	    $hei = 640;
-	    $wid = 640;
-	    $saida .= '<div class="pfti"><img class="fti'.$loc.'" data-wi="'.$wid.'" data-he="'.$hei.'" data-local="instagram" data-alta="'.$img.'" src="'.$low.'"></div>';
-	}
-	return $saida;
-    }
-    
+    /*
+     * Método que prepara as imagens do Instagram para aparecer na tela
+     * 
+     * @url Array: dados
+     * 
+     */
     private function listjson($url, $loc){
 	$saida = '';
 	
@@ -100,16 +111,19 @@ class Auth extends CI_Controller{
 	$query = $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result();
 	$l = 1;
 	$next = '';
+	$photo = '';
 	
 	$cache = './cachejson/instagram_'.$this->session->userdata('us_codigo').'.json';
 	
-	if(file_exists($cache) && filemtime($cache) > time() - 60*60){
+	if(file_exists($cache) && filemtime($cache) > (time() - (60 * 60))){
 	    // If a cache file exists, and it is newer than 1 hour, use it
-	    echo $this->listjson(json_decode(file_get_contents($cache),true),$local);
+	    $photo = $this->listjson(json_decode(file_get_contents($cache),true),$local);
 	    
 	}else{
 	    
-	    unlink($cache);
+	    if(file_exists($cache)){
+		unlink($cache);
+	    }
 	
 	    $images[] = array();
 	    
@@ -128,7 +142,7 @@ class Auth extends CI_Controller{
 		    $low = $item->images->thumbnail->url;
 		    
 		    $images['src'][] = htmlspecialchars($src);
-		    echo '<div class="pfti"><img class="fti'.$local.'" data-wi="640" data-he="640" data-local="instagram" data-alta="'.$src.'" src="'.$low.'"></div>';
+		    $photo .= '<div class="pfti"><img class="fti'.$local.'" data-wi="640" data-he="640" data-local="instagram" data-alta="'.$src.'" src="'.$low.'"></div>';
 		}
 		
 		file_put_contents($cache,json_encode($images)); //Save as json
@@ -139,6 +153,7 @@ class Auth extends CI_Controller{
 		}
 	    }
 	}
+	echo $photo;
     }
     
     public function fotos_facebook(){

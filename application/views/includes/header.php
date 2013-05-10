@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/jquery-ui-1.10.3.custom.css">
 	<script src="<?php echo base_url(); ?>js/load-image.min.js" type="text/javascript"></script>
-	<script src="<?php echo base_url(); ?>js/excanvas.js" type="text/javascript"></script>
+	<!--[if IE]><script src="<?php echo base_url(); ?>js/excanvas.js" type="text/javascript"></script><![endif]-->
         <script src="<?php echo base_url(); ?>js/jquery-1.7.2.min.js"></script>
 	<script src="<?php echo base_url(); ?>js/jquery.html5-placeholder-shim.js"></script>
         <script src="<?php echo base_url(); ?>js/jquery-ui-1.8.21.custom.min.js"></script>
@@ -39,6 +39,7 @@
 		    <li><?php echo anchor('web/login',$this->lang->line('pt_tlogin'),'class="white"'); ?></li>
                     <li style="margin-right: 0px;"><?php echo anchor('web/criar_projeto',$this->lang->line('pt_tcriar'),'class="white"'); ?></li>
 		    <?php }else{ ?>
+		    <li><?php echo anchor('web/atualiza_dados',$this->lang->line('pt_tatualiza'),'class="white"'); ?></li>
 		    <li style="margin-right: 0px;"><?php echo anchor('web/sair',$this->lang->line('pt_tlogout'),'class="white"'); ?></li>
 		    <?php } ?>
 		</ul>    
@@ -55,7 +56,6 @@
                 </div>
                 <div class="linksAdmin">
 		    <ul>
-                        <li><?php echo anchor('web/atualiza_dados',$this->lang->line('pt_tatualiza'),'class="white"'); ?></li>
                         <li><?php echo anchor('web/counts',$this->lang->line('pt_tminhas'),'class="white"'); ?></li>
                         <li><?php echo anchor('web/criar_novo_projeto',$this->lang->line('pt_tnovo'),'class="white"'); ?></li>
                     </ul>

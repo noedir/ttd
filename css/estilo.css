@@ -1317,3 +1317,9 @@ div.tagsinput div { display: block; float: left; }
 #trocar_instagram a{
 	color: #15e09b;
 }
+
+#google_translate_element{
+    position: relative;
+    float: left;
+    width: 100%;
+}

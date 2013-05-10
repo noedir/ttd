@@ -79,11 +79,7 @@ if(form_error('confirma_senha')){
 	<h3>Novo Count</h3>
                 <div class="formNovoCount">
 		    <label>Título: <br><input type="text" size="45" <?php if(form_error('nome_projeto')){ echo 'style="border: 1px solid #900" placeholder="Nome do projeto é obrigatório"'; }else{ echo 'placeholder="Nome do Projeto"'; } ?> name="nome_projeto" id="titulo_projeto" value="<?php echo set_value('nome_projeto'); ?>"></label>
-                </div>
-                
-                <div class="formNovoCount">
-		    <label>Ocasião: <br><input type="text" size="45" <?php if(form_error('ocasiao_projeto')){ echo 'style="border: 1px solid #900" placeholder="Ocasião do projeto é obrigatório"'; }else{ echo 'placeholder="Ocasião do Projeto"'; } ?> name="ocasiao_projeto" value="<?php echo set_value('ocasiao_projeto'); ?>"></label>
-            </div>
+                </div><input type="hidden" size="45" <?php if(form_error('ocasiao_projeto')){ echo 'style="border: 1px solid #900" placeholder="Ocasião do projeto é obrigatório"'; }else{ echo 'placeholder="Ocasião do Projeto"'; } ?> name="ocasiao_projeto" value=".">
                 
                 <div class="formNovoCountDias">
                     <label>Quantos dias terá seu projeto?

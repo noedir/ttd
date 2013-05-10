@@ -30,7 +30,7 @@ if($this->uri->segment(4) != ''){
 			<div class="upload" id="uploadpc"><input type="hidden" value="s" name="central" id="optimg">Computador</div>
 			<?php
 			if(!is_numeric($instagram) || $instagram == 0){
-			    echo '<div class="instagram"><a class="white" href="https://api.instagram.com/oauth/authorize/?client_id='.$this->config->item('instagram_id').'&redirect_uri='.base_url().'auth/token&response_type=code">Instagram</a></div>';
+			    echo '<div class="instagram"><a class="white" href="https://api.instagram.com/oauth/authorize/?client_id=4df5f47cf2fa4da98b0d0f91beb158fb&redirect_uri='.base_url().'auth/token&response_type=code">Instagram</a></div>';
 			}else{
 			    echo '<div class="instagram" id="pega_instagram">Instagram</div>';
 			}
@@ -87,14 +87,14 @@ if($this->uri->segment(4) != ''){
 	    </p>
 	</div>
 	<div class="tip-maior">
-	    <h5 class="projetoTitle">Capa da Contagem</h5>
+	    <h5 class="projetoTitle">Capa da Count</h5>
 	    <div id="opcoes_capa">
 		    <ul>
 			<li id="computador">Computador</li>
 			<!-- <li id="get_facebook">Facebook</li> -->
 			<?php
 			if(!is_numeric($instagram) || $instagram == 0){
-			    echo '<li class="instagram"><a class="white" href="https://api.instagram.com/oauth/authorize/?client_id='.$this->config->item('instagram_id').'&redirect_uri='.base_url().'auth/token&response_type=code">Instagram</a></li>';
+			    echo '<li class="instagram"><a class="white" href="https://api.instagram.com/oauth/authorize/?client_id=4df5f47cf2fa4da98b0d0f91beb158fb&redirect_uri='.base_url().'auth/token&response_type=code">Instagram</a></li>';
 			}else{
 			    echo '<li id="get_instagram">Instagram</li>';
 			}

@@ -266,6 +266,12 @@ class Web extends CI_Controller {
 	$id = $this->session->userdata('us_codigo');
 	$this->wdb->del_instagram($id);
 	
+	$cache = './cachejson/instagram_'.$this->session->userdata('us_codigo').'.json';
+	
+	if(file_exists($cache)){
+	    unlink($cache);
+	}
+	
 	redirect('web/'.$loc);
     }
     
