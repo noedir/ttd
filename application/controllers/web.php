@@ -92,7 +92,7 @@ class Web extends CI_Controller {
     
     public function index(){
         $dados = array(
-            'title' => 'TilTheDay',
+            'title' => $this->config->item('title_page'),
             'tela' => 'home',
         );
         if($this->input->get('id')){
@@ -116,7 +116,7 @@ class Web extends CI_Controller {
     
     public function quem_somos(){
 	$dados = array(
-	    'title' => 'TilTheDay &raquo; Quem Somos',
+	    'title' => $this->config->item('title_page').' &raquo; Quem Somos',
 	    'tela' => 'quem_somos',
 	);
 	$this->load->view('web_view',$dados);
@@ -126,7 +126,7 @@ class Web extends CI_Controller {
 	$this->load->helper('email');
 	$this->load->library('email');
 	$dados = array(
-	    'title' => 'TilTheDay &raquo; Contato',
+	    'title' => $this->config->item('title_page').' &raquo; Contato',
 	    'tela' => 'contato',
 	    'erro' => ''
 	);
@@ -143,9 +143,9 @@ class Web extends CI_Controller {
 	    $config['protocol']  = 'smtp';
 	    $config['charset'] = 'utf8';
 	    $config['wordwrap'] = TRUE;
-	    $config['smtp_host'] = 'mail.tiltheday.com';
-	    $config['smtp_user'] = 'contato@tiltheday.com';
-	    $config['smtp_pass'] = 'dudinha09';
+	    $config['smtp_host'] = $this->config->item('email_host');
+	    $config['smtp_user'] = $this->config->item('email_contato');
+	    $config['smtp_pass'] = $this->config->item('email_contato_senha');
 	    $config['smtp_port'] = 587;
 	    $config['smtp_timeout'] = 20;
 	    $config['mailtype'] = 'html';
@@ -157,7 +157,7 @@ class Web extends CI_Controller {
 
 	    $this->email->initialize($config);
 	    $this->email->from($input['email_contato'], $input['nome_contato']);
-	    $this->email->to('contato@tiltheday.com');
+	    $this->email->to($this->config->item('email_contato'));
 	    $this->email->subject($input['assunto_contato']);
 	    $this->email->message($texto);
 	    $em = $this->email->send();
@@ -173,7 +173,7 @@ class Web extends CI_Controller {
 	$this->load->library('email');
 	
 	$dados = array(
-	    'title' => 'TilTheDay &raquo; Esqueceu a Senha',
+	    'title' => $this->config->item('title_page').' &raquo; Esqueceu a Senha',
 	    'tela' => 'esqueceu',
 	    'erro' => '',
 	);
@@ -192,9 +192,9 @@ class Web extends CI_Controller {
 		$config['protocol']  = 'smtp';
 		$config['charset'] = 'utf8';
 		$config['wordwrap'] = TRUE;
-		$config['smtp_host'] = 'mail.tiltheday.com';
-		$config['smtp_user'] = 'noreply@tiltheday.com';
-		$config['smtp_pass'] = 'dudinha09';
+		$config['smtp_host'] = $this->config->item('email_host');
+		$config['smtp_user'] = $this->config->item('email_noreply');
+		$config['smtp_pass'] = $this->config->item('email_noreply_senha');
 		$config['smtp_port'] = 587;
 		$config['smtp_timeout'] = 20;
 		$config['mailtype'] = 'html';
@@ -203,12 +203,12 @@ class Web extends CI_Controller {
 		$texto .= "<p>Essa é uma senha gerada pelo sistema</p>";
 		$texto .= "<p><hr><strong>".$novasenha."</strong><hr></p>";
 		$texto .= "<p>Faça seu login com essa senha e clique em Atualizar Dados para personaliza-la.</p>";
-		$texto .= "<p>Equipe TilTheDay</p>";
+		$texto .= "<p>Equipe ".$this->config->item('title_page')."</p>";
 
 		$this->email->initialize($config);
-		$this->email->from('noreply@tiltheday.com', 'TilTheDay');
+		$this->email->from($this->config->item('email_noreply'), $this->config->item('title_page'));
 		$this->email->to($input['email']);
-		$this->email->subject('Nova senha no TilTheDay');
+		$this->email->subject('Nova senha no '.$this->config->item('title_page'));
 		$this->email->message($texto);
 		$em = $this->email->send();
 		
@@ -223,7 +223,7 @@ class Web extends CI_Controller {
     
     public function login(){
 	$dados = array(
-	    'title' => 'TilTheDay &raquo; Login',
+	    'title' => $this->config->item('title_page').' &raquo; Login',
 	    'tela' => 'login',
 	    'erro' => '',
 	);
@@ -272,7 +272,7 @@ class Web extends CI_Controller {
     public function atualiza_dados(){
 	$this->ver_conta();
 	$dados = array(
-	    'title' => 'TilTheDay &raquo; Atualizar Dados',
+	    'title' => $this->config->item('title_page').' &raquo; Atualizar Dados',
 	    'tela' => 'atualiza_dados',
 	    'oauth' => $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result_array(),
 	);
@@ -311,7 +311,7 @@ class Web extends CI_Controller {
     
     public function criar_projeto(){
 	$dados = array(
-            'title' => 'TilTheDay &raquo; Criar Novo TilTheDay',
+            'title' => $this->config->item('title_page').' &raquo; Criar Novo '.$this->config->item('title_page'),
             'tela' => 'cadprojeto',
         );
         
@@ -357,7 +357,7 @@ class Web extends CI_Controller {
     public function criar_novo_projeto(){
 	$this->ver_conta();
 	$dados = array(
-            'title' => 'TilTheDay &raquo; Criar Novo TilTheDay',
+            'title' => $this->config->item('title_page').' &raquo; Criar Novo '.$this->config->item('title_page'),
             'tela' => 'novo_projeto',
         );
 	
@@ -386,7 +386,7 @@ class Web extends CI_Controller {
     
     public function estatisticas(){
 	$dados = array(
-	    'title'	=> 'TilTheDay &raquo; Estatísticas',
+	    'title'	=> $this->config->item('title_page').' &raquo; Estatísticas',
 	    'tela'	=> 'estatistica',
 	);
 	
@@ -395,7 +395,7 @@ class Web extends CI_Controller {
     
     public function politica(){
 	$dados = array(
-	    'title'	=> 'TilTheDay &raquo; Política de Privacidade',
+	    'title'	=> $this->config->item('title_page').' &raquo; Política de Privacidade',
 	    'tela'	=> 'privacidade',
 	);
 	
@@ -406,7 +406,7 @@ class Web extends CI_Controller {
 	$this->ver_conta();
 	$id = $this->uri->segment(3);
 	$dados = array(
-	    'title'	=> 'TilTheDay &raquo; Editar Count',
+	    'title'	=> $this->config->item('title_page').' &raquo; Editar Count',
 	    'tela'	=> 'editar_count',
 	    'edcount'	=> $this->wdb->get_count($id)->result_array(),
 	);
@@ -433,7 +433,7 @@ class Web extends CI_Controller {
     public function counts(){
 	$this->ver_conta();
 	$dados = array(
-	    'title' => 'TilTheDay &raquo; Minhas Counts',
+	    'title' => $this->config->item('title_page').' &raquo; Minhas Counts',
 	    'tela' => 'counts',
 	    'counts' => $this->wdb->get_counts($this->session->userdata('us_codigo'))->result(),
 	);
@@ -465,7 +465,7 @@ class Web extends CI_Controller {
 	}
 	
 	$dados = array(
-	    'title'	=> 'TilTheDay &raquo; Tips',
+	    'title'	=> $this->config->item('title_page').' &raquo; Tips',
 	    'tela'	=> 'tips',
 	    'count'	=> $this->wdb->get_tcount($id)->result(),
 	    'tips'	=> $this->wdb->get_tips($id)->result(),
@@ -488,7 +488,7 @@ class Web extends CI_Controller {
     public function upphoto(){
 	$this->ver_conta();
 	$dados = array(
-	    'title' => 'TilTheDay &raquo; Fotos',
+	    'title' => $this->config->item('title_page').' &raquo; Fotos',
 	    'tela' => 'sobefoto',
 	    'instagram' => $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result(),
 	);
@@ -922,7 +922,7 @@ class Web extends CI_Controller {
     
     public function computador(){
 	$dados = array(
-	    'title' => 'TilTheDay &raquo; Meu Computador',
+	    'title' => $this->config->item('title_page').' &raquo; Meu Computador',
 	    'tela' => 'micro',
 	);
 	
@@ -933,14 +933,14 @@ class Web extends CI_Controller {
 	$this->ver_conta();
 	$access = $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result_array();
 	$dados = array(
-	    'title' => 'TilTheDay &raquo; Invites',
+	    'title' => $this->config->item('title_page').' &raquo; Invites',
 	    'tela' => 'convites',
 	    'counts' => $this->wdb->get_counts($this->session->userdata('us_codigo'))->result(),
 	    'facebook' => base_url().'facebook',
 	);
 	
 	if(count($access) === 0){
-	    $dados['appID'] == '445876232159922';
+	    $dados['appID'] = $this->config->item('facebook_id');
 	}else{
 	    $dados['appID'] = '';
 	}
@@ -991,7 +991,7 @@ class Web extends CI_Controller {
 	$html .= '<p>Eu criei essa contagem regressiva de <strong>###count###</strong> e estou te convidando a seguir e ficar por dentro de todas as novidades.</p>';
 	$html .= '<p>Você só precisa aceitar esse convite clicando <a href="'.base_url().'web/aceitarconvite/###id###"><strong>aqui</strong></a> ou copiando e colando esse link no seu navegador: '.base_url().'web/aceitarconvite/###id###</p>';
 	$html .= '<p>Caso não possua o aplicativo, <a href="https://itunes.apple.com/br/app/nivea-sun/id577311928?mt=8">clique aqui</a>.</p>';
-	$html .= '<p>Se você já possui o aplicativo instalado, <a href="tiltheday://###til###">clique aqui</a> para abrir o Til The Day e veja seu convite.</p>';
+	$html .= '<p>Se você já possui o aplicativo instalado, <a href="'.$this->config->item('app_itunes').'://###til###">clique aqui</a> para abrir o '.$this->config->item('title_page').' e veja seu convite.</p>';
 	$html .= '<p>Nos vemos lá.</p>';
 	$html .= '<h5>###nome###</h5>';
 	$html .= '<br><br>';
@@ -1014,9 +1014,9 @@ class Web extends CI_Controller {
 		    $config['protocol']  = 'smtp';
 		    $config['charset'] = 'utf8';
 		    $config['wordwrap'] = TRUE;
-		    $config['smtp_host'] = 'mail.tiltheday.com';
-		    $config['smtp_user'] = 'invite@tiltheday.com';
-		    $config['smtp_pass'] = 'dudinha09';
+		    $config['smtp_host'] = $this->config->item('email_host');
+		    $config['smtp_user'] = $this->config->item('email_invite');
+		    $config['smtp_pass'] = $this->config->item('email_invite_senha');
 		    $config['smtp_port'] = 587;
 		    $config['smtp_timeout'] = 20;
 		    $config['mailtype'] = 'html';
@@ -1035,7 +1035,7 @@ class Web extends CI_Controller {
 	    }
 	}
 	if(isset($em) && $em != false){
-	    $this->session->set_flashdata('total','Email enviado com sucesso para '.$c.' invites');
+	    $this->session->set_flashdata('total','Invite enviado com sucesso para '.$c.' emails');
 	}else{
 	    $saldo = count($arr) - $c;
 	    $this->session->set_flashdata('total','Emails recebidos: '.count($arr).'. Enviados: '.$c.'. Inválidos: '.$saldo);

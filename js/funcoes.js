@@ -126,6 +126,13 @@ $(document).ready(function(){
 	}
     }
     
+    $(".dt_projeto").hover(function(){
+	$(".altdata").fadeIn();
+    },
+    function(){
+	$(".altdata").fadeOut();
+    });
+    
     $(".altdata").click(function(){
 	$("#altdata").datepicker({
 	    dateFormat: 'dd/mm/yy',
@@ -614,7 +621,7 @@ $(document).ready(function(){
 	    $("#loader").fadeOut();
 	    return false;
 	}
-	 
+	
 	var imagem = $("input[name='fotoc']").val();
 	var imageObj = new Image();
 	 
@@ -637,13 +644,16 @@ $(document).ready(function(){
 	     
 	    var w = 640;
 	    var h = 200;
-	     
+	    
+	    console.log($("#photoc").width()+"x"+$("#photoc").height());
+	    console.log(sourceX+"x"+sourceY);
+	    
 	    if(central === 's'){
 		w = $("#photoc").width() * 2;
 		h = $("#photoc").height() * 2;
 		
-		sourceX = (sx / 2) - sourceX;
-		sourceY =  (sy / 2) - sourceY;
+		sourceX = (sx / 2) - (sourceX * 1.25);
+		sourceY =  (sy / 2) - (sourceY * 1.25);
 		
 		context.drawImage(imageObj, sourceX, sourceY, w, h);
 	    }else{
@@ -652,8 +662,8 @@ $(document).ready(function(){
 		    w = $("#photoc").width() * 2;
 		    h = $("#photoc").height() * 2;
 
-		    sourceX = (sx / 2) - sourceX;
-		    sourceY =  (sy / 2) - sourceY;
+		    sourceX = (sx / 2) - (sourceX * 1.25);
+		    sourceY =  (sy / 2) - (sourceY * 1.25);
 
 		    context.drawImage(imageObj, sourceX, sourceY, w, h);
 		}else{

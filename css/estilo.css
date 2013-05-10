@@ -637,10 +637,18 @@ a.black:hover{
 }
 .dt_projeto .altdata{
     position: absolute;
-    top: 36px;
+    background: url(../img/fundo_claro.png) repeat;
+    width: 325px; height: 22px;
+    text-align: center;
+    padding-top: 9px;
+    color: #000;
+    top: 0px;
+    font-size: 12px;
+    font-weight: bold;
     left: 0px;
     z-index: 110;
     cursor: pointer;
+    display: none;
 }
 .dt_projeto  .inidata{
     position: relative;

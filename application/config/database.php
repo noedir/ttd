@@ -64,23 +64,5 @@ $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
 
-
-/*$db['sqlpush']['hostname'] = 'sqlite:'.APPPATH.'db/push.db';
-$db['sqlpush']['username'] = '';
-$db['sqlpush']['password'] = '';
-$db['sqlpush']['database'] = '';
-$db['sqlpush']['dbdriver'] = 'sqlite';
-$db['sqlpush']['dbprefix'] = '';
-$db['sqlpush']['pconnect'] = TRUE;
-$db['sqlpush']['db_debug'] = TRUE;
-$db['sqlpush']['cache_on'] = FALSE;
-$db['sqlpush']['cachedir'] = '';
-$db['sqlpush']['char_set'] = 'utf8';
-$db['sqlpush']['dbcollat'] = 'utf8_general_ci';
-$db['sqlpush']['swap_pre'] = '';
-$db['sqlpush']['autoinit'] = TRUE;
-$db['sqlpush']['stricton'] = FALSE;
-*/
-
 /* End of file database.php */
 /* Location: ./application/config/database.php */

@@ -2,6 +2,35 @@
 
 /*
 |--------------------------------------------------------------------------
+| Config do Site
+|--------------------------------------------------------------------------
+|
+| Essas configurações são necessárias, porque o sistema será utilizado em
+| mais de um servidor.
+|
+| Serão utilizados o título da página e oauth do instagram e facebook.
+|
+*/
+$config['title_page'] = 'TilTheDay';
+$config['app_itunes'] = 'tiltheday';
+$config['caminho_site'] = 'www.tiltheday.com';
+$config['email_host'] = 'mail.tiltheday.com';
+$config['email_contato'] = 'contato@tiltheday.com';
+$config['email_contato_senha'] = 'dudinha09';
+$config['email_noreply'] = 'noreply@tiltheday.com';
+$config['email_noreply_senha'] = 'dudinha09';
+$config['email_invite'] = 'mail.tiltheday.com';
+$config['email_invite_senha'] = 'dudinha09';
+$config['instagram_id'] = '4df5f47cf2fa4da98b0d0f91beb158fb';
+$config['instagram_secret'] = '4664a8ef7e3142e4bb12fb19fd4aa4d3';
+$config['instagram_redirect'] = 'http://www.tiltheday.com/auth/token';
+$config['facebook_id'] = '445876232159922';
+$config['facebook_secret'] = '4e8db7c42234a9eac60854309e35a986';
+$config['facebook_redirect'] = 'http://www.tiltheday.com/auth/token_facebook';
+$config['facebook_token'] = '';
+
+/*
+|--------------------------------------------------------------------------
 | Base Site URL
 |--------------------------------------------------------------------------
 |

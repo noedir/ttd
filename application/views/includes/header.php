@@ -4,6 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/jquery-ui-1.10.3.custom.css">
 	<script src="<?php echo base_url(); ?>js/load-image.min.js" type="text/javascript"></script>
+	<script src="<?php echo base_url(); ?>js/excanvas.js" type="text/javascript"></script>
         <script src="<?php echo base_url(); ?>js/jquery-1.7.2.min.js"></script>
 	<script src="<?php echo base_url(); ?>js/jquery.html5-placeholder-shim.js"></script>
         <script src="<?php echo base_url(); ?>js/jquery-ui-1.8.21.custom.min.js"></script>
@@ -29,7 +30,7 @@
 	<div id="fundo_box"></div>
 	<div id="baseHeader">
 	    <div id="baseMenuGeral">
-                <div id="baseLogo"><?php echo anchor(index_page(),'<img title="TilTheDay" alt="Logotipo TilTheDay" src="'.base_url().'img/logotipo_header.jpg" />','class="white"'); ?></div>
+                <div id="baseLogo"><?php echo anchor(index_page(),'<img title="'.$this->config->item('title_page').'" alt="Logotipo '.$this->config->item('title_page').'" src="'.base_url().'img/logotipo_header.jpg" />','class="white"'); ?></div>
 		<ul>
 		    <li><?php echo anchor('web/quem_somos','Quem Somos','class="white"'); ?></li>
 		    <li><?php echo anchor('web/politica','Política de Privacidade','class="white"'); ?></li>

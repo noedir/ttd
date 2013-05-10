@@ -23,8 +23,8 @@ class Facebook extends CI_Controller {
         parent::__construct();
 	$this->load->helper('url');
         // replace these with Application ID and Application Secret.
-        $this->appid = '445876232159922';
-        $this->apisecret = '4e8db7c42234a9eac60854309e35a986';
+        $this->appid = $this->config->item('facebook_id');
+        $this->apisecret = $this->config->item('facebook_secret');
 	
 	$this->load->model('web_model','wdb');
     }
@@ -35,7 +35,7 @@ class Facebook extends CI_Controller {
     public function index(){
 	$this->session->set_userdata('return',$this->input->get('inv'));
         // set the page you want Facebook to send the user back to
-        $callback = 'http://www.tiltheday.com/auth/token_facebook'; //base_url().'auth/token_facebook';
+        $callback = 'http://'.$this->config->item('caminho_site').'/auth/token_facebook'; //base_url().'auth/token_facebook';
         // create the FB auth url to redirect the user to. 'scope' is
         // a comma sep list of the permissions you want. then direct them to it
         $url = "https://graph.facebook.com/oauth/authorize?client_id={$this->appid}&redirect_uri={$callback}&scope=email,friends_about_me,user_photos,publish_stream";
@@ -47,7 +47,7 @@ class Facebook extends CI_Controller {
      */
     public function confirm(){
         // get the code from the querystring
-        $redirect = 'http://www.tiltheday.com/auth/token_facebook';
+        $redirect = 'http://'.$this->config->item('caminho_site').'/auth/token_facebook';
         $code = $this->input->get('code');
         if ($code){
             // now to get the auth token. '__getpage' is just a CURL method

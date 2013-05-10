@@ -29,7 +29,7 @@
 	<div id="fundo_box"></div>
 	<div id="baseHeader">
 	    <div id="baseMenuGeral">
-                <div id="baseLogo"><?php echo anchor(index_page(),'<img title="TilTheDay" alt="Logotipo TilTheDay" src="'.base_url().'img/logotipo_header.jpg" />','class="white"'); ?></div>
+                <div id="baseLogo"><?php echo anchor(index_page(),'<img title="'.$this->config->item('title_page').'" alt="Logotipo '.$this->config->item('title_page').'" src="'.base_url().'img/logotipo_header.jpg" />','class="white"'); ?></div>
 		<ul>
 		    <li><?php echo anchor('web/quem_somos','Quem Somos','class="white"'); ?></li>
 		    <li><?php echo anchor('web/politica','Política de Privacidade','class="white"'); ?></li>

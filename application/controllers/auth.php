@@ -12,17 +12,17 @@ class Auth extends CI_Controller{
 	switch ($oauth){
 	    case 'instagram':
 		$provider = array(
-		    'id' => '4df5f47cf2fa4da98b0d0f91beb158fb',
-		    'secret' => '4664a8ef7e3142e4bb12fb19fd4aa4d3',
-		    'redirect' => 'http://www.tiltheday.com/auth/token',
+		    'id' => $this->config->item('instagram_id'),
+		    'secret' => $this->config->item('instagram_secret'),
+		    'redirect' => $this->config->item('instagram_redirect'),
 		);
 		break;
 	    
 	    case 'facebook':
 		$provider = array(
-		    'id' => '445876232159922',
-		    'secret' => '4e8db7c42234a9eac60854309e35a986',
-		    'redirect' => 'http://www.tiltheday.com/auth/token_facebook',
+		    'id' => $this->config->item('facebook_id'),
+		    'secret' => $this->config->item('facebook_secret'),
+		    'redirect' => $this->config->item('facebook_redirect'),
 		);
 		break;
 	}
@@ -173,10 +173,10 @@ class Auth extends CI_Controller{
         
     public function token_facebook(){
 	if($this->input->get('code') != ''){
-	    redirect('http://www.tiltheday.com/facebook/confirm?code='.$this->input->get('code'));
+		redirect('http://'.$this->config->item('caminho_site').'/facebook/confirm?code='.$this->input->get('code'));
 	}else
 	if($this->input->get('access_token') != ''){
-	    redirect('http://www.tiltheday.com/facebook/confirm?access_token='.$this->input->get('access_token'));
+	    redirect('http://'.$this->config->item('caminho_site').'/facebook/confirm?access_token='.$this->input->get('access_token'));
 	}else	
 	if($this->input->get('request') != ''){
 	    redirect(base_url().'/web/convite_enviado/'.$this->input->get('post_id'));
@@ -195,9 +195,9 @@ class Auth extends CI_Controller{
 	
 	$this->session->set_userdata('idcount',$idcount);
 	
-	$txt = 'Estou te convidando para seguir meu evento '.$count[0]['co_titulo'].'. Instale o aplicativo TilTheDay no seu Iphone ou Android. Caso já possua o aplicativo, basta clicar aqui tiltheday://'.$idcount;
+	$txt = 'Estou te convidando para seguir meu evento '.$count[0]['co_titulo'].'. Instale o aplicativo '.$this->config->item('title_page').' no seu Iphone ou Android. Caso já possua o aplicativo, basta clicar aqui '.$this->config->item('app_itunes').'://'.$idcount;
 		
-	$url = 'https://www.facebook.com/dialog/apprequests?app_id='.$tk['id'].'&link=tiltheday://'.$idcount.'&picture=http://www.tiltheday.com/img/logotipo_header.jpg&name=TilTheDay&caption=TilTheDay&message='.$txt.'&redirect_uri='.$tk['redirect'].'&to='.$iduser.'&display=iframe&access_token='.$query[0]['oa_facebook_access_token'];
+	$url = 'https://www.facebook.com/dialog/apprequests?app_id='.$tk['id'].'&link='.$this->config->item('app_itunes').'://'.$idcount.'&picture=http://'.$this->config->item('caminho_site').'/img/logotipo_header.jpg&name='.$this->config->item('title_page').'&caption='.$this->config->item('title_page').'&message='.$txt.'&redirect_uri='.$tk['redirect'].'&to='.$iduser.'&display=iframe&access_token='.$query[0]['oa_facebook_access_token'];
 	
 	redirect($url);
     }
@@ -238,7 +238,7 @@ class Auth extends CI_Controller{
 	$access = $token[0]['oa_facebook_access_token'];
 	$usuario = $token[0]['oa_facebook_usuario'];
 	#https://graph.facebook.com/100001933896128/feed?message=Mensagem%20da%20DCANM%20Mobil&link=http%3A%2F%2Fwww.dcanm.mobi%2Fcount
-	$data['link'] = 'http://www.tiltheday.com/';
+	$data['link'] = 'http://'.$this->config->item('caminho_site').'/';
 	$data['message'] = 'Essa é uma mensagem de teste';
 	$data['caption'] = 'Caption';
 	$data['description'] = 'Description';
