@@ -135,21 +135,25 @@ class Auth extends CI_Controller{
 		}
 
 		$get = file_get_contents($url);
+		if($get){
 		
-		foreach(json_decode($get)->data as $item){
+		    foreach(json_decode($get)->data as $item){
 
-		    $src = $item->images->standard_resolution->url;
-		    $low = $item->images->thumbnail->url;
-		    
-		    $images['src'][] = htmlspecialchars($src);
-		    $photo .= '<div class="pfti"><img class="fti'.$local.'" data-wi="640" data-he="640" data-local="instagram" data-alta="'.$src.'" src="'.$low.'"></div>';
-		}
-		
-		file_put_contents($cache,json_encode($images)); //Save as json
+			$src = $item->images->standard_resolution->url;
+			$low = $item->images->thumbnail->url;
 
-		if(isset(json_decode($get)->pagination->next_max_id)){
-		    $next = json_decode($get)->pagination->next_url;
-		    ++$l;
+			$images['src'][] = htmlspecialchars($src);
+			$photo .= '<div class="pfti"><img class="fti'.$local.'" data-wi="640" data-he="640" data-local="instagram" data-alta="'.$src.'" src="'.$low.'"></div>';
+		    }
+
+		    file_put_contents($cache,json_encode($images)); //Save as json
+
+		    if(isset(json_decode($get)->pagination->next_max_id)){
+			$next = json_decode($get)->pagination->next_url;
+			++$l;
+		    }
+		}else{
+		    echo "falha";
 		}
 	    }
 	}

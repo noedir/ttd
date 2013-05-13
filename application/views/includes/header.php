@@ -13,7 +13,17 @@
 	<script src="<?php echo base_url(); ?>js/jquery.form.js"></script>
 	<script src="<?php echo base_url(); ?>js/jquery.tagsinput.js" type="text/javascript"></script>
         <script src="<?php echo base_url(); ?>js/jquery.prettyPhoto.js" type="text/javascript"></script>
-	<script src="<?php echo base_url(); ?>js/funcoes.js" type="text/javascript"></script>
+        <?php
+	$bro = '';
+	if($this->uri->segment(2) == 'tips'){
+	    switch($browser['browser']){
+		case "Firefox":
+		    $bro = '2';
+		break;
+	    }
+	}
+        ?>
+	<script src="<?php echo base_url(); ?>js/funcoes<?php echo $bro; ?>.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/jquery.mCustomScrollbar.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/prettyPhoto.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/estilo.css">

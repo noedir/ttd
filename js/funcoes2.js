@@ -35,37 +35,37 @@ function nl2br (str, is_xhtml) {
 
 function processJson(data){
     if(data.status === '200'){
-	$(".barraup").fadeIn();
-	$('progress').attr('value','');
-	$('#porcentagem').html('0%');
-	$("#ajuste_automatico").fadeIn();
-	$("#tela").html('').html(data.img+'<input type="hidden" id="arq" name="foto" value="'+data.arquivo+'">');
+        $(".barraup").fadeIn();
+        $('progress').attr('value','');
+        $('#porcentagem').html('0%');
+        $("#ajuste_automatico").fadeIn();
+        $("#tela").html('').html(data.img+'<input type="hidden" name="foto" value="'+data.arquivo+'">');
     }else{
-	alert("Aviso: "+data.msg);
+	$(".barraup").fadeOut();
+        $('progress').attr('value','');
+        $('#porcentagem').html('0%');
+        alert("Aviso: "+data.msg);
     }
 }
 
 function processJsonc(data){
     if(data.status === '200'){
-	$(".capa #telinha").html('').html(data.img+'<input type="hidden" id="arqc" name="fotoc" value="'+data.arquivo+'">');
+	$("#redimensionar, #salvar").removeClass('oculto');
+        $(".capa #telinha").html('').html(data.img+'<input type="hidden" name="fotoc" value="'+data.arquivo+'">');
     }else{
-	alert("Aviso: "+data.msg);
+        alert("Aviso: "+data.msg);
     }
 }
 
 function instagram(ur){
-    $("#loadering").fadeIn();
     $.ajax({
-	type: 'post',
-	dataType: 'html',
-	url: ur+'auth/fotos_instagram',
-	beforeSend:  function(){
-	    $("#loadering").fadeIn();
-	},
-	success: function(resp){
-	    $('#list_foto').html(resp);
-	    $("#loadering").fadeOut();
-	}
+        type: 'post',
+        dataType: 'html',
+        url: ur+'auth/fotos_instagram',
+        success: function(resp){
+            $('#list_foto').html(resp);
+            $(".loader").fadeOut();
+        }
     });
 }
 
@@ -172,103 +172,6 @@ $(document).ready(function(){
 	$("#loader").fadeIn();
     });
     
-    $("#file-capa").on('change', function(e){
-	var lar;
-	var alt;
-	
-	var files = e.target.files;
-	var f = files[0];
-	
-	if(f.type === 'image/jpeg' || f.type === 'image/png'){
-	    $("#opcoes_capa").fadeIn();
-	    $("#telinha").html('<img src="'+ur+'img/loader.gif">');
-	    
-	    var reader = new FileReader();
-	    reader.onload = (function () {
-		return function (e) {
-		    window.loadImage(
-			e.target.result,
-			function (img) {
-			    $("#telinha").html('');
-			    $(img).appendTo("#telinha").attr({
-				id: 'photoc',
-				width: img.width,
-				height: img.height
-			    }).data('wi',img.width).data('he',img.height);
-			    $('<input id="arqc" type="hidden" name="fotoc" value="'+img.src+'">').appendTo("#telinha");
-
-			    lar = img.width / 2;
-			    alt = img.height / 2;
-
-			    $("#photoc").attr({
-				width: lar,
-				height: alt
-			    }).css({
-				top: '0px',
-				left: '0px'
-			    });
-			    $("#redimensionar, #salvar").removeClass('oculto');
-			}
-		    );
-		};
-	    })(f);
-	    reader.readAsDataURL(f);
-	}else{
-	    alert("Use imagens JPG ou PNG.");
-	    return false;
-	}
-    });
-    
-    $("#file-up").on('change', function(e){
-	var lar;
-	var alt;
-	
-	var files = e.target.files;
-	var f = files[0];
-	
-	if(f.type === 'image/jpeg' || f.type === 'image/png'){
-	    $("#ajuste_automatico").fadeIn();
-	    $("#tela").html('<img src="'+ur+'img/loader.gif">');
-	    var reader = new FileReader();
-	    reader.onload = (function () {
-		return function (e) {
-		    window.loadImage(
-			e.target.result,
-			function (img) {
-			    $("#tela").html('');
-			    $(img).appendTo("#tela").attr({
-				id: 'photo',
-				width: img.width,
-				height: img.height,
-			    });
-			    $('<input id="arq" data-wi="'+img.width+'" data-he="'+img.height+'" type="hidden" name="foto" value="'+img.src+'">').appendTo("#tela");
-
-			    lar = img.width / 2.5;
-			    alt = img.height / 2.5;
-
-			    $("#photo").attr({
-				width: lar,
-				height: alt,
-			    }).css({
-				top: '0px',
-				left: '0px',
-			    });
-			},
-			{
-			    minWidth: 640,
-			    minHeight: 570
-			}
-		    );
-		};
-	    })(f);
-	    reader.readAsDataURL(f);
-	}else{
-	    alert("Use imagens JPG ou PNG.");
-	    return false;
-	}
-    });
-    
-    
     $(".countGerencia").click(function(){
 	var cod = $(this).data('count');
 	redirect(ur+'web/tips/'+cod+'.html');
@@ -336,6 +239,34 @@ $(document).ready(function(){
 	},
     });
     
+    
+    $(document).on('click','#computador', function(){
+        $("#file-capa").click();
+    });
+    
+    $('#file-up').on('change',function(){
+	var valor = $(this).val();
+	$("#FileField").val(valor);
+	$('#formtip').ajaxForm({
+	    dataType: 'json',
+	    uploadProgress: function(event, position, total, percentComplete) {
+	    $(".barraup").fadeIn();
+		$('progress').attr('value',percentComplete);
+		$('#porcentagem').html(percentComplete+'%');
+	    },
+	    success: processJson
+	    }).submit();
+	});
+
+    $('#file-capa').on('change',function(){
+	var valor = $(this).val();
+	$("#FileFieldc").val(valor);
+	$('#formcapa').ajaxForm({
+	    dataType: 'json',
+	    success: processJsonc
+        }).submit();
+     });
+    
     $(document).on('click','#uploadpc', function(){
 	$("#file-up").click();
     });
@@ -351,10 +282,6 @@ $(document).ready(function(){
     if($(".rettip").length){
 	$(".controle_capa").click();
     };
-    
-    $(document).on('click','#computador', function(){
-	$("#file-capa").click();
-    });
     
     $(document).on('mouseover','#telinha', function(){
 	if($("#opcoes_capa").is(":visible")){
@@ -493,49 +420,53 @@ $(document).ready(function(){
     });
     
     $("#pega_instagram").click(function(){
-	$("#fundo_box").fadeIn(function(){
-	    $("#pagina").fadeIn();
-	    $(".pag").fadeIn();
-	});
+        $("#fundo_box").fadeIn(function(){
+            $("#pagina").fadeIn();
+            $(".pag").fadeIn();
+        });
 	var count = $("#cod_count").val();
-	var tip = $("#codigo_tip").val();
-	$.ajax({
-	    type: 'post',
-	    dataType: 'html',
+        $.ajax({
+            type: 'post',
+            dataType: 'html',
 	    data: 'local=tips',
-	    url: ur+'auth/fotos_instagram/tips',
-	    beforeSend: function(){
-		$("#loadering").fadeIn();
-	    },
-	    success: function(resp){
+            url: ur+'auth/fotos_instagram/tips',
+            beforeSend: function(){
+                $("#loadering").fadeIn();
+            },
+            success: function(resp){
+		if(resp !== 'falha'){
+		    var html = '<p align="left" id="instagram_lightbox"><img style="float:left;" src="'+ur+'img/instagram_logo.png"><div id="title_lightbox">Instagram</div><div id="trocar_instagram"><a href="'+ur+'web/sair_instagram/capa_'+count+'">Trocar Conta<br /> do Instagram</a></div><div style="clear:both;"></div></p><hr>'+resp+''
+		    $(html).appendTo('.pag');
+		}else{
+		    alert("Houve um erro. Por favor, tente novamente");
+		    $("#fundo_box").click();
+		}
 		$("#loadering").fadeOut();
-		var html = '<p align="left" id="instagram_lightbox"><img style="float:left;" src="'+ur+'img/instagram_logo.png"><div id="title_lightbox">Instagram</div><div id="trocar_instagram"><a href="'+ur+'web/sair_instagram/tips_'+count+'_'+tip+'">Trocar Conta<br /> do Instagram</a></div><div style="clear:both;"></div></p><hr>'+resp+''
-		$(html).appendTo('.pag');
-	    }
-	});
+            }
+});
     });
     
     $("#get_instagram").click(function(){
-	$("#fundo_box").fadeIn(function(){
-	    $("#pagina").fadeIn();
-	    $(".pag").fadeIn();
-	});
+        $("#fundo_box").fadeIn(function(){
+            $("#pagina").fadeIn();
+            $(".pag").fadeIn();
+        });
 	var count = $("#cod_count").val();
-	$.ajax({
-	    type: 'post',
-	    dataType: 'html',
+        $.ajax({
+            type: 'post',
+            dataType: 'html',
 	    data: 'local=capa',
-	    url: ur+'auth/fotos_instagram/capa',
-	    beforeSend: function(){
-		$("#loadering").fadeIn();
-	    },
-	    success: function(resp){
-		$("#loadering").fadeOut();
-		var html = '<p align="left" id="instagram_lightbox"><img style="float:left;" src="'+ur+'img/instagram_logo.png"><div id="title_lightbox">Instagram</div><div id="trocar_instagram"><a href="'+ur+'web/sair_instagram/capa_'+count+'">Trocar Conta<br /> do Instagram</a></div><div style="clear:both;"></div></p><hr>'+resp+''
-		$(html).appendTo('.pag');
+            url: ur+'auth/fotos_instagram/capa',
+            beforeSend: function(){
+                $("#loadering").fadeIn();
+            },
+            success: function(resp){
+                var html = '<p align="left" id="instagram_lightbox"><img style="float:left;" src="'+ur+'img/instagram_logo.png"><div id="title_lightbox">Instagram</div><div id="trocar_instagram"><a href="'+ur+'web/sair_instagram/capa_'+count+'">Trocar Conta<br /> do Instagram</a></div><div style="clear:both;"></div></p><hr>'+resp+''
+                $(html).appendTo('.pag');
 		$("#redimensionar, #salvar").removeClass('oculto');
-	    }
-	});
+                $("#loadering").fadeOut();
+            }
+        });
     });
     
     
@@ -550,10 +481,11 @@ $(document).ready(function(){
     $(document).on('click','.ftitips',function(){
 	var image = $(this).data('alta');
 	
-	$.post(ur+'web/encodeimg', {img: image}, function(resp){
-	    image = resp.img64;
+	$.post(ur+'web/img_instagram', {imgi: image, local: 'tips', loca: 'instagram'}, function(resp){
+	    image = resp.url;
+	    
 	    $("#tela").html('');
-	    var html = '<img src="'+image+'">';
+	    var html = '<img src="'+ur+'tips/'+image+'">';
 	    $(html).appendTo("#tela").attr({
 		id: 'photo',
 		width: 256,
@@ -578,11 +510,12 @@ $(document).ready(function(){
     
     $(document).on('click','.fticapa',function(){
 	var image = $(this).data('alta');
+	var idcount = $("#cod_count").val();
 	$("#loadering").fadeIn();
-	$.post(ur+'web/encodeimg', {img: image}, function(resp){
-	    image = resp.img64;
+	$.post(ur+'web/img_instagram', {imgi: image, local: 'capa', loca: 'instagram', idcount: idcount}, function(resp){
+	    image = resp.url;
 	    $("#telinha").html('');
-	    var html = '<img id="photoc" height="" width="320" data-he="640" data-wi="640" src="'+image+'"><input type="hidden" name="fotoc" id="arqc" value="'+image+'">';
+	    var html = '<img id="photoc" height="" width="320" data-he="640" data-wi="640" src="'+ur+'capa/'+image+'"><input type="hidden" name="fotoc" value="'+image+'">';
 	    $(html).appendTo(".capa #telinha").css({
 		top: '0px',
 		left: '0px'
@@ -611,92 +544,35 @@ $(document).ready(function(){
 	buttonImageOnly: true
     });
     
-    $(document).on('click', '#salvar', function(){
-	$("#loader").fadeIn();
-	var html;
-	var central = $("#optimgc").val(); // imagem centralizada;
-	
-	if(imagem === ''){
-	    alert("Sua Capa precisa de uma imagem");
-	    $("#loader").fadeOut();
-	    return false;
-	}
-	
-	var imagem = $("input[name='fotoc']").val();
-	var imageObj = new Image();
-	 
-	imageObj.src = imagem;
-	 
-	imageObj.onload = function() {
-	    var canvas = document.getElementById('canvascapa');
-	    var context = canvas.getContext('2d');
-	    
-	    var codigo = $("input[name='count']").val();
-	    var posicao = coordsCapa(); // pega LEFT x TOP
-	    var n = posicao.split('/'); // separa as posições LEFT x TOP
-	    var sx = n[0].replace("px",""); // retira o PX deixando somente o número negativo do LEFT
-	    var sy = n[1].replace("px",""); // retira o PX deixando somente o número negativo do TOP
-	    sx = sx * -1; // transforma o negativo em positivo do LEFT
-	    sy = sy * -1; // transforma o negativo em positivo do TOP
-	    
-	    var sourceX = sx * 2; // imagem original X
-	    var sourceY = sy * 2; // imagem original Y
-	     
-	    var w = 640;
-	    var h = 200;
-	    
-	    if(central === 's'){
-		w = $("#photoc").width() * 2;
-		h = $("#photoc").height() * 2;
-		
-		sourceX = (sx / 2) - (sourceX * 1.25);
-		sourceY =  (sy / 2) - (sourceY * 1.25);
-		
-		context.drawImage(imageObj, sourceX, sourceY, w, h);
-	    }else{
-		// SOMENTE CROP
-		if(imageObj.width < 640 || imageObj.height < 200){
-		    w = $("#photoc").width() * 2;
-		    h = $("#photoc").height() * 2;
+    $(document).on('click','#salvar', function(){
+        var html = '';
+        var imagem = $("input[name='fotoc']").val();
+        var codigo = $("#cod_count").val();
+        var central = $("#optimgc").val();
+        var posicao = coordsCapa();
 
-		    sourceX = (sx / 2) - (sourceX * 1.25);
-		    sourceY =  (sy / 2) - (sourceY * 1.25);
+        var larimg = $("#photoc").width();
+        var altimg = $("#photoc").height();
 
-		    context.drawImage(imageObj, sourceX, sourceY, w, h);
-		}else{
-		    context.drawImage(imageObj, sourceX, sourceY, w, h, 0, 0, 640, 200);
+        var dados = 'codigo='+codigo+'&img='+imagem+'&central='+central+'&largura='+larimg+'&altura='+altimg+'&posicao='+posicao;
+
+        $.ajax({
+	    type: 'post',
+	    dataType: 'json',
+	    data: dados,
+	    async: false,
+	    url: ur+'web/grava_capa_antigo',
+	    success: function(resp){
+		if(resp.erro !== "sim"){
+		    $("#redimensionar, #salvar").addClass('oculto');
+		    $("#opcoes_capa").fadeOut();
+		    /*html = '<img src="'+ur+'capa/'+imagem+'" width="320" height="100">';
+		    $(".capa #telinha").html('').html(html);
+		    $('#photoc').draggable( "destroy" );*/
+		    redirect('');
 		}
 	    }
-	    var img_pronta = canvas.toDataURL("image/jpeg");
-	    
-	    context.clearRect(0,0,canvas.width,canvas.height);
-	    
-	    var dados = 'codigo='+codigo+'&img='+img_pronta;
-	     
-	    
-	    $.ajax({
-		type: 'post',
-		dataType: 'json',
-		data: dados,
-		async: false,
-		url: ur+'web/grava_capa',
-		beforeSend: function(){
-		    $(".progress").progressbar({
-			value: 45
-		    });
-		},
-		success: function(resp){
-		    $("#opcoes_capa").fadeOut();
-		    $("#loader").fadeOut();
-		    html = '<img src="'+resp.msg+'" width="320" height="100">';
-		    $(".capa #telinha").html('').html(html);
-		    $('#photoc').draggable( "destroy" );
-		}
-	    });
-	    $("#loader").fadeOut();
-	};
-	$("#loader").fadeOut();
-	$("#redimensionar, #salvar").addClass("oculto");
+        });
     });
     
     $(document).on('click','#redimensionar', function(){
@@ -708,8 +584,8 @@ $(document).ready(function(){
 	if(opt.val() === 's'){
 	    opt.val('n');
 	    img.attr({
-		height: img.data('he') / 2,
-		width: img.data('wi') / 2
+		height: img.data('he'),
+		width: img.data('wi')
 	    }).css({
 		top: '0px',
 		left: '0px',
@@ -718,7 +594,7 @@ $(document).ready(function(){
 	    });
 	}else{
 	    opt.val('s');
-	    if((img.data('he') / 2) < 100){
+	    if((img.data('he')) < 100){
 		h = '100';
 		w = '';
 		eixo = 'x';
@@ -741,7 +617,7 @@ $(document).ready(function(){
     
     $(document).on('click','#ajuste_automatico', function(){
 	var opt = $("#optimg");
-	var img = $("input[name='foto']");
+	var img = $("#photo");
 	var h = '';
 	var w = '';
 	var eixo;
@@ -749,8 +625,8 @@ $(document).ready(function(){
 	if(opt.val() === 's'){
 	    opt.val('n');
 	    $("#photo").attr({
-		height: img.data('he') / 2.5,
-		width: img.data('wi') / 2.5
+		height: img.data('he'),
+		width: img.data('wi')
 	    }).css({
 		top: '0px',
 		left: '0px',
@@ -905,6 +781,11 @@ $(document).ready(function(){
 	var central = $("#optimg").val(); // imagem centralizada;
 	var imagem = $("input[name='foto']").val();
 	$("#mudou").val('n');
+	
+	var posicao = updateCoords();
+
+	var larimg = $("#photo").width();
+	var altimg = $("#photo").height();
 	 
 	if(imagem === ''){
 	    alert("Sua Tip precisa de uma imagem");
@@ -948,116 +829,32 @@ $(document).ready(function(){
 	
 	$("#photo").mouseover();
 	
-	var n = imagem.match("/*_tip*");
-	
-	if(n === null){
-	    var canvas = document.getElementById('canvas');
-	    var context = canvas.getContext('2d');
-	    
-	    var imageObj = new Image();
-	    imageObj.src = imagem;
-	    
-	    imageObj.onload = function() {
-		
-		var posicao = updateCoords(); // pega LEFT x TOP
-		var n = posicao.split('/'); // separa as posições LEFT x TOP
-		var sx = n[0].replace("px",""); // retira o PX deixando somente o número negativo do LEFT
-		var sy = n[1].replace("px",""); // retira o PX deixando somente o número negativo do TOP
-		sx = sx * -1; // transforma o negativo em positivo do LEFT
-		sy = sy * -1; // transforma o negativo em positivo do TOP
+	var dados = 'id_tip='+id_tip+'&codigo='+codigo+'&img='+imagem+'&central='+central+'&titulo='+titulo+'&sub='+sub+'&mensagem='+mensagem+'&largura='+larimg+'&altura='+altimg+'&posicao='+posicao;
 
-		var sourceX = sx * 2.5; // imagem original X
-		var sourceY = sy * 2.5; // imagem original Y
-
-		var w = 640;
-		var h = 570;
-
-		if(central === 's'){
-		    w = $("#photo").width() * 2.5;
-		    h = $("#photo").height() * 2.5;
-
-		    sourceX = (sx / 2.5) - sourceX;
-		    sourceY =  (sy / 2.5) - sourceY;
-
-		    context.drawImage(imageObj, sourceX, sourceY, w, h);
-		}else{
-		    // SOMENTE CROP
-		    if(imageObj.width < 640 || imageObj.height < 570){
-			w = $("#photo").width() * 2.5;
-			h = $("#photo").height() * 2.5;
-
-			sourceX = (sx / 2.5) - sourceX;
-			sourceY =  (sy / 2.5) - sourceY;
-
-			context.drawImage(imageObj, sourceX, sourceY, w, h);
-		    }else{
-			context.drawImage(imageObj, sourceX, sourceY, w, h, 0, 0, 640, 570);
-		    }
-		}
-
-		var img_pronta = canvas.toDataURL("image/jpeg");
-		
-		context.clearRect(0,0,canvas.width,canvas.height);
-		
-		var dados = 'id_tip='+id_tip+'&codigo='+codigo+'&img='+img_pronta+'&titulo='+titulo+'&sub='+sub+'&mensagem='+mensagem;
-
-		$.ajax({
-		    type: 'post',
-		    dataType: 'json',
-		    data: dados,
-		    async: false,
-		    url: ur+'web/grava_tip',
-		    beforeSend: function(){
-			$("#loader").fadeIn();
-			$("#addtip").html('Processando...');
-		    },
-		    success: function(resp){
-			$("#loader").fadeOut();
-			$(".menu_foto").fadeOut();
-			if(resp.erro === 'ok'){
-			    var img = '<img width="100" src="'+ur+'tips/thumb_'+resp.imagem+'"><div class="fundo"><strong>'+$("#tip_"+id_tip).data('tip')+'/'+$("#tip_"+id_tip).data('dias')+'</strong></div>';
-			    $("#tip_"+id_tip).html('').html(img);
-			    $("#tip_"+id_tip).data('titulo',titulo);
-			    $("#tip_"+id_tip).data('sub',sub);
-			    $("#tip_"+id_tip).data('descricao',mensagem);
-			    $("#tip_"+id_tip).data('imagem',resp.imagem);
-			    $(".esconde, #num_tip, #loader").fadeOut();
-			    $("#tit_tip, #sub_tip, #men_tip").html('');
-			    $("#tela").html('');
-			}
-			$("#addtip").html('Salvar');
-		    }
-		});
+	$.ajax({
+	    type: 'post',
+	    dataType: 'json',
+	    data: dados,
+	    async: false,
+	    url: ur+'web/grava_tip_antigo',
+	    success: function(resp){
 		$("#loader").fadeOut();
-	    };
-	}else{
-	    var dados = 'id_tip='+id_tip+'&codigo='+codigo+'&img=sem&titulo='+titulo+'&sub='+sub+'&mensagem='+mensagem;
-	    
-	    $.ajax({
-		type: 'post',
-		dataType: 'json',
-		data: dados,
-		async: false,
-		url: ur+'web/grava_tip',
-		beforeSend: function(){
-		    $("#loader").fadeIn();
-		    $("#addtip").html('Processando...');
-		},
-		success: function(resp){
-		    $("#loader").fadeOut();
-		    $(".menu_foto").fadeOut();
-		    if(resp.erro === 'ok'){			
-			$("#tip_"+id_tip).data('titulo',titulo);
-			$("#tip_"+id_tip).data('sub',sub);
-			$("#tip_"+id_tip).data('descricao',mensagem);
-			$(".esconde, #num_tip, #loader").fadeOut();
-			$("#tit_tip, #sub_tip, #men_tip").html('');
-			$("#tela").html('');
-		    }
-		    $("#addtip").html('Salvar');
+		$(".barraup").fadeOut();
+		$(".menu_foto").fadeOut();
+		if(resp.erro === 'ok'){
+		    var img = '<img width="100" src="'+ur+'tips/thumb_'+resp.imagem+'"><div class="fundo"><strong>'+$("#tip_"+id_tip).data('tip')+'/'+$("#tip_"+id_tip).data('dias')+'</strong></div>';
+		    $("#tip_"+id_tip).html('').html(img);
+		    $("#tip_"+id_tip).data('titulo',titulo);
+		    $("#tip_"+id_tip).data('sub',sub);
+		    $("#tip_"+id_tip).data('descricao',mensagem);
+		    $("#tip_"+id_tip).data('imagem',resp.imagem);
+		    $(".esconde, #num_tip, #loader").fadeOut();
+		    $("#tit_tip, #sub_tip, #men_tip").html('');
+		    $("#tela").html('');
 		}
-	    });
-	}
+		$("#addtip").html('Salvar');
+	    }
+	});
     });
      
     $("#tit").keyup(function(){

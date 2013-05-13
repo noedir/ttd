@@ -43,7 +43,7 @@ $config['facebook_token'] = '';
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://www.tiltheday.com/';
+$config['base_url']	= 'http://localhost/TTD/SITE/';
 
 /*
 |--------------------------------------------------------------------------

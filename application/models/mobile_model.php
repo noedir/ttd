@@ -138,7 +138,7 @@ class Mobile_model extends CI_Model {
 	}else{
 	    $arr = '';
 	}
-	return $this->db->query("SELECT c.co_codigo id, c.co_titulo nome, c.co_capa image, c.co_premium premium, c.co_tags tags, c.co_dias dias_total, c.co_data_inicio inicio, (SELECT COUNT(*) FROM tbl_convidados i WHERE i.con_count = c.co_codigo AND i.con_aceitou = 's') AS inscritos FROM tbl_count c WHERE c.co_privado = 'n' AND c.co_data_expira > '".date("Y-m-d")."' AND c.co_excluido = 'n' AND c.co_finalizado = 'n' AND c.co_pago = 's' AND c.co_data_inicio <= '".date("Y-m-d")."' $where $arr ORDER BY c.co_premium DESC");
+	return $this->db->query("SELECT c.co_codigo id, c.co_titulo nome, c.co_capa image, c.co_premium premium, c.co_tags tags, c.co_dias dias_total, c.co_data_inicio inicio, (SELECT COUNT(*) FROM tbl_convidados i WHERE i.con_count = c.co_codigo AND i.con_aceitou = 's') AS inscritos FROM tbl_count c WHERE c.co_privado = 'n' AND c.co_data_expira > '".date("Y-m-d")."' AND c.co_excluido = 'n' AND c.co_finalizado = 'n' AND c.co_pago = 's' AND c.co_data_inicio <= '".date("Y-m-d")."' AND (c.co_capa != 'no_capa.jpg' OR c.co_capa != 'escolher_foto_capa.png') $where $arr ORDER BY c.co_premium DESC");
     }
     
     public function get_allcount($priv=NULL,$id=NULL){
