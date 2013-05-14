@@ -134,8 +134,8 @@ class Auth extends CI_Controller{
 		    $url = $next;
 		}
 
-		$get = file_get_contents($url);
-		if($get){
+		$get = file_get_contents(urldecode($url));
+		if($get !== false){
 		
 		    foreach(json_decode($get)->data as $item){
 

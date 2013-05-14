@@ -848,8 +848,8 @@ class Web extends CI_Controller {
 		    'source_image' => './capa/'.$input['img'],
 		    'x_axis' => $posil,
 		    'y_axis' => $posit,
-		    'width' => 640,
-		    'height' => 200,
+		    'width' => 640 - 28,
+		    'height' => 200 - 28,
 		    'quality' => '75',
 		    'maintain_ratio' => FALSE,
 		);

@@ -18,6 +18,7 @@
 	if($this->uri->segment(2) == 'tips'){
 	    switch($browser['browser']){
 		case "Firefox":
+		case "Safari":
 		    $bro = '2';
 		break;
 	    }
