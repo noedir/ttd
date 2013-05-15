@@ -20,6 +20,15 @@ class Mobile_model extends CI_Model {
 	}
     }
     
+    public function set_userlogout($dados=NULL){
+	if($dados != NULL){
+	    $up = array(
+		'us_tokenpush' => ''
+	    );
+	    $this->db->update('tbl_usuario',$up,array('us_email'=>$dados['email'],'us_tokenpush'=>$dados['tokenpush']));
+	}
+    }
+    
     public function chk_usuario($email){
 	return $this->db->query("SELECT * FROM tbl_usuario WHERE us_email = '".$email."'");
     }

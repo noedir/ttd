@@ -334,5 +334,7 @@ class Web_model extends CI_Model {
 	);
 	$this->db->where('co_codigo',$codigo);
 	$this->db->update('tbl_count',$ins);
+	
+	$this->db->delete('tbl_convidados',array('con_count'=>$codigo));
     }
 }

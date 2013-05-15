@@ -30,7 +30,7 @@ foreach ($row as $sg){
 	    if($sg['push'] != '(null)' && $sg['push'] != ''){
 		
 		$push = $sg['push'];
-		$mensagem = 'Novas TIPS disponíveis';
+		$mensagem = utf8_encode('Novas TIPS disponíveis');
 		$count = $idc;
 	    }
 	}else if($sg['total'] == 1){
@@ -38,7 +38,7 @@ foreach ($row as $sg){
 		
 		$cont = $pdo->query("SELECT co_titulo FROM tbl_count WHERE co_codigo = ".$sg['count'])->fetch(PDO::FETCH_ASSOC);
 		$push = $sg['push'];
-		$mensagem =  $cont['co_titulo'];
+		$mensagem =  utf8_encode($cont['co_titulo']);
 		$count = $idc;
 	    }
 	}

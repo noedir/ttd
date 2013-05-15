@@ -88,6 +88,7 @@ if($this->uri->segment(4) != ''){
 	</div>
 	<div class="tip-maior">
 	    <h5 class="projetoTitle">Capa da Count</h5>
+	    <div class="barraupc"><progress value="0" max="100"></progress><span id="porcentagemc">0%</span></div>
 	    <div id="opcoes_capa">
 		    <ul>
 			<li id="computador">Computador</li>
@@ -107,7 +108,7 @@ if($this->uri->segment(4) != ''){
 		<form id="formcapa" action="<?php echo base_url(); ?>web/img_upload/capa" method="post" enctype="multipart/form-data">
 		    <input type="hidden" name="optimgc" id="optimgc" value="n">
 		    <div id="FileUploadc">
-			<input type="file" name="imagem" id="file-capa">
+			<input style="top: -100000px;" type="file" name="imagem" id="file-capa">
 			<div id="BrowserVisiblec">
 			    <input type="text" id="FileFieldc" style="width: 0px; cursor: pointer;" name="foto">
 			    <input type="hidden" data-dias="<?php echo $count[0]->co_dias; ?>" id="cod_count" name="cod_count" value="<?php echo $count[0]->co_codigo; ?>">

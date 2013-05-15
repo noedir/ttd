@@ -1,3 +1,8 @@
+/*
+ * Função que redireciona uma página ou faz reload
+ * @param String rld : Url que será redirecionada. Vazia ('') para recarregar página.
+ * @returns redireciona ou faz reload
+ */
 function redirect(rld){
     if(rld === ''){
 	window.location.reload();
@@ -6,6 +11,10 @@ function redirect(rld){
     }
 }
 
+/*
+ * Função que verifica se os campos email e senha estão preenchido
+ * @returns true ou false
+ */
 function manda_login(){
     var nome = $("input[name='email']").val();
     var senha = $("input[name='senha']").val();
@@ -14,12 +23,17 @@ function manda_login(){
     if(senha === ''){ alert("Preencha com sua senha"); return false; }
 }
 
+/*
+ * Função que retorna o nome disponível para o Identificador do Count
+ * @param String nome : name do campo que quer tratar
+ * @returns retorna um nome disponível
+ */
 function retornaValor(nome){
     var ur = $('#ur').data('url');
     var vai = $("input[name='"+nome+"']");
     $.post(ur+'web/disponivel',{nome:vai.val()}, function(ret){
 	if(ret === 'false'){
-	    $(vai).focus().css({border: '1px solid #e98087', background: '#f5d4d7',});
+	    $(vai).focus().css({border: '1px solid #e98087', background: '#f5d4d7'});
 	    $("input[name='unique']").val('n');
 	}else{
 	    $(vai).css({border: '1px solid #ddd'});
@@ -28,11 +42,22 @@ function retornaValor(nome){
     });
 }
 
+/*
+ * Função que substitui o \n de um campo textarea para <br>
+ * @param String str : pega os valores
+ * @param String is_xhtml : se é ou não xhtml
+ * @returns retorna o texto formatado, pronto para gravar no banco de dados
+ */
 function nl2br (str, is_xhtml) {
     var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
     return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
 }
 
+/*
+ * Função que recebe o resultado do upload de imagens do TIP para o servidor em json
+ * @param Json data : dados em json
+ * @returns Escreve na tela os dados da imagem
+ */
 function processJson(data){
     if(data.status === '200'){
 	$(".barraup").fadeIn();
@@ -45,6 +70,11 @@ function processJson(data){
     }
 }
 
+/*
+ * Função que recebe o resultado do upload de imagens da CAPA para o servidor em json
+ * @param Json data : dados em json
+ * @returns Escreve na tela os dados da imagem
+ */
 function processJsonc(data){
     if(data.status === '200'){
 	$(".capa #telinha").html('').html(data.img+'<input type="hidden" id="arqc" name="fotoc" value="'+data.arquivo+'">');
@@ -53,6 +83,11 @@ function processJsonc(data){
     }
 }
 
+/*
+ * Função que busca as imagens no Instagram
+ * @param String ur : url básica da página
+ * @returns mostra as imagens do Instagram na tela
+ */
 function instagram(ur){
     $("#loadering").fadeIn();
     $.ajax({
@@ -69,6 +104,13 @@ function instagram(ur){
     });
 }
 
+/*
+ * Função para adicionar as tags das Counts
+ * @param String valor : tag a ser adicionada
+ * @param Integer codigo : código do Count
+ * @param String ur : url básica da página
+ * @returns sem retorno, só grava na página
+ */
 function addTag(valor,codigo,ur){
     $.ajax({
 	type: 'post',
@@ -79,6 +121,10 @@ function addTag(valor,codigo,ur){
     });
 }
 
+/*
+ * Função que pega a posição da imagem da TIP antes de fazer o crop
+ * @returns retorna o left e o top da imagem, nessa ordem
+ */
 function updateCoords(){
     var tp = $("#photo").css('top');
     var lf = $("#photo").css('left');
@@ -86,6 +132,10 @@ function updateCoords(){
     return res;
 };
 
+/*
+ * Função que pega a posição da imagem da CAPA antes de fazer o crop
+ * @returns retorna o left e o top da imagem, nessa ordem
+ */
 function coordsCapa(){
     var tp = $("#photoc").css('top');
     var lf = $("#photoc").css('left');
@@ -93,6 +143,10 @@ function coordsCapa(){
     return res;
 };
 
+/*
+ * Função buscar os amigos do Facebook e listar na tela
+ * @returns mostra todos os amigos
+ */
 function convida_face(){
     if($("#lista_facebook").length){
 	var ur = $('#ur').data('url');
@@ -111,8 +165,16 @@ function convida_face(){
 }
 
 $(document).ready(function(){
+    /*
+     * @string pega a url básica da página.
+     */
     var ur = $('#ur').data('url');
     
+    
+    /*
+    * Se o seletor @louins existir na página, então pergunta se quer ir para o Instagram
+    * É usado quando se faz o logout do Instagram pela página.
+    */
     if($("#louins").length){
 	var local = $("#louins").data("capa");
 	var tip = $("#louins").data('tip');
@@ -126,6 +188,9 @@ $(document).ready(function(){
 	}
     }
     
+    /*
+     * Mostrar / Ocultar o calendário para alterar a data de início do Count
+     */
     $(".dt_projeto").hover(function(){
 	$(".altdata").fadeIn();
     },
@@ -133,6 +198,13 @@ $(document).ready(function(){
 	$(".altdata").fadeOut();
     });
     
+    /*
+     * Ao clicar, inicia o calendário e mostra na tela.
+     * Ao selecionar o dia, o calendário é fechado e é atualizado o início do Count
+     * 
+     * @var String novadata : seleciona o novo dia de início
+     * @var Integer dias : pega o dias da Count para calcular o término
+     */
     $(".altdata").click(function(){
 	$("#altdata").datepicker({
 	    dateFormat: 'dd/mm/yy',
@@ -163,15 +235,29 @@ $(document).ready(function(){
 	});
     });
     
+    /*
+     * Após enviar o invite pelo facebook, essa tela faz o fechamendo do lightbox.
+     */
     $(document).on('click','.inv',function(){
 	var api_images = [$(this).data('url')];
 	$.prettyPhoto.open(api_images);
-    })
+    });
     
+    /*
+     * Inicia o seletor #loader ao enviar o contato
+     */
     $("#ok_contato").click(function(){
 	$("#loader").fadeIn();
     });
     
+    /*
+     * Função que faz a imagem aparecer no navegador sem fazer upload para o servidor.
+     * A pessoa escolhe a imagem e ela aparece no navegador quase instantaneamente.
+     * Essa opção não funciona em navegadores mais antigos.
+     * Mais detalhes na página http://caniuse.com/filereader
+     * 
+     * Seletor #file-capa faz a imagem aparecer na capa
+     */
     $("#file-capa").on('change', function(e){
 	var lar;
 	var alt;
@@ -219,6 +305,14 @@ $(document).ready(function(){
 	}
     });
     
+    /*
+     * Função que faz a imagem aparecer no navegador sem fazer upload para o servidor.
+     * A pessoa escolhe a imagem e ela aparece no navegador quase instantaneamente.
+     * Essa opção não funciona em navegadores mais antigos.
+     * Mais detalhes na página http://caniuse.com/filereader
+     * 
+     * Seletor #file-up faz a imagem aparecer na TIP
+     */
     $("#file-up").on('change', function(e){
 	var lar;
 	var alt;
@@ -239,7 +333,7 @@ $(document).ready(function(){
 			    $(img).appendTo("#tela").attr({
 				id: 'photo',
 				width: img.width,
-				height: img.height,
+				height: img.height
 			    });
 			    $('<input id="arq" data-wi="'+img.width+'" data-he="'+img.height+'" type="hidden" name="foto" value="'+img.src+'">').appendTo("#tela");
 
@@ -248,10 +342,10 @@ $(document).ready(function(){
 
 			    $("#photo").attr({
 				width: lar,
-				height: alt,
+				height: alt
 			    }).css({
 				top: '0px',
-				left: '0px',
+				left: '0px'
 			    });
 			},
 			{
@@ -268,7 +362,9 @@ $(document).ready(function(){
 	}
     });
     
-    
+    /*
+     * Pega o código da Count e redireciona para gerenciar as TIPS
+     */
     $(".countGerencia").click(function(){
 	var cod = $(this).data('count');
 	redirect(ur+'web/tips/'+cod+'.html');
@@ -276,32 +372,24 @@ $(document).ready(function(){
     
     $(".formNovoCount").buttonset();
     
+    /*
+     * Inicia o ToolTip (dicas) para os seletores com a classe .poshy
+     * @tooltipClass: classe que estiliza o poshytip.
+     */ 
     $('.poshy').tooltip({
 	position: {
 	    my: "left bottom-10",
-	    at: "left top",
+	    at: "left top"
 	},
-	tooltipClass: 'poshy_style',
+	tooltipClass: 'poshy_style'
     });
     
     $("#tabs").tabs();
     
-    $(".ui-button-text").on('mouseover', function(){
-	$("#seta_priv").fadeIn();
-    });
-    
-    $(".ui-button-text").on('click', function(){
-	if($("#seta_priv").css('margin-left') === '98px'){
-	    $("#seta_priv").css({
-		'margin-left': '30px',
-	    });
-	}else{
-	    $("#seta_priv").css({
-		'margin-left': '98px',
-	    });
-	}
-    })
-    
+    /*
+     * Ao sair dos campos #dias_projeto e/ou #titulo_projeto,
+     * é gerado o Identificador do Count e escreve no campo #nomeunico
+     */
     $(document).on('blur', '#dias_projeto, #titulo_projeto', function(){
 	var proj = $("#titulo_projeto");
 	var dias = $("#dias_projeto");
@@ -319,43 +407,76 @@ $(document).ready(function(){
 	}
     });
     
+    /*
+     * Controle para saber se no seletor #convida_face existe o data-volta
+     * e se está setado como sim.
+     * Caso esteja, abre a aba para os amigos do facebook.
+     * Isso acontece após fazer o Oauth no facebook
+     */
     if($("#convida_face").data('volta') === 'sim'){
 	$("#convida_face").click();
 	convida_face();
     }
     
+    /*
+     * Mesmo que função anterior
+     */
     $("#convida_face").click(function(){
 	convida_face();
     });
     
-    $(".hastags").tagsInput({
-	'width': '100%',
-	'height': '58px',
-	'onAddTag': function(){
-	    addTag($(".hastags").val(),$(".hastags").data("codigo"),ur);
-	},
-    });
+    /*
+     * Formata as tags e, cada tag escrita, é adicionada no banco de dados.
+     */
+    if($(".hastags").length){
+	$(".hastags").tagsInput({
+	    'width': '100%',
+	    'height': '58px',
+	    'onAddTag': function(){
+		addTag($(".hastags").val(),$(".hastags").data("codigo"),ur);
+	    }
+	});
+    }
     
+    /*
+     * Abre a tela para escolher um arquivo de imagem para upload
+     */
     $(document).on('click','#uploadpc', function(){
 	$("#file-up").click();
     });
     
-    $(".controle_capa").click(function(){
+    /*
+     * Mostra / oculta as opção na capa
+     */
+    $(".controle_capa").click(function(){   
 	$("#opcoes_capa").fadeToggle();
     });
     
+    /*
+     * Usado para quando retorna do Oauth no instagram, as opções da capa estejam abertas.
+     */
     if($(".retcapa").length){
 	$(".controle_capa").click();
     };
     
+    /*
+     * Usado para quando retorna do Oauth no instagram, as opções da tip estejam abertas.
+     */
     if($(".rettip").length){
-	$(".controle_capa").click();
+	$("#triggerSelect").click();
     };
     
+    /*
+     * Abre a tela para escolher um arquivo de imagem para upload
+     */
     $(document).on('click','#computador', function(){
 	$("#file-capa").click();
     });
     
+    
+    /*
+     * Inicia a drag na imagem da capa e seta os limites da imagem ao arrastar.
+     */
     $(document).on('mouseover','#telinha', function(){
 	if($("#opcoes_capa").is(":visible")){
 	    $("#photoc").draggable({
@@ -363,30 +484,38 @@ $(document).ready(function(){
 		scroll: false,
 		snapTolerance: 5,
 		stop: function (event,ui){
+		    
+		    // Pega o tamanho da imagem  (largura e altura)
 		    var limitx = $(this).width();
 		    var limity = $(this).height();
 		    
+		    // Verifica a posição TOP. Se maior que zero, retorna à posição zero (encosta no topo)
 		    if(ui.position.top > 0){
 			$(this).animate({
-			    top: '0px',
-			},200);
-		    }
-		    if((limity + ui.position.top) < 100){
-			var alt = (limity - 100);
-			$(this).animate({
-			    top: '-'+alt+'px',
+			    top: '0px'
 			},200);
 		    }
 		    
-		    if(ui.position.left > 0){
+		    // Se a soma do limite TOP da imagem for menor que 100, retorna à posição da base da imagem
+		    if((limity + ui.position.top) < 100){
+			var alt = (limity - 100);
 			$(this).animate({
-			    left: '0px',
+			    top: '-'+alt+'px'
 			},200);
 		    }
+		    
+		    // Verifica a posição LEFT. Se maior que zero, retorna à posição zero (encosta na lateral direita)
+		    if(ui.position.left > 0){
+			$(this).animate({
+			    left: '0px'
+			},200);
+		    }
+		    
+		    // Se a soma do limit LEFT da image for menor que 320, retorna à posição do lado direito da imagem
 		    if((limitx + ui.position.left) < 320){
 			var lar = (limitx - 320);
 			$(this).animate({
-			    left: '-'+lar+'px',
+			    left: '-'+lar+'px'
 			},200);
 		    }
 		}
@@ -394,6 +523,9 @@ $(document).ready(function(){
 	}
     });
     
+    /*
+     * Inicia a drag na imagem da TIP e seta os limites da imagem ao arrastar.
+     */
     $(document).on('mouseover','#tela', function(){
 	if($("#ajuste_automatico").is(":visible")){
 	    $("#baseDock").fadeToggle();
@@ -410,46 +542,65 @@ $(document).ready(function(){
 		//}
 	    //},
 	    stop: function (event,ui){
+		
+		// Pega o tamanho da imagem  (largura e altura)
 		var limitx = $(this).width();
 		var limity = $(this).height();
-
+		
+		// Verifica a posição TOP. Se maior que zero, retorna à posição zero (encosta no topo)
 		if(ui.position.top > 0){
 		    $(this).animate({
-			top: '0px',
+			top: '0px'
 		    },200);
 		}
+		
+		// Se a soma do limite TOP da imagem for menor que 100, retorna à posição da base da imagem
 		if((limity + ui.position.top) < 228){
 		    var alt = (limity - 228);
 		    $(this).animate({
-			top: '-'+alt+'px',
+			top: '-'+alt+'px'
 		    },200);
 		}
-
+		
+		// Verifica a posição LEFT. Se maior que zero, retorna à posição zero (encosta na lateral direita)
 		if(ui.position.left > 0){
 		    $(this).animate({
-			left: '0px',
+			left: '0px'
 		    },200);
 		}
+		
+		// Se a soma do limit LEFT da image for menor que 320, retorna à posição do lado direito da imagem
 		if((limitx + ui.position.left) < 256){
 		    var lar = (limitx - 256);
 		    $(this).animate({
-			left: '-'+lar+'px',
+			left: '-'+lar+'px'
 		    },200);
 		}
 	    }
 	});
     });
     
-    $(".friends").tagsInput({
-	'width': '100%',
-	'height': '100px',
-	'defaultText': 'Adicionar email'
-    });
+    /*
+     * Formata o campo para adicionar emails para convites
+     */
+    if($(".friends").length){
+	$(".friends").tagsInput({
+	    'width': '100%',
+	    'height': '100px',
+	    'defaultText': 'Adicionar email'
+	});
+    }
     
+    /*
+     * Inicia o lightbox sem as redes sociais no rodapé
+     */
     $("a[rel^='prettyPhoto']").prettyPhoto({
 	social_tools: false
     });
     
+    /*
+     * Opção para buscar imagens no facebook para as TIPS
+     */
     $("#pega_facebook").click(function(){
 	$("#fundo_box").fadeIn(function(){
 	    $("#pagina").fadeIn();
@@ -463,7 +614,7 @@ $(document).ready(function(){
 		$("#loader").fadeIn();
 	    },
 	    success: function(resp){
-		var html = '<p align="center"><img src="'+ur+'img/facebook_photo.jpg"></p><hr>'+resp+''
+		var html = '<p align="center"><img src="'+ur+'img/facebook_photo.jpg"></p><hr>'+resp+'';
 		$(html).appendTo('.pag');
 		$("#loader").fadeOut();
 	    }
@@ -471,6 +622,9 @@ $(document).ready(function(){
 	$("#loader").fadeOut();
     });
     
+    /*
+     * Opção para buscar imagens no facebook para as CAPAS
+     */
     $("#get_facebook").click(function(){
 	$("#fundo_box").fadeIn(function(){
 	    $("#pagina").fadeIn();
@@ -484,7 +638,7 @@ $(document).ready(function(){
 		$("#loader").fadeIn();
 	    },
 	    success: function(resp){
-		var html = '<p align="center"><img src="'+ur+'img/facebook_photo.jpg"></p><hr>'+resp+''
+		var html = '<p align="center"><img src="'+ur+'img/facebook_photo.jpg"></p><hr>'+resp+'';
 		$(html).appendTo('.pag');
 		$("#loader").fadeOut();
 	    }
@@ -492,6 +646,9 @@ $(document).ready(function(){
 	$("#loader").fadeOut();
     });
     
+    /*
+     * Opção para pegar imagens no Instagram para as TIPS
+     */
     $("#pega_instagram").click(function(){
 	$("#fundo_box").fadeIn(function(){
 	    $("#pagina").fadeIn();
@@ -509,12 +666,15 @@ $(document).ready(function(){
 	    },
 	    success: function(resp){
 		$("#loadering").fadeOut();
-		var html = '<p align="left" id="instagram_lightbox"><img style="float:left;" src="'+ur+'img/instagram_logo.png"><div id="title_lightbox">Instagram</div><div id="trocar_instagram"><a href="'+ur+'web/sair_instagram/tips_'+count+'_'+tip+'">Trocar Conta<br /> do Instagram</a></div><div style="clear:both;"></div></p><hr>'+resp+''
+		var html = '<p align="left" id="instagram_lightbox"><img style="float:left;" src="'+ur+'img/instagram_logo.png"><div id="title_lightbox">Instagram</div><div id="trocar_instagram"><a href="'+ur+'web/sair_instagram/tips_'+count+'_'+tip+'">Trocar Conta<br /> do Instagram</a></div><div style="clear:both;"></div></p><hr>'+resp+'';
 		$(html).appendTo('.pag');
 	    }
 	});
     });
     
+    /*
+     * Opção para buscar imagens no Instagram para a CAPA
+     */
     $("#get_instagram").click(function(){
 	$("#fundo_box").fadeIn(function(){
 	    $("#pagina").fadeIn();
@@ -531,14 +691,16 @@ $(document).ready(function(){
 	    },
 	    success: function(resp){
 		$("#loadering").fadeOut();
-		var html = '<p align="left" id="instagram_lightbox"><img style="float:left;" src="'+ur+'img/instagram_logo.png"><div id="title_lightbox">Instagram</div><div id="trocar_instagram"><a href="'+ur+'web/sair_instagram/capa_'+count+'">Trocar Conta<br /> do Instagram</a></div><div style="clear:both;"></div></p><hr>'+resp+''
+		var html = '<p align="left" id="instagram_lightbox"><img style="float:left;" src="'+ur+'img/instagram_logo.png"><div id="title_lightbox">Instagram</div><div id="trocar_instagram"><a href="'+ur+'web/sair_instagram/capa_'+count+'">Trocar Conta<br /> do Instagram</a></div><div style="clear:both;"></div></p><hr>'+resp+'';
 		$(html).appendTo('.pag');
 		$("#redimensionar, #salvar").removeClass('oculto');
 	    }
 	});
     });
     
-    
+    /*
+     * Cria um lightbox "caseiro" usado para buscar imagens do Instagram
+     */
     $("#fundo_box").click(function(){
 	$("#pagina").fadeOut();
 	$(".pag").fadeOut().html('');
@@ -547,12 +709,19 @@ $(document).ready(function(){
 	$(this).fadeOut();
     });
     
+    /*
+     * Busca a imagem que veio do Instagram e coloca na TIP
+     */
     $(document).on('click','.ftitips',function(){
 	var image = $(this).data('alta');
 	
 	$.post(ur+'web/encodeimg', {img: image}, function(resp){
 	    image = resp.img64;
+	    
+	    // Limpa o seletor #tela
 	    $("#tela").html('');
+	    
+	    // Cria o html que será carregado na tela
 	    var html = '<img src="'+image+'">';
 	    $(html).appendTo("#tela").attr({
 		id: 'photo',
@@ -560,7 +729,7 @@ $(document).ready(function(){
 		height: 256
 	    }).css({
 		top: '0px',
-		left: '0px',
+		left: '0px'
 	    },"json");
 	    $('<input id="arq" data-wi="640" data-he="640" type="hidden" name="foto" value="'+image+'">').appendTo("#tela");
 	}, "json");
@@ -570,12 +739,18 @@ $(document).ready(function(){
 	$("#fundo_box").fadeOut();
     });
     
+    /*
+     * Mostra / Oculta as opção da imagem na TIP
+     */
     $("#triggerSelect").on({
 	click: function(){
 	      $("#baseDock").fadeToggle();
-	},
+	}
     });
     
+    /*
+     * Busca a imagem que veio do Instagram e coloca na CAPA
+     */
     $(document).on('click','.fticapa',function(){
 	var image = $(this).data('alta');
 	$("#loadering").fadeIn();
@@ -594,12 +769,18 @@ $(document).ready(function(){
 	}, "json");
     });
     
+    /*
+     * Fecha o calendário
+     */
     $("#ok_data").click(function(){
 	if($("#calendario").val() === ''){
 	    return false;
 	}
     });
     
+    /*
+     * Inicia o calendário
+     */
     $("#calendario, #fimcount, #inicount").datepicker({
 	dateFormat: 'dd/mm/yy',
 	monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
@@ -611,6 +792,9 @@ $(document).ready(function(){
 	buttonImageOnly: true
     });
     
+    /*
+     * Usado para salvar a capa
+     */
     $(document).on('click', '#salvar', function(){
 	$("#loader").fadeIn();
 	var html;
@@ -622,16 +806,24 @@ $(document).ready(function(){
 	    return false;
 	}
 	
+	/*
+	 * Cria a instância da imagem.
+	 * 
+	 * Pega a imagem do input name='fotoc'
+	 */	
 	var imagem = $("input[name='fotoc']").val();
 	var imageObj = new Image();
 	 
+	// Muda a url da imagem na instancia
 	imageObj.src = imagem;
 	 
+	
 	imageObj.onload = function() {
+	    // Obtem o elemento canvas da capa
 	    var canvas = document.getElementById('canvascapa');
 	    var context = canvas.getContext('2d');
 	    
-	    var codigo = $("input[name='count']").val();
+	    var codigo = $("input[name='count']").val(); // Peag o código da count
 	    var posicao = coordsCapa(); // pega LEFT x TOP
 	    var n = posicao.split('/'); // separa as posições LEFT x TOP
 	    var sx = n[0].replace("px",""); // retira o PX deixando somente o número negativo do LEFT
@@ -642,19 +834,20 @@ $(document).ready(function(){
 	    var sourceX = sx * 2; // imagem original X
 	    var sourceY = sy * 2; // imagem original Y
 	     
-	    var w = 640;
-	    var h = 200;
+	    var w = 640; // seta a largura
+	    var h = 200; // seta a altura
 	    
+	    // Caso a imagem tenha sido ajustada
 	    if(central === 's'){
-		w = $("#photoc").width() * 2;
-		h = $("#photoc").height() * 2;
+		w = $("#photoc").width() * 2; // pega a largura da imagem atualizada * 2
+		h = $("#photoc").height() * 2; // pega a altura da imagem atualizada * 2
 		
-		sourceX = (sx / 2) - (sourceX * 1.25);
-		sourceY =  (sy / 2) - (sourceY * 1.25);
+		sourceX = (sx / 2) - (sourceX * 1.25); // Faz o cálculo para ajustar a largura
+		sourceY =  (sy / 2) - (sourceY * 1.25); // Faz o cálculo para ajustar a altura
 		
-		context.drawImage(imageObj, sourceX, sourceY, w, h);
+		context.drawImage(imageObj, sourceX, sourceY, w, h); // Desenha imagem no canvas oculto
 	    }else{
-		// SOMENTE CROP
+		// Caso a imagem tenha sido cropada
 		if(imageObj.width < 640 || imageObj.height < 200){
 		    w = $("#photoc").width() * 2;
 		    h = $("#photoc").height() * 2;
@@ -667,10 +860,15 @@ $(document).ready(function(){
 		    context.drawImage(imageObj, sourceX, sourceY, w, h, 0, 0, 640, 200);
 		}
 	    }
+	    
+	    // Imagem pronta para ser enviada para o servidor
 	    var img_pronta = canvas.toDataURL("image/jpeg");
 	    
+	    
+	    // Faz a limpeza do canvas, para evitar sobreposição de imagens, principalmente PNG transparente
 	    context.clearRect(0,0,canvas.width,canvas.height);
 	    
+	    // Dados que vão para o servidor
 	    var dados = 'codigo='+codigo+'&img='+img_pronta;
 	     
 	    
@@ -699,6 +897,9 @@ $(document).ready(function(){
 	$("#redimensionar, #salvar").addClass("oculto");
     });
     
+    /*
+     * Usado para ajustar o tamanho da imagem na Capa.
+     */
     $(document).on('click','#redimensionar', function(){
 	var opt = $("#optimgc");
 	var img = $("#photoc");
@@ -712,7 +913,7 @@ $(document).ready(function(){
 		width: img.data('wi') / 2
 	    }).css({
 		top: '0px',
-		left: '0px',
+		left: '0px'
 	    }).draggable({
 		axis: ''
 	    });
@@ -729,16 +930,19 @@ $(document).ready(function(){
 	    }
 	    img.attr({
 		height: h,
-		width: w,
+		width: w
 	    }).css({
 		top: '0px',
-		left: '0px',
+		left: '0px'
 	    }).draggable({
 		axis: eixo
 	    });
 	}
     });
     
+    /*
+     * Usado para ajustar a imagem na TIP
+     */
     $(document).on('click','#ajuste_automatico', function(){
 	var opt = $("#optimg");
 	var img = $("input[name='foto']");
@@ -753,7 +957,7 @@ $(document).ready(function(){
 		width: img.data('wi') / 2.5
 	    }).css({
 		top: '0px',
-		left: '0px',
+		left: '0px'
 	    }).draggable({
 		axis: ''
 	    });
@@ -770,7 +974,7 @@ $(document).ready(function(){
 	    }
 	    $("#photo").attr({
 		height: h,
-		width: w,
+		width: w
 	    }).css({
 		top: '0px',
 		left: '0px'
@@ -780,30 +984,37 @@ $(document).ready(function(){
 	}
     });
     
+    /*
+     * Setar seletor #mudou para 's', caso tenho alterado algo em uma TIP.
+     * É emitido um aviso, caso o usuário clique em outra TIP sem salvar a TIP aberta
+     */
     $(document).on('change','.campos', function(){
 	$("#mudou").val('s');
     });
     
+    /*
+     * Abre uma TIP para edição
+     * Caso já tenha uma TIP aberta, é emitido um aviso
+     */
     $(".mozaico").click(function(){
+	/*
+	 * Usado caso não tenha sido escolhida uma capa para o projeto
+	 */
 	if($(".trava").length){
 	    alert("Você ainda não escolheu uma capa para esse projeto");
 	    return false;
 	}
 	
+	// Aviso emitido, quando uma tip esteja aberta para edição
 	if($("#mudou").val() === 's'){
 	    if(!confirm("Os dados dessa tip serão perdidos. Continuar assim mesmo?")){
 		return false;
 	    }
 	}
 	
-	if (!window.File && !window.FileReader && !window.FileList && !window.Blob) {
-	    alert("Seu navegador não suporta os recursos dessa página.");
-	    return false;
-	}
-	
 	$("#mudou").val('n');
 	$(".campos").css({
-	    border: '1px solid #ddd',
+	    border: '1px solid #ddd'
 	});
 	
 	var dis = $(this).data("disabled");
@@ -829,6 +1040,7 @@ $(document).ready(function(){
 	$("#men_tip").html(nl2br($(this).data("descricao")));
 	$(".esconde").fadeIn();
 	
+	// Usado caso uma TIP já tenha passado da data
 	if(dis === 'yes'){
 	    $("#tit").prop("disabled", true);
 	    $("#sub").prop("disabled", true);
@@ -851,7 +1063,10 @@ $(document).ready(function(){
 	    $(".menu_foto").fadeIn();
 	}
     });
-        
+
+    /*
+     * Cancelar a edição de uma TIP
+     */
     $("#cantip").click(function(){
 	$("#codigo_tip").val('');
 	$("#tit_tip").html('');
@@ -863,40 +1078,58 @@ $(document).ready(function(){
 	$(".esconde").fadeOut();
     });
     
+    /*
+     * Usado para voltar para a TIP
+     */
     $("#ok_volta").click(function(){
 	var id = $(this).data("id");
 	redirect(ur+'web/tips/'+id+'.html');
 	return false;
     });
     
+    /*
+     * Verificar se foi digitado um título para a TIP
+     */
     $(document).on('blur','#tit', function(){
 	if($("#tit").val() !== ''){
 	    $("#tit").css({
-		border: '1px solid #090',
+		border: '1px solid #090'
 	    });
 	}
     });
      
+    /*
+     * Verificar se foi digitado um subtítulo para a TIP
+     */
     $(document).on('blur','#sub', function(){
 	if($("#sub").val() !== ''){
 	    $("#sub").css({
-		border: '1px solid #090',
+		border: '1px solid #090'
 	    });
 	}
     });
      
+     /*
+     * Verificar se foi digitado uma mensagem para a TIP
+     */
     $(document).on('blur','#men', function(){
 	if($("#men").val() !== ''){
 	    $("#men").css({
-		border: '1px solid #090',
+		border: '1px solid #090'
 	    });
 	}
     });
      
+    /*
+     * Usado para salvar a TIP que foi editada
+     */
     $("#addtip").click(function(){
 	$("#loader").fadeIn();
+	
+	// Troca o texto do botão Salvar por Processando
 	$(this).html("Processando...").delay(100);
 	
+	// Pega as informações da TIP para salvar e da imagem.
 	var titulo = $("input[name='titulo']").val();
 	var sub = $("input[name='subtitulo']").val();
 	var mensagem = $("#men").val();
@@ -906,6 +1139,8 @@ $(document).ready(function(){
 	var imagem = $("input[name='foto']").val();
 	$("#mudou").val('n');
 	 
+	// Faz as verificações antes de continuar.
+	// Se existe imagem, titulo, sub e mensagem.
 	if(imagem === ''){
 	    alert("Sua Tip precisa de uma imagem");
 	    $("#loader").fadeOut();
@@ -917,7 +1152,7 @@ $(document).ready(function(){
 	    alert("Sua Tip precisa de um título");
 	    $("input[name='titulo']").focus().css({
 		border: '1px solid #e98087',
-		background: '#f5d4d7',
+		background: '#f5d4d7'
 	    });
 	    $("#loader").fadeOut();
 	    $("#addtip").html('Salvar');
@@ -928,7 +1163,7 @@ $(document).ready(function(){
 	    alert("Sua Tip precisa de um sub-título");
 	    $("input[name='subtitulo']").focus().css({
 		border: '1px solid #e98087',
-		background: '#f5d4d7',
+		background: '#f5d4d7'
 	    });
 	    $("#loader").fadeOut();
 	    $("#addtip").html('Salvar');
@@ -939,15 +1174,20 @@ $(document).ready(function(){
 	    alert("Sua Tip precisa de uma descrição");
 	    $("#men").focus().css({
 		border: '1px solid #e98087',
-		background: '#f5d4d7',
+		background: '#f5d4d7'
 	    });
 	    $("#loader").fadeOut();
 	    $("#addtip").html('Salvar');
 	    return false;
 	}
 	
+	/*
+	 * HACK para funcionar em alguns navegadores, senão as imagens ficam pretas.
+	 */
 	$("#photo").mouseover();
 	
+	// Verificação para saber se é uma nova tip ou atualização
+	// Caso seja atualização, se foi ou não trocada a imagem.
 	var n = imagem.match("/*_tip*");
 	
 	if(n === null){
@@ -1059,22 +1299,26 @@ $(document).ready(function(){
 	    });
 	}
     });
-     
+    
+    // Ao digitar no campos específico, preenche a div no  Iphone de exemplo
     $("#tit").keyup(function(){
 	var valor = $(this).val();
 	$("#tit_tip").html(valor);
     });
-     
+    
+    // Ao digitar no campos específico, preenche a div no  Iphone de exemplo
     $("#sub").keyup(function(){
 	var valor = $(this).val();
 	$("#sub_tip").html(valor);
     });
-     
+    
+    // Ao digitar no campos específico, preenche a div no  Iphone de exemplo
     $("#men").keyup(function(){
 	var valor = $(this).val();
 	$("#men_tip").html(nl2br(valor));
     });
     
+    // Usado para setar uma count como excluida no sistema
     $(".exc").click(function(){
 	var id = $(this).data('id');
 	var ur = $(this).data('ur');
@@ -1086,6 +1330,7 @@ $(document).ready(function(){
 	return false;
     });
     
+    // Usado para resetar uma TIP
     $(document).on('click','#cleantip', function(){
 	if(confirm("Deseja realmente limpar essa TIP? Essa ação não tem retorno.")){
 	    var id = $("#codigo_tip").val();
@@ -1117,10 +1362,16 @@ $(document).ready(function(){
 	}
     });
     
+    /*
+     * Mudar de idioma
+     */
     $("#btn_idioma").click(function(){
 	$("#lang").fadeToggle();
     });
     
+    /*
+     * Mudar de idioma
+     */
     $(".lang").click(function(){
 	var lng = $(this).data('lang');
 	
@@ -1136,18 +1387,29 @@ $(document).ready(function(){
 	});
     });
     
+    // Fechar uma tela
     $(".fechar").click(function(){
         $(this).parent().fadeOut();
     });
+    
+    /*
+     * Fazer login, mas não é mais usado
+     */
     $(".btn_login").click(function(){
         $("#login").fadeToggle(function(){
             $("input[name='email']").focus();
         });
     });
+    
+    /*
+     * Mudar cor da borda, em caso de foco.
+     */
     $("input[name='email'], input[name='senha']").focus(function(){
         $(this).css('border-color','#ddd');
     });
     
+    // Calcula o valor do projeto, baseado no número de dias e se o campo for
+    // diferente de vazio
     if($("#dias_projeto").val() !== ''){
 	var valor = $(this).val();
 	if(valor !== ''){
@@ -1161,6 +1423,7 @@ $(document).ready(function(){
 	}
     }
     
+    // Faz o cálculo do valor do projeto, ao escolher o número de dias
     $("#dias_projeto").blur(function(){
         var valor = $(this).val();
 	if(valor !== ''){

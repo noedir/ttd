@@ -482,7 +482,7 @@ class Web extends CI_Controller {
 	    'count'	=> $this->wdb->get_tcount($id)->result(),
 	    'tips'	=> $this->wdb->get_tips($id)->result(),
 	    'totaltips'	=> $this->wdb->get_totaltips($id),
-            'browser' => $this->browser_check(),
+            'browser'	=> $this->browser_check(),
 	);
 	
 	$auth = $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result_array();
@@ -568,7 +568,6 @@ class Web extends CI_Controller {
 		'width'		    => 320,
 		'height'	    => 320,
 		'quality'	    => '100%',
-		'maintain_ratio'    => TRUE,
 	    );
 	}else{
 	    $lar = $tam[0] / 2.5;
@@ -593,9 +592,9 @@ class Web extends CI_Controller {
 	$this->image_lib->resize();
 	$this->image_lib->clear();
 
-	if($local === 'instagram'){
-	    $data['width'] = 640;
-	    $data['height'] = 640;
+	if($local == 'instagram'){
+	    $data['width'] = 320;
+	    $data['height'] = 320;
 	}else{
 	    $data['width'] = $tam[0];
 	    $data['height'] = $tam[1];
@@ -717,7 +716,6 @@ class Web extends CI_Controller {
 	if($this->upload->do_upload('imagem')){
 	    $file = $this->upload->data();
 	    
-	    $data['arquivo'] = $file['file_name'];
 	    $temp = 'tmp_'.$file['file_name'];
 	    
 	    if($path == 'tips'){
@@ -744,31 +742,31 @@ class Web extends CI_Controller {
 	    
 	    if($path == 'tips'){
 		$param = 'id="photo"';
+		$ca = '';
 	    }else{
 		 $param = 'id="photoc"';
+		 $ca = 'c';
 	    }
-	    $data['img'] = '<img data-wi="'.$lar.'" data-he="'.$alt.'" '.$param.' src="'.base_url().$path.'/'.$temp.'">';
+	    $mostra_img = '<img width="'.$lar.'" height="'.$alt.'" data-wi="'.$file['image_width'].'" data-he="'.$file['image_height'].'" '.$param.' src="'.base_url().$path.'/'.$temp.'"><input type="hidden" name="foto'.$ca.'" value="'.$file['file_name'].'">';
 	    
 	    if($path == 'capa'){
 		$input = array(
-		    'img' => $data['arquivo'],
+		    'img' => $file['file_name'],
 		    'codigo' => $this->input->get_post('cod_count'),
 		);
 		$this->wdb->up_count($input);
 	    }
-	    
-	    $data['status'] = '200';
-	    $data['msg'] = 'OK';
 	}else{
-	    $data['status'] = '201';
 	    if($path == 'tips'){
-		$data['msg'] = 'A imagem precisa ter no mínimo 640 x 570 pixels.';
+		//$data['msg'] = 'A imagem precisa ter no mínimo 640 x 570 pixels.';
+		$mostra_img = 'erro1';
 	    }else{
-		$data['msg'] = 'A imagem precisa ter no mínimo 640 x 200 pixels.';
+		//$data['msg'] = 'A imagem precisa ter no mínimo 640 x 200 pixels.';
+		$mostra_img = 'erro2';
 	    }
 	}
 	
-	echo json_encode($data);
+	echo $mostra_img;
     }
     
     public function grava_capa_antigo(){

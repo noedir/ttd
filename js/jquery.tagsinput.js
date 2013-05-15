@@ -95,13 +95,13 @@
 					var skipTag = false; 
 				}
 				
-				if (value !='' && skipTag != true) { 
+				if (value != '' && skipTag != true) { 
                     $('<span>').addClass('tag').append(
                         $('<span>').addClass('essa').text(value).append('&nbsp;&nbsp;'),
                         $('<a>', {
                             href  : '#',
                             title : 'Removing tag',
-                            text  : 'x',
+                            text  : 'x'
                         }).click(function () {
 			    var tag = value;
 			    var cod = $("#cod_count").val();
@@ -183,7 +183,7 @@
                 id = $(this).attr('id');
 		$('#'+id+'_tagsinput .tag').remove();
 		$.fn.tagsInput.importTags(this,str);
-	}
+	};
 		
 	$.fn.tagsInput = function(options) { 
     var settings = jQuery.extend({

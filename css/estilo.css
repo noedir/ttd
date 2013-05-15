@@ -184,6 +184,25 @@ a.black:hover{
     box-shadow: 0px 0px 4px #000;
     cursor: pointer;
 }
+#aviso{
+    position: relative;
+    float: left;
+    width: 100%;
+    font-size: 14px;
+    padding: 10px 0px;
+    text-align: center;
+    margin: 0px auto;
+    margin-top: -30px;
+    margin-bottom: 30px;
+    padding-bottom: -50px;
+    background: #ff6;
+}
+#aviso .aviso{
+    position: relative;
+    width: 700px;
+    margin: 0px auto;
+    color: #f00;
+}
 #tudo{
     position: relative;
     width: 1080px;
@@ -338,8 +357,11 @@ a.black:hover{
 }
 .fechar{
     position: absolute;
-    top: 0px;
+    top: -5px;
     right: 4px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #900;
     cursor: pointer;
 }
 #container{
@@ -1195,7 +1217,7 @@ div.tagsinput div { display: block; float: left; }
 	height: 228px;
 	top: 143px;
 	right: 30px;
-	z-index: 87;
+	z-index: 870000;
 	overflow:hidden;
 }
 
@@ -1205,7 +1227,7 @@ div.tagsinput div { display: block; float: left; }
 	height: 228px;
 	right: 0px;
 	background: url(../img/fundo.png);
-	z-index: 200;
+	z-index: 200000;
 }
 
 #metodosUpload .barraup{
@@ -1217,10 +1239,25 @@ div.tagsinput div { display: block; float: left; }
     display: none;
     color: #fff;
     border-bottom: 1px solid #181818;
-    z-index: 200;
+    z-index: 200000;
 }
 .barraup progress{
     width: 100px;
+}
+
+.tip-maior .barraupc{
+    position: absolute;
+    top: 0px;
+    right: 67px;
+    width: 110px;
+    padding: 5px;
+    color: #333;
+    display: none;
+    z-index: 201;
+}
+.barraupc .progress{
+    width: 50px;
+    height: 20px;
 }
 
 #metodosUpload .upload {
@@ -1322,4 +1359,24 @@ div.tagsinput div { display: block; float: left; }
     position: relative;
     float: left;
     width: 100%;
+}
+.downloadApp {
+position:fixed;
+right: 0px;
+top: 40%;
+z-index: 1000;
+}
+
+.downloadApp img {
+width: 120px;
+}
+
+#baseFooter {
+position: relative;
+background: #212121;
+color: #CCC;
+font-size: 11px;
+bottom: 0px;
+width: 100%; height: 60px;
+min-width: 100%;
 }

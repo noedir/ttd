@@ -33,7 +33,7 @@ class Mobile extends CI_Controller {
 	    $user['contagem'] = count($verify);
             if(count($verify) > 0){
                 $user['status'] = '201';
-                $user['msg'] = 'Email existente';
+                $user['msg'] = 'Email inexistente';
             }else{
                 $this->mdb->set_usuario($input);
 		$this->mdb->set_cleartokenpush($tk);
@@ -98,6 +98,28 @@ class Mobile extends CI_Controller {
             $user['msg'] = 'Email não Informado';
         }
 	echo json_encode($user);
+    }
+    
+    public function logout(){
+	header("Content-type: application/json");
+	$input = elements(array('email','tokenpush'),$this->input->post());
+	if($input['email'] != ''){
+	    
+	    $query = $this->mdb->get_loginuser($input)->result_array();
+	    if(count($query) > 0){
+		$this->mdb->set_userlogout($input);
+		$resp['status'] = '200';
+		$resp['msg'] = 'Logout efetuado com sucesso';
+	    }else{
+		$resp['status'] = '201';
+		$resp['msg'] = 'Email não localizado';
+	    }
+	}else{
+	    $resp['status'] = '202';
+	    $resp['msg'] = 'Email não informado';
+	}
+	
+	echo json_encode($resp);
     }
     
     public function login(){

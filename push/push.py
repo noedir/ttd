@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env /usr/local/bin/python2.7
 # -*- coding: utf-8 -*-
 '''
 	Sample code for Apple Push Notification Service in Python
@@ -22,7 +22,7 @@ from threading import Thread
 con = None
 
 try:
-	con = lite.connect('push.db')
+	con = lite.connect("/home/tiltheda/public_html/push/push.db")
 	cur = con.cursor()
 	cur.execute('SELECT * FROM enviapush')
 except lite.Error, e:
@@ -30,7 +30,7 @@ except lite.Error, e:
 
 def send_push_message(token,payload):
 	# the certificate file generated from Provisioning Portal
-	certfile = 'apns-dev.pem'
+	certfile = "/home/tiltheda/public_html/push/apns-dev.pem"
 	
 	# APNS server address (use 'gateway.push.apple.com' for production server)
 	apns_address = ('gateway.sandbox.push.apple.com', 2195)
@@ -54,7 +54,7 @@ count = 0
 con = None
 
 try:
-        con = lite.connect('push.db')
+        con = lite.connect('/home/tiltheda/public_html/push/push.db')
         cur = con.cursor()
         cur.execute('SELECT * FROM enviapush')
 except lite.Error, e:
@@ -69,7 +69,6 @@ for x in cur.fetchall():
 		th.start()
 		th.join()
 	count = count + 1
-	print "Foi enviado"
 
 cur.execute('DELETE FROM enviapush')
 con.commit()

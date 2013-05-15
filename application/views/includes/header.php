@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE9"/>
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/jquery-ui-1.10.3.custom.css">
 	<script src="<?php echo base_url(); ?>js/load-image.min.js" type="text/javascript"></script>
 	<!--[if IE]><script src="<?php echo base_url(); ?>js/excanvas.js" type="text/javascript"></script><![endif]-->
@@ -15,16 +16,27 @@
         <script src="<?php echo base_url(); ?>js/jquery.prettyPhoto.js" type="text/javascript"></script>
         <?php
 	$bro = '';
+	$scrp = '';
 	if($this->uri->segment(2) == 'tips'){
 	    switch($browser['browser']){
-		case "Firefox":
+		case "IE":
+		    if($browser['version'] < 10){
+			$bro = '2';
+			$scrp = '<script type="text/javascript" src="'.base_url().'js/ajaxupload3.5.3.js"></script>';
+		    }
+		break;
+	    
 		case "Safari":
-		    $bro = '2';
+		    if($browser['version'] < 6){
+			$bro = '2';
+			$scrp = '<script type="text/javascript" src="'.base_url().'js/ajaxupload3.5.3.js"></script>';
+		    }
 		break;
 	    }
 	}
         ?>
 	<script src="<?php echo base_url(); ?>js/funcoes<?php echo $bro; ?>.js" type="text/javascript"></script>
+	<?php echo $scrp;?>
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/jquery.mCustomScrollbar.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/prettyPhoto.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>css/estilo.css">
@@ -74,5 +86,14 @@
             </div>
         </div>
 	<?php } ?>
-        <div id="clr"></div>
+	<?php if($bro === '2'){ ?>
+	    <div id="aviso">
+		<span class="fechar" style='display: none;'>x</span>
+		<p class="aviso">
+		    <span class="fechar">x</span>
+		    As versões antigas do SAFARI e IE não foram desenvolvidas para suportar a tecnologia da nossa plataforma!<br>Aconselhamos utilizar as últimas versões disponíveis do seu browser favorito!
+		</p>
+	    </div>
+	    <div id="clr"></div>
+	<?php } ?>
         <div id="tudo">
