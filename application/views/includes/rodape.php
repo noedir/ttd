@@ -1,4 +1,12 @@
-        </div>
+<div class="clr"></div>
+<div id="baseFooter">
+       		<div class="centralizador">
+            	<span style="float:left; margin-top: 25px;">Todos os Direitos Reservados</span>
+                <div style="float:right; margin-top: 10px;"><img width="90" src="<?php echo base_url(); ?>images/dcanm_logo.jpg" /></div>
+            </div>
+       </div>        
+</div>
+<div class="vazia"></div>
 	<div id="google_translate_element"></div>
 	<?php /*<script>
 	    /* google translate 

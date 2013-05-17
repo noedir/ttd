@@ -15,7 +15,7 @@ foreach ($row as $sg){
     if(!in_array($sg['push'],$ver)){
 	$idc = '';
 	
-	$c = $pdo->query("SELECT con_count FROM tbl_convidados WHERE con_email = '".$sg['email']."' AND con_aceitou = 's'")->fetchAll(PDO::FETCH_ASSOC);
+	$c = $pdo->query("SELECT con_count FROM tbl_convidados WHERE con_email = '".$sg['email']."' AND con_aceitou = 's'")->fetchAll();
 	
 	if(count($c) > 0){
 	    foreach($c as $co){
@@ -23,7 +23,7 @@ foreach ($row as $sg){
 	    }
 	    $idc = substr($idc,0,-1);
 	}else{
-	    $idc = NULL;
+	    $idc = 0;
 	}
 	
 	if($sg['total'] > 1){

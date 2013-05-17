@@ -1,12 +1,25 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/*
+ * Classe do Controler do Mobile.
+ * Usado para resgatar dados do Banco de Dados e transformar em json para
+ * ser usado no celular.
+ */
+
 class Mobile extends CI_Controller {
+    
+    /*
+     * Função que pré carrega as bibliotecas do CI
+     */
     public function __construct() {
 	parent::__construct();
 	$this->load->model('mobile_model','mdb');
 	$this->load->helper('array');
     }
     
+    /*
+     * Função utilizada para excluir email do usuário
+     */
     public function deleta_email(){
 	$email = $this->input->get('email');
 	$this->mdb->del_usuario($email);
@@ -16,6 +29,10 @@ class Mobile extends CI_Controller {
 	echo json_encode($user);
     }
     
+    /*
+     * Função para fazer o cadastro que vem do celular.
+     * Array: token_face, nome_usuario, email_usuario, tokenpush
+     */
     public function cadastro(){
 	header("Content-type: application/json");
 	$input = elements(array('token_face','nome_usuario','email_usuario','tokenpush'),$this->input->post());
@@ -28,25 +45,72 @@ class Mobile extends CI_Controller {
 	    'email' => $input['email_usuario'],
 	    'tokenpush' => $input['tokenpush'],
 	);
+	// Verifica se foi enviado um email
 	if($ver['email'] != ""){
+	    
+	    // Verifica se o email existe na base de dados
             $verify = $this->mdb->chk_usuario($ver['email'])->result();
 	    $user['contagem'] = count($verify);
             if(count($verify) > 0){
                 $user['status'] = '201';
                 $user['msg'] = 'Email inexistente';
             }else{
+		
+		// Envia senha provisória para email do usuário		
+		$this->load->helper('email');
+		$this->load->library('email');
+		
+		$texto = '<img src="'.base_url().'img/logotipo_header.jpg">
+		    <p>Olá '.$input['email_usuario'].',</p>
+		    <p>Seja bem vindo ao TilTheDay!</p>
+		    <p>Você acabou de se cadastrar na ferramenta de contagem que vai estabelecer o vínculo entre você e seu melhores momentos futuros.</p>
+		    <p>A partir de agora você poderá criar uma contagem regressiva de até 10 Dias para o evento ou acontecimento que você deseja.</p>
+		    <p><a href="'.base_url().'web/confirma">Clique Aqui</a> para confirmar seu cadastro e comece já a ativar a sua ansiedade.</p>
+		    <p>Caso o link acima não esteja funcionando, copie e cole o URL abaixo no seu Navegador:</p>
+		    '.base_url().'web/confirma';
+		
+		$config['protocol']  = 'smtp';
+		$config['charset'] = 'utf8';
+		$config['wordwrap'] = TRUE;
+		$config['smtp_host'] = EMAIL_HOST;
+		$config['smtp_user'] = EMAIL_CONTATO;
+		$config['smtp_pass'] = EMAIL_CONTATO_SENHA;
+		$config['smtp_port'] = 587;
+		$config['smtp_timeout'] = 20;
+		$config['mailtype'] = 'html';
+
+		$this->email->initialize($config);
+		$this->email->from(EMAIL_CONTATO);
+		$this->email->to($input['email_usuario']);
+		$this->email->subject('Confirmação de Email');
+		$this->email->message($texto);
+		$em = $this->email->send();
+		
+		// Se usuário existir, atualiza, senão faz o cadastro
                 $this->mdb->set_usuario($input);
+		
+		// Limpa o tokenpush baseado no email
 		$this->mdb->set_cleartokenpush($tk);
+		
+		// Seta o novo tokenpush
 		$this->mdb->set_tokenpush($tk);
+		
+		// Pega os dados de login
 		$query = $this->mdb->get_loginuser($ver)->result_array();
 		foreach($query as $v){
 		    $user['login'] = $v;
 		}
 		
+		// 's' indica os convites aceitos, então são os projetos que estão seguindo
 		$segue = $this->mdb->get_convites('s',$tk)->result_array();
+		
+		// Pega os dados do projeto
 		$meus = $this->mdb->get_meus($tk)->result_array();
+		
+		// Pega os convites que ainda não foram aceitos
 		$conv = $this->mdb->get_convites('n',$tk)->result_array();
 
+		// Verifica se está seguindo algum projeto, senão retorna um array vazio
 		if(count($segue) > 0){
 		    foreach($segue as $k){
 			if($k['privado'] == 's'){
@@ -59,7 +123,7 @@ class Mobile extends CI_Controller {
 		}else{
 		    $user['seguindo']['counts'] = array();
 		}
-
+		// Verifica se criou algum projeto, senão retorna um array vazio
 		if(count($meus) > 0){
 		    foreach($meus as $m){
 			if($m['id'] != null || $m['id'] != ''){
@@ -76,7 +140,8 @@ class Mobile extends CI_Controller {
 		}else{
 		    $user['projetos']['counts'] = array();
 		}
-
+		
+		// Verifica se tem convite para algum projeto, senão retorna um array vazio
 		if(count($conv) > 0){
 		    foreach($conv as $c){
 			if($c['privado'] == 's'){
@@ -100,6 +165,10 @@ class Mobile extends CI_Controller {
 	echo json_encode($user);
     }
     
+    /*
+     * Função usada para fazer logout e limpar o tokenpush para não
+     * receber nenhum, quando não estiver logado no projeto
+     */
     public function logout(){
 	header("Content-type: application/json");
 	$input = elements(array('email','tokenpush'),$this->input->post());
@@ -122,21 +191,42 @@ class Mobile extends CI_Controller {
 	echo json_encode($resp);
     }
     
+    /*
+     * Função que faz o login e retorna os dados do usuário via json
+     * @Array: email, tokenpush
+     */
     public function login(){
 	header("Content-type: application/json");
 	$input = elements(array('email','tokenpush'),$this->input->post());
+	
+	// Verifica se o email foi informado
 	if($input['email'] != ""){
+	    
+	    // Pega os dados do usuário
 	    $query = $this->mdb->get_loginuser($input)->result_array();
+	    
+	    // se encontrado prossegue
 	    if(count($query) > 0){
+		
+		// Limpa todos os tokens iguais
 		$this->mdb->set_cleartokenpush($input);
+		
+		// Seta o token
 		$this->mdb->set_tokenpush($input);
 		foreach($query as $v){
 		    $user['login'] = $v;
 		}
+		
+		// Pega os projetos que está seguindo.
 		$segue = $this->mdb->get_convites('s',$input)->result_array();
+		
+		// Pega os projetos criados
 		$meus = $this->mdb->get_meus($input)->result_array();
+		
+		// Pega os convites ainda não aceitos
 		$conv = $this->mdb->get_convites('n',$input)->result_array();
-
+		
+		// Caso não esteja seguingo, retorn um array vazio
 		if(count($segue) > 0){
 		    foreach($segue as $k){
 			if($k['privado'] == 's'){
@@ -149,7 +239,8 @@ class Mobile extends CI_Controller {
 		}else{
 		    $user['seguindo']['counts'] = array();
 		}
-
+		
+		// Caso não tenha projeto criado, retorn um array vazio
 		if(count($meus) > 0){
 		    foreach($meus as $m){
 			if($m['id'] != null || $m['id'] != ''){
@@ -166,7 +257,8 @@ class Mobile extends CI_Controller {
 		}else{
 		    $user['projetos']['counts'] = array();
 		}
-
+		
+		// Caso não tenha convites para aceitar, retorn um array vazio
 		if(count($conv) > 0){
 		    foreach($conv as $c){
 			if($c['privado'] == 's'){
@@ -193,6 +285,9 @@ class Mobile extends CI_Controller {
 	echo json_encode($user);
     }
     
+    /*
+     * Função para retornar número de dias
+     */
     private function geraTimestamp($dataini,$datafim) {
 	$ini = explode('-', $dataini);
 	$fim = explode('-', $datafim);
@@ -206,25 +301,37 @@ class Mobile extends CI_Controller {
 	return strval(abs($dias));
     }
     
+    /*
+     * Função que retorna todas as Counts que são públicas
+     * Retorna um arquivo em json
+     */
     public function count_public(){
 	header("content-type: application/json");
 	$input = array();
+	
+	// Verifica se foi feita uma busca.
 	if($this->input->post('busca') != ''){
 	    $input['busca'] = $this->input->post('busca');
 	}else{
 	    $input['busca'] = '';
 	}
 	
+	// Verifica se foi enviado um array de counts para pesquisar
 	if($this->input->post('busca_id') != ''){
 	    $input['busca_id'] = $this->input->post('busca_id');
 	}else{
 	    $input['busca_id'] = '';
 	}
+	
+	// Busca as Counts Públicas que não estejam finalizadas, excluídas, pagas
+	// que não sejam privadas, que tenham uma capa gravada (diferente de no_image.jpg)
 	$query = $this->mdb->get_countpublica($input)->result_array();
 	if(count($query) > 0){
 	    foreach($query as $k => $v){
 		$ret['counts'][$k] = $v;
 		if($ret['counts'][$k]['tags'] != ''){
+		    
+		    // Monta um array de tags
 		    $ex = explode(',',$ret['counts'][$k]['tags']);
 		    if(is_array($ex)){
 			unset($ret['counts'][$k]['tags']);
@@ -246,7 +353,8 @@ class Mobile extends CI_Controller {
 
 		$ret['status'] = '200';
 		$ret['msg'] = 'ok';
-
+		
+		// Monta os dias que a Count já começou
 		if($ret['counts'][$k]['inicio'] != '0000-00-00' && $ret['counts'][$k]['inicio'] != '' && $ret['counts'][$k]['inicio'] <= date("Y-m-d")){
 		    $dataini = date("Y-m-d");
 		    $datafim = $ret['counts'][$k]['inicio'];
@@ -266,7 +374,10 @@ class Mobile extends CI_Controller {
 
 	echo json_encode($ret);
     }
-
+    
+    /*
+     * Função que retorna os dados de uma Count em json
+     */
     public function list_counts(){
 	header("Content-type: application/json");
 	$id = $this->input->post('codigo');
@@ -275,6 +386,8 @@ class Mobile extends CI_Controller {
 	if($priv == ""){
 	    $priv = NULL;
 	}
+	
+	// Busca os dados da Count baseado no ID
 	$query = $this->mdb->get_allcount($priv,$id)->result_array();
 	foreach($query as $k){
 	    if($k['co_data_inicio'] != null || $k['co_data_inicio'] == ''){
@@ -295,12 +408,18 @@ class Mobile extends CI_Controller {
 
 	echo json_encode($ret);
     }
-
+    
+    /*
+     * Função que retorna todos os dados de uma Count e suas TIPS em json baseado no ID da Count
+     */
     public function main_count(){
 	header("Content-type: application/json");
 	$id = elements(array('codigo','email'),$this->input->post());
+	
+	// Pega todas as tips da count que tenham pelo menos o título
 	$query = $this->mdb->get_tipcount($id)->result_array();
 	
+	// Verifica se foram encontradas as tips
 	if(count($query) > 0){
 	    $ret['count']['titulo'] = $query[0]['co_titulo'];
 	    $ret['count']['data_inicio'] = $query[0]['co_data_inicio'];
@@ -315,6 +434,7 @@ class Mobile extends CI_Controller {
 	    foreach($query as $k => $v){
 		$ret['count']['tips'][$k] = $v;
 		
+		// Monta o mozaico de tips (imagens)
 		if($ret['count']['tips'][$k]['ti_titulo'] != ""){
 		    $ret['count']['tips'][$k]['ti_imagem'] = base_url().'tips/'.$ret['count']['tips'][$k]['ti_imagem'];
 		    $ret['count']['tips'][$k]['ti_thumb'] = base_url().'tips/thumb_'.$v['ti_imagem'];
@@ -322,6 +442,7 @@ class Mobile extends CI_Controller {
 		    unset($ret['count']['tips'][$k]);
 		}
 		
+		// Dados que não são interessantes enviar, são descartados
 		unset($ret['count']['tips'][$k]['ti_imgposicao']);
 		unset($ret['count']['tips'][$k]['ti_imgcentral']);
 		unset($ret['count']['tips'][$k]['co_titulo']);
@@ -342,10 +463,17 @@ class Mobile extends CI_Controller {
 	echo json_encode($ret);
     }
     
+    /*
+     * Função que retorna os dados de uma TIP baseado no código em json
+     */
     public function tips(){
 	header("Content-type: application/json");
 	$id = elements(array('codigo'),$this->input->post());
+	
+	// Pega os dados da TIP
 	$query = $this->mdb->get_tips($id)->result_array();
+	
+	// Caso exista, monta o array
 	if(count($query) > 0){
 	    foreach($query as $k => $v){
 		$ret['tips'] = $v;
@@ -363,13 +491,23 @@ class Mobile extends CI_Controller {
 	echo json_encode($ret);
     }
     
+    /*
+     * Função que monta o menu do aplicativo
+     */
     public function menu(){
 	header("Content-type: application/json");
 	$email = elements(array('email'),$this->input->post());
+	
+	// Se está seguindo algum projeto
 	$segue = $this->mdb->get_convites('s',$email)->result_array();
+	
+	// Os projetos que criou
 	$meus = $this->mdb->get_meus($email)->result_array();
+	
+	// Convites ainda não aceitos
 	$conv = $this->mdb->get_convites('n',$email)->result_array();
 	
+	// Caso não esteja seguindo, gera um array vazio
 	if(count($segue) > 0){
 	    foreach($segue as $k){
 		if($k['privado'] == 's'){
@@ -383,6 +521,7 @@ class Mobile extends CI_Controller {
 	    $ret['seguindo']['counts'] = array();
 	}
 	
+	// Caso não tenha nenhum projeto, gera um array vazio
 	if(count($meus) > 0){
 	    foreach($meus as $m){
 		if($m['id'] != null || $m['id'] != ''){
@@ -400,6 +539,7 @@ class Mobile extends CI_Controller {
 	    $ret['projetos']['counts'] = array();
 	}
 	
+	// Caso não tenha nenhum convite, gera um array vazio
 	if(count($conv) > 0){
 	    foreach($conv as $c){
 		if($c['privado'] == 's'){
@@ -415,13 +555,19 @@ class Mobile extends CI_Controller {
 	echo json_encode($ret);
     }
     
+    /*
+     * Função para aceitar um convite
+     */
     public function seguir_count(){
 	header("Content-type: application/json");
 	$input = elements(array('email','id_count'),$this->input->post());
-	$input['seguir'] = 's';
-	$input['sair'] = 'n';
+	$input['seguir'] = 's'; // Para seguir
+	$input['sair'] = 'n'; // Não vai sair
+	
+	// Seta no banco como 's' (está seguindo)
 	$this->mdb->set_seguircount($input);
 	
+	// Pega os nome da Count para retornar o aviso de qual count está seguindo
 	$query = $this->mdb->get_count($input['id_count'])->result_array();
 			
 	$user['status'] = '200';
@@ -431,15 +577,17 @@ class Mobile extends CI_Controller {
     }
     
     /*
-     * Function @sair_count()
-     * 
+     * Função para deixar de seguir uma count
+     * @Array: email, id_count
      */
     public function sair_count(){
 	header("Content-type: application/json");
 	$input = elements(array('email','id_count'),$this->input->post());
 	$input['codigo'] = $input['id_count'];
-	$input['seguir'] = 'n';
-	$input['sair'] = 's';
+	$input['seguir'] = 'n'; // Não seguir
+	$input['sair'] = 's'; // Sair
+	
+	// Excluir no banco o convite e dos dados
 	$this->mdb->set_seguircount($input);
 	
 	$query = $this->mdb->get_tipcount($input)->result_array();

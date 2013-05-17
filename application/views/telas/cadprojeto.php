@@ -15,14 +15,17 @@ if(form_error('email_usuario')){
 
 $diaq = strpos(form_error('dias_projeto'), 'numbers');
 $diareq = strpos(form_error('dias_projeto'), 'required');
+$diamax = strpos(form_error('dias_projeto'), 'less than');
 $avds = '';
 if(form_error('dias_projeto')){
-    if($diareq === false && $diaq === false){
+    if($diareq === false && $diaq === false && $diamax === false){
     }else{
-	if($diareq === false){
+	if($diamax === false && $diareq === false){
 	    $avds = '<small class="red">Dias do Projeto precisa ser um número</small>';
-	}else{
+	}else if($diamax === false && $diaq === false){
 	    $avds = '<small class="red">Dias do Projeto é obrigatório</small>';
+	}else{
+	    $avds = '<small class="red">Você pode criar no máximo 10 dias</small>';
 	}
     }
 }
@@ -84,21 +87,23 @@ if(form_error('confirma_senha')){
                 <div class="formNovoCountDias">
                     <label>Quantos dias terá seu projeto?
 		    <br /><input type="text" <?php if(form_error('dias_projeto')){ echo 'style="width: 20%; border: 1px solid #900" placeholder="Dias do projeto é obrigatório"'; }else{ echo 'style="width: 20%;" placeholder="Dias do projeto"'; } ?> name="dias_projeto" id="dias_projeto" value="<?php echo set_value('dias_projeto'); ?>"></label>
-                    <div id="baseValores">
-			<input type="hidden" name="valor_projeto" id="vlr_proj" value="">
-                    	<div class="startfee">
-                            Start-Fee
-                            <Br />R$ 1.00
-                        </div>
-                        <div class="cadaDia">
-                            Cada dia
-                            <Br />R$ 0.99
-                        </div>
-                        <div class="valorFinal">
-                            Total
-                            <Br /><div id="resultado_dias">R$ 0.00</div>
-                        </div>
-                    </div>
+		    <?php if(PRECO_CADASTRO == 's'){ ?>
+			<div id="baseValores">
+			    <input type="hidden" name="valor_projeto" id="vlr_proj" value="">
+			    <div class="startfee">
+				Start-Fee
+				<Br />R$ 1.00
+			    </div>
+			    <div class="cadaDia">
+				Cada dia
+				<Br />R$ 0.99
+			    </div>
+			    <div class="valorFinal">
+				Total
+				<Br /><div id="resultado_dias">R$ 0.00</div>
+			    </div>
+			</div>
+		    <?php } ?>
                 </div><?php echo $avds; ?>
                 <div class="clr"></div>
                 <div class="formNovoCount">

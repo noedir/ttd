@@ -1,6 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Web_model extends CI_Model {
+    
+    /*
+     * Função que retorna os dados de Oauth do usuário
+     */
     public function set_oauth_instagram($dados=NULL){
 	if($dados != NULL){
 	    $ins = array(
@@ -13,6 +17,20 @@ class Web_model extends CI_Model {
 	}
     }
     
+    /*
+     * Função que seta o tutorial como LIDO a primeira vez
+     */
+    public function set_tutorial(){
+	$up = array(
+	    'us_tutorial' => 's'
+	);
+	$this->db->where('us_codigo',$this->session->userdata('us_codigo'));
+	$this->db->update('tbl_usuario',$up);
+    }
+    
+    /*
+     * Função de cadastro de email da home.
+     */
     public function cademail($email){
 	if($email != ''){
 	    $ins = array(
@@ -23,12 +41,18 @@ class Web_model extends CI_Model {
 	}
     }
     
+    /*
+     * Função que verifica se o email existe.
+     */
     public function veemail($email){
 	$this->db->from('tbl_cadastro');
 	$this->db->where('cad_email',$email);
 	return $this->db->count_all_results();
     }
     
+    /*
+     * Função que grava os dados de Oauth do Facebook
+     */
     public function set_faceoauth($id,$access){
 	if($access != NULL){
 	    $conta = $this->db->query("SELECT COUNT(*) AS total FROM tbl_oauth WHERE oa_usuario = ".$this->session->userdata('us_codigo'))->result_array();
@@ -50,6 +74,9 @@ class Web_model extends CI_Model {
 	}
     }
     
+    /*
+     * Função que limpa os dados de Oauth do Instagram
+     */
     public function del_instagram($id){
 	$this->db->where('oa_usuario',$id);
 	$up = array(
@@ -60,10 +87,18 @@ class Web_model extends CI_Model {
 	$this->db->update('tbl_oauth',$up);
     }
     
+    /*
+     * Função que pega os dados de Oauth do usuário
+     */
     public function get_oauth($id){
 	$this->db->where('oa_usuario',$id);
 	return $this->db->get('tbl_oauth');
     }
+    
+    /*
+     * Função que grava os dados do usuário no banco de dados
+     * Se $dados['codigo'] > 0 faz o update, senão faz o insert
+     */
     public function set_usuario($dados=NULL){
 	if($dados != NULL){
 	    
@@ -84,6 +119,9 @@ class Web_model extends CI_Model {
 	}
     }
     
+    /*
+     * Função que retorna os dados de uma count baseado no ID
+     */
     public function get_count($id=NULL){
 	if($id != NULL){
 	    $this->db->where(array('co_codigo' => $id));
@@ -91,6 +129,10 @@ class Web_model extends CI_Model {
 	}
     }
     
+    /*
+     * Função que grava os dados da Count.
+     * Se o $dados['codigo'] > 0, faz o update, senão faz o insert
+     */
     public function set_count($dados=NULL){
 	if($dados != NULL){
 	    if(isset($dados['codigo']) && $dados['codigo'] > 0){
@@ -111,7 +153,7 @@ class Web_model extends CI_Model {
 		    'co_titulo'		=> $dados['nome_projeto'],
                     'co_descricao'      => $dados['ocasiao_projeto'],
 		    'co_privado'	=> $dados['privado'],
-		    'co_pago'		=> 's',
+		    'co_pago'		=> PAGTO,
 		    'co_nomeunico'	=> $dados['nomeunico'],
 		);
 		$this->db->insert('tbl_count',$ins);
@@ -119,6 +161,9 @@ class Web_model extends CI_Model {
 	}
     }
     
+    /*
+     * Função que seta a count como excluída e exclui as tips criadas nessa count
+     */
     public function del_count($id){
 	$up = array(
 	    'co_excluido'=>'s',
@@ -129,14 +174,25 @@ class Web_model extends CI_Model {
 	$this->db->delete('tbl_tips',array('ti_count'=>$id));
     }
     
+    /*
+     * Função que retorna a count baseada no ID
+     * Verifica se está excluida ou finalizada para retornar
+     */
     public function get_counts($id){
 	return $this->db->query("SELECT u.us_codigo, u.us_nome, c.* FROM tbl_count c INNER JOIN tbl_usuario u ON u.us_codigo = c.co_master WHERE u.us_codigo = $id AND c.co_excluido <> 's' AND c.co_finalizado <> 's' ORDER BY c.co_data_expira");
     }
     
+    /*
+     * Função que retorna todos os dados da count e usuário baseado no ID da count
+     * Verifica se está excluida ou finalizada
+     */
     public function get_tcount($id){
 	return $this->db->query("SELECT u.us_codigo, u.us_nome, c.co_codigo, c.co_pago, c.co_admin, c.co_titulo, c.co_descricao, c.co_dias, c.co_data_compra, c.co_data_expira, c.co_data_inicio, c.co_privado, c.co_tags, c.co_capa FROM tbl_count c INNER JOIN tbl_usuario u ON u.us_codigo = c.co_master WHERE c.co_codigo = $id AND c.co_excluido <> 's' AND c.co_finalizado <> 's' ORDER BY c.co_data_expira");
     }
     
+    /*
+     * Função que seta a data de início da count
+     */
     public function set_datacount($dados){
 	$ins = array(
 	    'co_data_inicio' => $dados['calendario'],
@@ -145,25 +201,51 @@ class Web_model extends CI_Model {
 	$this->db->update('tbl_count',$ins);
     }
     
+    /*
+     * Função que atualiza a capa da count
+     */
     public function up_count($dados){
 	$ins = array('co_capa' => $dados['img']);
 	$this->db->where('co_codigo',$dados['codigo']);
 	$this->db->update('tbl_count',$ins);
     }
     
+    /*
+     * Função que faz o login do usuário
+     * Retorna todos os dados do usuário baseado no email e senha
+     * A senha é criptografada no Controller web
+     */
     public function get_loginuser($dados=NULL){
         if($dados != NULL){
             $this->db->where(array(
-		'us_email'  => $dados['email'],
-		'us_senha'  => $dados['snh'])
+		    'us_email'  => $dados['email'],
+		    'us_senha'  => $dados['snh'],
+		)
 	    );
             return $this->db->get('tbl_usuario');
         }
     }
     
+    /*
+     * Função que retorna todos os usuários do banco de dados
+     */
     public function get_allusuario(){
         return $this->db->get('tbl_usuario');
     }
+    
+    public function set_confirma($email=NULL){
+	if($email != NULL){
+	    $this->db->where('us_email',$email);
+	    $up = array(
+		'us_confirma' => 's'
+	    );
+	    $this->db->update("tbl_usuario",$up);
+	}
+    }
+    
+    /*
+     * Função que retorna os dados do usuário baseado no email
+     */
     public function get_usuariobyemail($email){
         if($email != 'all'){
             $this->db->where(array('us_email'=>$email));

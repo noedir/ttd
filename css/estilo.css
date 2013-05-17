@@ -62,7 +62,9 @@
     margin: 0px;
     padding: 0px;
 }
-
+html, body {
+	height: 100%;
+}
 body{
     background: url(../img/background_textura.png) repeat;
     color: #333;
@@ -71,10 +73,10 @@ body{
     padding: 0px;
 }
 .clr {
-	clear:both;
+    clear:both;
 }
 input {
-	outline: none;
+    outline: none;
 }
 .poshy_style{
     font-size: 11px;
@@ -203,12 +205,26 @@ a.black:hover{
     margin: 0px auto;
     color: #f00;
 }
+.vazia{
+    position: relative;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 60px;
+    background: #212121;
+    z-index: -1;
+    margin-top: -60px;
+}
+* html #tudo {
+	height: 100%; /* hack para IE6 que trata height como min-height */
+}
 #tudo{
     position: relative;
     width: 1080px;
     margin: 0px auto;
-    background: #fff;
+    min-height: 100%;	
 }
+
 #baseLogo {
     margin-top: -6px;
     float: left;
@@ -290,6 +306,103 @@ a.black:hover{
     margin-left: 35px;
     color: #fff;
 }
+#baseBannerVideo {
+    position:relative;
+    min-width: 100%;
+    width: 100%;
+    margin: 0px auto;
+    min-height: 680px;
+    height: 100%;
+}
+
+.controleBanner {
+    overflow: hidden;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    top: 0px;
+    width: 100%;
+}
+
+#bannerVideo {
+    position:absolute;
+    width: 100%;
+    height: 800px;
+    min-height: 100%;
+    min-width: 100%;
+    top: 0px;
+}
+
+.videoBase {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+}
+
+#fraseVideo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -93px;
+    margin-left: -245px;
+    z-index: 1999;
+}
+
+#fraseVideo img{
+    max-width: 100%;
+    width: 490px;
+}
+.centralizador {
+	position:relative;
+	width: 960px;
+	margin: 0 auto;
+}
+#baseSaibaMais {
+    width: 960px;
+    height: 426px;
+    max-width: 100%;
+    margin: 0 auto;
+    text-align:center;
+    margin-top: 20px;
+}
+
+#baseSaibaMais ul {
+    list-style: none;
+    display: block;
+}
+
+#baseSaibaMais li {
+    display: block;
+    float: left;
+    margin-left: 90px;
+    padding-top: 80px;
+    width: 200px; height: 120px;
+    text-align:center;
+    color: #666;
+    overflow: hidden;
+}
+
+#baseSaibaMais li:hover {
+    background: url(../images/saiba_mais/saiba_hover.png) no-repeat top;
+    padding-top: 60px;
+    height: 330px;
+}
+
+#baseSobre {
+    width: 960px; height: 780px;
+    max-width: 100%;
+    margin: 0 auto;
+    font-size: 14px;
+    color: #747474;
+}
+
+#baseSobre h2{
+    text-align: center;
+    font-size: 24px;
+    color: #15e09b;
+    padding: 0px 10px 10px 10px;
+}
 #topo{
     position: relative;
     float: left;
@@ -364,13 +477,91 @@ a.black:hover{
     color: #900;
     cursor: pointer;
 }
+#baseFundo{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 900;
+    background: url(../img/fundo.png);
+}
+#baseTutoriais{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1000px;
+    height: 568px;
+    margin-top: -150px;
+    margin-left: -500px;
+    z-index: 910;
+}
+#baseTutoriais .img{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+#baseTutoriais #start{
+    position: absolute;
+    bottom: 120px;
+    right: 74px;
+    width: 377px;
+    height: 42px;
+    z-index: 950;
+    cursor: pointer;
+}
+#baseTutoriais #sair_tutorial{
+    position: absolute;
+    bottom: 66px;
+    right: 132px;
+    color: #FEA7A5;
+    font-size: 20px;
+    cursor: pointer;
+    display: none;
+    z-index: 1200;
+}
+#baseTutoriais #navegador{
+    position: absolute;
+    bottom: 68px;
+    left: 375px;
+    width: 250px;
+    height: 40px;
+    z-index: 2000;
+    display: none;
+}
+#navegador #volta{
+    position: absolute;
+    top: 10px;
+    left: 51px;
+    width: 19px;
+    height: 22px;
+    cursor: pointer;
+}
+#navegador #avanca{
+    position: absolute;
+    top: 10px;
+    right: 51px;
+    width: 19px;
+    height: 22px;
+    cursor: pointer;
+}
+#navegador .bola{
+    position: relative;
+    float: left;
+    width: 15px;
+    height: 15px;
+    margin-top: 14px;
+    cursor: pointer;
+}
 #container{
     position: relative;
     float: left;
     width: 1060px;
     min-height: 100px;
     padding: 10px;
-    padding-bottom: 40px;
+    padding-bottom: 85px;
 }
 #container p{
     margin: 10px 0px;
@@ -535,6 +726,7 @@ a.black:hover{
 }
 .tip-box .campos{
     padding: 20px 5px;
+    font-size: 12px;
 }
 .tip-box .tela{
     position: absolute;
@@ -1003,20 +1195,28 @@ button[type='reset']:hover{
 
 /* Tags */
 
-.secNav .tagsinput { background: none; border: none; padding: 0 8px; margin: -3px 0; }
-.secNav .tagsinput span.tag { margin: 3px; color: #5f5f5f;
-background: #fdfdfd;
-background: -moz-linear-gradient(top, #fcfcfc 0%, #f2f2f2 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcfcfc), color-stop(100%,#f2f2f2));
-background: -webkit-linear-gradient(top, #fcfcfc 0%,#f2f2f2 100%);
-background: -o-linear-gradient(top, #fcfcfc 0%,#f2f2f2 100%);
-background: -ms-linear-gradient(top, #fcfcfc 0%,#f2f2f2 100%);
-background: linear-gradient(top, #fcfcfc 0%,#f2f2f2 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#f2f2f2',GradientType=0 );
-border: 1px solid #D2D2D2;
-border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px;
+.secNav .tagsinput {
+    background: none;
+    border: none;
+    padding: 0 8px;
+    margin: -3px 0;
 }
-.secNav .tagsinput span.tag a { color: #aaa; }
+.secNav .tagsinput span.tag {
+    margin: 3px; color: #5f5f5f;
+    background: #fdfdfd;
+    background: -moz-linear-gradient(top, #fcfcfc 0%, #f2f2f2 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcfcfc), color-stop(100%,#f2f2f2));
+    background: -webkit-linear-gradient(top, #fcfcfc 0%,#f2f2f2 100%);
+    background: -o-linear-gradient(top, #fcfcfc 0%,#f2f2f2 100%);
+    background: -ms-linear-gradient(top, #fcfcfc 0%,#f2f2f2 100%);
+    background: linear-gradient(top, #fcfcfc 0%,#f2f2f2 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#f2f2f2',GradientType=0 );
+    border: 1px solid #D2D2D2;
+    border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.secNav .tagsinput span.tag a {
+    color: #aaa;
+}
 
 /* ===== Tags input  ===== */
 
@@ -1196,38 +1396,38 @@ div.tagsinput div { display: block; float: left; }
 /*** DOCK ***/
 
 #triggerSelect {
-	position:absolute;
-	display: block;
-	cursor: pointer;
-	padding: 5px;
-	top: 110px;
-	right: 30px;
-	text-align:center;
-	color: #fff;
-	font-size: 11px;
+    position:absolute;
+    display: block;
+    cursor: pointer;
+    padding: 5px;
+    top: 110px;
+    right: 30px;
+    text-align:center;
+    color: #fff;
+    font-size: 11px;
 }
 
 #triggerSelect:hover{
-	text-decoration:underline;
+    text-decoration:underline;
 }
 
 #baseDock {
-	position: absolute;
-	width: 113px;
-	height: 228px;
-	top: 143px;
-	right: 30px;
-	z-index: 870000;
-	overflow:hidden;
+    position: absolute;
+    width: 113px;
+    height: 228px;
+    top: 143px;
+    right: 30px;
+    z-index: 870000;
+    overflow:hidden;
 }
 
 #metodosUpload {
-	position: absolute;
-	width: 113px;
-	height: 228px;
-	right: 0px;
-	background: url(../img/fundo.png);
-	z-index: 200000;
+    position: absolute;
+    width: 113px;
+    height: 228px;
+    right: 0px;
+    background: url(../img/fundo.png);
+    z-index: 200000;
 }
 
 #metodosUpload .barraup{
@@ -1261,98 +1461,98 @@ div.tagsinput div { display: block; float: left; }
 }
 
 #metodosUpload .upload {
-	background: url(../img/icon_upload.png) no-repeat left;
-	color: #fff;
-	font-size: 12px;
-	width: 110px;
-	padding: 20px;
-	padding-left: 40px;
-	border-bottom: 1px solid #181818;
-	z-index: 201;
+    background: url(../img/icon_upload.png) no-repeat left;
+    color: #fff;
+    font-size: 12px;
+    width: 110px;
+    padding: 20px;
+    padding-left: 40px;
+    border-bottom: 1px solid #181818;
+    z-index: 201;
 }
 
 #metodosUpload .facebook{
-	background: url(../img/icon_facebook.png) no-repeat left;
-	color: #fff;
-	font-size: 12px;
-	width: 110px;
-	padding: 20px;
-	padding-left: 40px;
-	border-bottom: 1px solid #181818;
-	z-index: 202;
+    background: url(../img/icon_facebook.png) no-repeat left;
+    color: #fff;
+    font-size: 12px;
+    width: 110px;
+    padding: 20px;
+    padding-left: 40px;
+    border-bottom: 1px solid #181818;
+    z-index: 202;
 }
 
 #metodosUpload .instagram{
-	background: url(../img/icon_instagram.png) no-repeat left;
-	color: #fff;
-	font-size: 12px;
-	width: 110px;
-	padding: 20px;
-	padding-left: 40px;
-	border-bottom: 1px solid #181818;
-	z-index: 203;
+    background: url(../img/icon_instagram.png) no-repeat left;
+    color: #fff;
+    font-size: 12px;
+    width: 110px;
+    padding: 20px;
+    padding-left: 40px;
+    border-bottom: 1px solid #181818;
+    z-index: 203;
 }
 
 #metodosUpload .reposicionar{
-	background: url(../img/icon_reposicionar.png) no-repeat left;
-	color: #fff;
-	font-size: 12px;
-	width: 110px;
-	padding: 20px;
-	padding-left: 40px;
-	border-bottom: 1px solid #181818;
-	z-index: 204;
+    background: url(../img/icon_reposicionar.png) no-repeat left;
+    color: #fff;
+    font-size: 12px;
+    width: 110px;
+    padding: 20px;
+    padding-left: 40px;
+    border-bottom: 1px solid #181818;
+    z-index: 204;
 }
 
 #metodosUpload .ajustar{
-	background: url(../img/icon_ajustar.png) #000 no-repeat left;
-	color: #fff;
-	font-size: 12px;
-	width: 110px;
-	padding: 19px;
-	padding-left: 40px;
-	border-bottom: 1px solid #181818;
-	z-index: 205;
+    background: url(../img/icon_ajustar.png) #000 no-repeat left;
+    color: #fff;
+    font-size: 12px;
+    width: 110px;
+    padding: 19px;
+    padding-left: 40px;
+    border-bottom: 1px solid #181818;
+    z-index: 205;
 }
 
 #metodosUpload .upload:hover, #metodosUpload .instagram:hover, #metodosUpload .facebook:hover, #metodosUpload .ajustar:hover, #metodosUpload .reposicionar:hover{
-	background-color:#0f0f0f;
+    background-color:#0f0f0f;
 }
 
 .tip-box #ui-datepicker-div {
-	width: 100px;
-	height: 200px;
+    width: 100px;
+    height: 200px;
 }
 
 #amigos_tagsinput {
-	padding: 10px;
-	border: 1px solid #e0e0e0;
-	margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    margin-top: 10px;
 }
 
 #amigos_tag {
-	outline: none;
-	font-size: 12px;
+    outline: none;
+    font-size: 12px;
 }
 
 #temas_tag {
-	outline: none;
-	font-size: 12px;
+    outline: none;
+    font-size: 12px;
 }
 #title_lightbox {
-	float:left;
-	margin-top: 20px;	
+    float:left;
+    margin-top: 20px;	
 }
 #trocar_instagram {
-	float:right;
-	margin: 20px 25px 0 0;
-	letter-spacing: -0.4px;
-	font-size: 11px;
-	font-weight: bold;
+    float:right;
+    margin: 20px 25px 0 0;
+    letter-spacing: -0.4px;
+    font-size: 11px;
+    font-weight: bold;
 }
 
 #trocar_instagram a{
-	color: #15e09b;
+    color: #15e09b;
 }
 
 #google_translate_element{
@@ -1361,22 +1561,21 @@ div.tagsinput div { display: block; float: left; }
     width: 100%;
 }
 .downloadApp {
-position:fixed;
-right: 0px;
-top: 40%;
-z-index: 1000;
+    position:fixed;
+    right: 0px;
+    top: 40%;
+    z-index: 1000;
 }
 
 .downloadApp img {
-width: 120px;
+    width: 120px;
 }
-
 #baseFooter {
-position: relative;
-background: #212121;
-color: #CCC;
-font-size: 11px;
-bottom: 0px;
-width: 100%; height: 60px;
-min-width: 100%;
+	position: absolute;
+	bottom: 0px;
+	background: #212121;
+	color: #CCC;
+	font-size: 11px;
+	width: 100%; height: 60px;
+	min-width: 100%;
 }

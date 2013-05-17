@@ -53,10 +53,10 @@
 	<div id="fundo_box"></div>
 	<div id="baseHeader">
 	    <div id="baseMenuGeral">
-                <div id="baseLogo"><?php echo anchor(index_page(),'<img title="'.$this->config->item('title_page').'" alt="Logotipo '.$this->config->item('title_page').'" src="'.base_url().'img/logotipo_header.jpg" />','class="white"'); ?></div>
+                <div id="baseLogo"><?php echo anchor(index_page(),'<img title="'.TITLE_PAGE.'" alt="Logotipo '.TITLE_PAGE.'" src="'.base_url().'img/logotipo_header.jpg" />','class="white"'); ?></div>
 		<ul>
 		    <li><?php echo anchor('web/quem_somos','Quem Somos','class="white"'); ?></li>
-		    <li><?php echo anchor('web/politica','Política de Privacidade','class="white"'); ?></li>
+		    <!-- <li><?php #echo anchor('web/politica','Política de Privacidade','class="white"'); ?></li> -->
 		    <li><?php echo anchor('web/contato','Contato','class="white"'); ?></li>
 		    <?php if($this->session->userdata("us_nome") == ''){ ?>
 		    <li><?php echo anchor('web/login',$this->lang->line('pt_tlogin'),'class="white"'); ?></li>
@@ -96,4 +96,11 @@
 	    </div>
 	    <div id="clr"></div>
 	<?php } ?>
-        <div id="tudo">
+	    <?php
+	    $a = '';
+	    if($this->uri->segment(1) == '' || $this->uri->segment(2) == ''){
+		$a = 'style="min-height: 0px;"';
+	    }
+	    ?>
+        <div id="tudo" <?php echo $a; ?>>
+	    

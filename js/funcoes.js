@@ -170,6 +170,90 @@ $(document).ready(function(){
      */
     var ur = $('#ur').data('url');
     
+    /*
+     * Se o tutorial estiver ativo na tela, abre essas opções de click.
+     * @start: Inicia o tutorial.
+     */
+    if($("#baseTutoriais").length){
+	var img = 2;
+	$("#start").click(function(){
+	    $("#navegador").show();
+	    $("#start").hide();
+	    $(".img").css({
+		'z-index': '100'
+	    });
+	    $("#img2").css({
+		'z-index': '910'
+	    });
+	});
+	
+	$("#avanca").click(function(){
+	    if(img >= 4){
+		$("#sair_tutorial").fadeIn();
+	    }
+	    if(img >= 5){
+		return false;
+	    }
+	    img++;
+	    console.log(img);
+	    $(".img").css({
+		'z-index': '100'
+	    });
+	    $("#img"+img).css({
+		'z-index': '910'
+	    });
+	});
+	
+	$("#volta").click(function(){
+	    img--;
+	    if(img < 5){
+		$("#sair_tutorial").fadeOut();
+	    }
+	    console.log(img);
+	    $(".img").css({
+		'z-index': '100'
+	    });
+	    $("#img"+img).css({
+		'z-index': '910'
+	    });
+	    if(img < 2){
+		img = 2;
+		$("#navegador").hide();
+		$("#start").show();
+	    }
+	});
+	
+	$(".bola").click(function(){
+	    var ima = $(this).data('img');
+	    var num = $(this).data('num');
+	    
+	    if(num == 5){
+		$("#sair_tutorial").fadeIn();
+	    }else{
+		$("#sair_tutorial").fadeOut();
+	    }
+	    
+	    img = num;
+	    
+	    $(".img").css({
+		'z-index': '100'
+	    });
+	    $("#"+ima).css({
+		'z-index': '910'
+	    });	    
+	});
+	
+	$("#sair_tutorial").click(function(){
+	    $.ajax({
+		type: 'post',
+		dataType: 'html',
+		url: ur+'web/tuto',
+		success: function(){
+		    redirect(ur+'web/counts');
+		}
+	    });
+	});
+    }
     
     /*
     * Se o seletor @louins existir na página, então pergunta se quer ir para o Instagram

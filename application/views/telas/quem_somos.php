@@ -1,13 +1,37 @@
 <div id="container">
-    <h3>Página Quem Somos</h3>
-    <p>
-	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    </p>
-    <p>
-	Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit. Etiam tempor. Ut ullamcorper, ligula eu tempor congue, eros est euismod turpis, id tincidunt sapien risus a quam. Maecenas fermentum consequat mi. Donec fermentum. Pellentesque malesuada nulla a mi. Duis sapien sem, aliquet nec, commodo eget, consequat quis, neque. Aliquam faucibus, elit ut dictum aliquet, felis nisl adipiscing sapien, sed malesuada diam lacus eget erat. Cras mollis scelerisque nunc. Nullam arcu. Aliquam consequat. Curabitur augue lorem, dapibus quis, laoreet et, pretium ac, nisi. Aenean magna nisl, mollis quis, molestie eu, feugiat in, orci. In hac habitasse platea dictumst.
-    </p>
-    <p>
-	Fusce convallis, mauris imperdiet gravida bibendum, nisl turpis suscipit mauris, sed placerat ipsum urna sed risus. In convallis tellus a mauris. Curabitur non elit ut libero tristique sodales. Mauris a lacus. Donec mattis semper leo. In hac habitasse platea dictumst. Vivamus facilisis diam at odio. Mauris dictum, nisi eget consequat elementum, lacus ligula molestie metus, non feugiat orci magna ac sem. Donec turpis. Donec vitae metus. Morbi tristique neque eu mauris. Quisque gravida ipsum non sapien. Proin turpis lacus, scelerisque vitae, elementum at, lobortis ac, quam. Aliquam dictum eleifend risus. In hac habitasse platea dictumst. Etiam sit amet diam. Suspendisse odio. Suspendisse nunc. In semper bibendum libero.
-    </p>
-
+    <div style="padding-bottom: 30px; font-size: 14px; ">
+         
+       
+        
+        <br /><br /><br />
+        
+            <p>Esse projeto foi inteiramente criado, estudado e desenvolvido pela <span style="color: #00d8ff; font-weight: bold;">DCAN+M</span>. Ele contou com a participação direta e indireta de mais de 10 pessoas no Brasil e no mundo.</p>
+            
+            <br />
+            
+            <p>O nosso insight aconteceu quando ficou evidente que a internet e os smartphones tem um impacto direto no nosso nível de ansiedade, essa mesma ansiedade que só aumenta uma vez que estamos constantemente plugados.</p>
+            
+            <br />
+            
+            <p>O processo de contagem regressiva para um determinado acontecimento está enraizada na nossa cultura.</p>
+            
+            <br />
+            
+            <p style="background: #fff; padding: 15px; color: #999;">A <span style="color: #00d8ff; font-weight: bold;">DCAN+M</span> aceitou o desafio
+            <br />se propôs a criar [ nossa equipe de criação é phoda ]
+            <br />se propôs a desenvolver [ nossos desenvolvedores são apaixonados pelo o que fazem ] 
+            <br />e chegamos na ferramenta que estabelece esse vinculo entre pessoas e seus momentos futuro.</p>
+            
+            <br />
+            
+            <p>Nós somos [beta] e seremos para sempre.</p>
+            
+            <br />
+            
+            <p>Divirtam-se.</p>
+            
+            <br />
+            
+            <p><span style="color: #00d8ff; font-weight: bold;">DCAN+M</span></p>
+    </div>
 </div>

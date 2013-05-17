@@ -21,17 +21,17 @@ class Auth extends CI_Controller{
 	switch ($oauth){
 	    case 'instagram':
 		$provider = array(
-		    'id' => '4df5f47cf2fa4da98b0d0f91beb158fb',
-		    'secret' => '4664a8ef7e3142e4bb12fb19fd4aa4d3',
-		    'redirect' => 'http://www.tiltheday.com/auth/token',
+		    'id' => INSTAGRAM_ID,
+		    'secret' => INSTAGRAM_SECRET,
+		    'redirect' => INSTAGRAM_REDIRECT,
 		);
 		break;
 	    
 	    case 'facebook':
 		$provider = array(
-		    'id' => $this->config->item('facebook_id'),
-		    'secret' => $this->config->item('facebook_secret'),
-		    'redirect' => $this->config->item('facebook_redirect'),
+		    'id' => FACEBOOK_ID,
+		    'secret' => FACEBOOK_SECRET,
+		    'redirect' => FACEBOOK_REDIRECT,
 		);
 		break;
 	}
@@ -101,18 +101,34 @@ class Auth extends CI_Controller{
 	return $saida;
     }
     
+    /*
+     * Função que prepara as imagens do Facebook para aparecer na tela.
+     */
     private function photo_face($url,$baixa,$hei,$wid,$loc){
 	return '<div class="pfti"><img class="fti'.$loc.'" data-he="'.$hei.'" data-wi="'.$wid.'" data-local="facebook" data-alta="'.$url.'" src="'.$baixa.'"><span class="size">'.$wid.'x'.$hei.'</span></div>';
     }
     
+    /*
+     * Função para pegar as imagens no Instagram.
+     * Verifica se o arquivo instagram_X.json existe e se já faz um hora que foi criado.
+     * X = código do usuário
+     * 
+     * Se arquivo existir e faz menos de uma hora, pega os dados, envia para a função
+     * listjson e prepara para aparecer na tela.
+     * 
+     * se não existir ou faz mais de uma hora, cria o arquivo novamente e prepara
+     * as imagens para aparecer na tela.
+     */
     public function fotos_instagram(){
 	$local = $this->input->post('local');
 	
+	// Pega os dados do Oauth no banco de dados
 	$query = $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result();
 	$l = 1;
 	$next = '';
 	$photo = '';
 	
+	// Monta o nome do arquivo 
 	$cache = './cachejson/instagram_'.$this->session->userdata('us_codigo').'.json';
 	
 	if(file_exists($cache) && filemtime($cache) > (time() - (60 * 60))){
@@ -127,6 +143,9 @@ class Auth extends CI_Controller{
 	
 	    $images[] = array();
 	    
+	    /*
+	     * Loop montado para pegar todos as imagen no Instagram, se houver ou não paginação no json de retorno.
+	     */
 	    for($i=0;$i<$l;++$i){
 		if($next == ''){
 		    $url = 'https://api.instagram.com/v1/users/'.$query[0]->oa_instagram_id.'/media/recent/?access_token='.$query[0]->oa_instagram_access_token.'&count=32';
@@ -160,6 +179,9 @@ class Auth extends CI_Controller{
 	echo $photo;
     }
     
+    /*
+     * Pega as imagens do facebook
+     */
     public function fotos_facebook(){
 	$local = $this->uri->segment(3);
 	$query = $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result_array();
@@ -182,20 +204,25 @@ class Auth extends CI_Controller{
 	echo $saida;
     }
     
-    
+    /*
+     * Faz o Oauth no facebook
+     */
     public function facebook(){
 	$token = $this->id_secret('facebook');
 	$url = 'https://www.facebook.com/dialog/oauth?client_id='.$token['id'].'&redirect_uri='.$token['redirect'].'&scope=user_photos,email,read_friendlists&display=iframe';
 	
 	redirect($url,'location');
     }
-        
+    
+    /*
+     * Retorno de Oauth do facebook
+     */
     public function token_facebook(){
 	if($this->input->get('code') != ''){
-		redirect('http://'.$this->config->item('caminho_site').'/facebook/confirm?code='.$this->input->get('code'));
+		redirect('http://'.CAMINHO_SITE.'/facebook/confirm?code='.$this->input->get('code'));
 	}else
 	if($this->input->get('access_token') != ''){
-	    redirect('http://'.$this->config->item('caminho_site').'/facebook/confirm?access_token='.$this->input->get('access_token'));
+	    redirect('http://'.CAMINHO_SITE.'/facebook/confirm?access_token='.$this->input->get('access_token'));
 	}else	
 	if($this->input->get('request') != ''){
 	    redirect(base_url().'/web/convite_enviado/'.$this->input->get('post_id'));
@@ -204,6 +231,9 @@ class Auth extends CI_Controller{
 	}
     }
     
+    /*
+     * Texto que é enviado no invite.
+     */
     public function send_dialog_face(){
 	$tk = $this->id_secret('facebook');
 	$query = $this->wdb->get_oauth($this->session->userdata('us_codigo'))->result_array();
@@ -214,14 +244,17 @@ class Auth extends CI_Controller{
 	
 	$this->session->set_userdata('idcount',$idcount);
 	
-	$txt = 'Estou te convidando para seguir meu evento '.$count[0]['co_titulo'].'. Instale o aplicativo '.$this->config->item('title_page').' no seu Iphone ou Android. Caso já possua o aplicativo, basta clicar aqui '.$this->config->item('app_itunes').'://'.$idcount;
+	$txt = 'Estou te convidando para seguir meu evento '.$count[0]['co_titulo'].'. Instale o aplicativo '.TITLE_PAGE.' no seu Iphone ou Android. Caso já possua o aplicativo, basta clicar aqui '.APP_ITUNES.'://'.$idcount;
 		
-	$url = 'https://www.facebook.com/dialog/apprequests?app_id='.$tk['id'].'&link='.$this->config->item('app_itunes').'://'.$idcount.'&picture=http://'.$this->config->item('caminho_site').'/img/logotipo_header.jpg&name='.$this->config->item('title_page').'&caption='.$this->config->item('title_page').'&message='.$txt.'&redirect_uri='.$tk['redirect'].'&to='.$iduser.'&display=iframe&access_token='.$query[0]['oa_facebook_access_token'];
+	$url = 'https://www.facebook.com/dialog/apprequests?app_id='.$tk['id'].'&link='.APP_ITUNES.'://'.$idcount.'&picture=http://'.CAMINHO_SITE.'/img/logotipo_header.jpg&name='.TITLE_PAGE.'&caption='.TITLE_PAGE.'&message='.$txt.'&redirect_uri='.$tk['redirect'].'&to='.$iduser.'&display=iframe&access_token='.$query[0]['oa_facebook_access_token'];
 	
 	redirect($url);
     }
 
-
+    /*
+     * Função para pegar os amigos no facebook
+     * Retorna um arquivo em jSon
+     */
     public function get_amigos(){
 	header("content-type: application/json");
 	$tkfb = $this->id_secret('facebook');
@@ -251,13 +284,16 @@ class Auth extends CI_Controller{
 	echo json_encode($saida);
     }
     
+    /*
+     * Teste para envio de postagem no facebook
+     */
     public function send_post(){
 	$tk = $this->id_secret('facebook');
 	$token = $this->wdb->get_oauth($this->session->userdata("us_codigo"))->result_array();
 	$access = $token[0]['oa_facebook_access_token'];
 	$usuario = $token[0]['oa_facebook_usuario'];
 	#https://graph.facebook.com/100001933896128/feed?message=Mensagem%20da%20DCANM%20Mobil&link=http%3A%2F%2Fwww.dcanm.mobi%2Fcount
-	$data['link'] = 'http://'.$this->config->item('caminho_site').'/';
+	$data['link'] = 'http://'.CAMINHO_SITE.'/';
 	$data['message'] = 'Essa é uma mensagem de teste';
 	$data['caption'] = 'Caption';
 	$data['description'] = 'Description';
@@ -281,7 +317,10 @@ class Auth extends CI_Controller{
 	
 	return $return;
     }
-
+    
+    /*
+     * Usado para obter o json após o Oauth
+     */
     private function getpage($url){
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
