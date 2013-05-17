@@ -69,52 +69,11 @@ class Mobile_model extends CI_Model {
 	}
     }
     
-    public function set_count($dados=NULL){
-	if($dados != NULL){
-	    $exp = date("Y-m-d", strtotime("+".$dados['dias_projeto']." days"));
-	    if($dados['privado'] == ''){
-		$priv = 'n';
-	    }else{
-		$priv = 's';
-	    }
-	    
-	    if(isset($dados['codigo']) && $dados['codigo'] > 0){
-		$upd = array(
-		    'co_titulo'		=> $dados['nome_projeto'],
-		    'co_descricao'	=> $dados['ocasiao_projeto'],
-		    'co_privado'	=> $priv,
-		    'co_dias'		=> $dados['dias_projeto'],
-		    'co_data_expira'	=> $exp,
-		    'co_tags'		=> $dados['tags'],
-		);
-		$this->db->where(array('co_codigo' => $dados['codigo']));
-		$this->db->update('tbl_count',$upd);
-	    }else{
-		$ins = array(
-		    'co_master'		=> $dados['user_id'],
-		    'co_dias'		=> $dados['dias_projeto'],
-		    'co_data_compra'	=> date("Y-m-d"),
-		    'co_data_expira'	=> $exp,
-		    'co_titulo'		=> $dados['nome_projeto'],
-		    'co_descricao'	=> $dados['ocasiao_projeto'],
-		    'co_privado'	=> $priv,
-		    'co_tags'		=> $dados['tags'],
-		);
-		$this->db->insert('tbl_count',$ins);
-	    }
-	}
-    }
-    
-    public function del_count($id){
-	$up = array(
-	    'co_excluido'=>'s',
-	);
-	$this->db->where(array('co_codigo'=>$id));
-	$this->db->update('tbl_count',$up);
-	
-	$this->db->delete('tbl_tips',array('ti_count'=>$id));
-    }
-    
+    /*
+     * Função que retorna os dados da count
+     * @param int: id da count
+     * @return dados da count
+     */
     public function get_counts($id){
 	return $this->db->query("SELECT u.us_codigo, u.us_nome, c.co_codigo, c.co_pago, c.co_admin, c.co_titulo, c.co_descricao, c.co_dias, c.co_data_compra, c.co_data_expira, c.co_privado FROM tbl_count c INNER JOIN tbl_usuario u ON u.us_codigo = c.co_master WHERE u.us_codigo = $id AND c.co_excluido != 's' AND c.co_finalizado != 's' ORDER BY c.co_data_expira");
     }
@@ -241,27 +200,9 @@ class Mobile_model extends CI_Model {
 	}
     }
     
-    public function set_tip($dados=NULL){
-	if($dados != NULL){
-	    if($dados['id_tip'] > 0){
-		$ins = array(
-		    'ti_count'  => $dados['codigo'],
-		    'ti_titulo' => $dados['titulo'],
-		    'ti_subtitulo'	=> $dados['sub'],
-		    'ti_descricao'	=> $dados['mensagem'],
-		    'ti_imagem'	=> $dados['img'],
-		);
-		$this->db->where(array('ti_codigo'=>$dados['id_tip']));
-		$this->db->update('tbl_tips',$ins);
-	    }else{
-		$ins = array(
-		    'ti_count' => $dados['codigo'],
-		);
-		$this->db->insert('tbl_tips',$ins);
-	    }
-	}
-    }
-    
+    /*
+     * Função que pega as tips de uma count baseado no ID da count
+     */
     public function get_tipcount($id=NULL){
 	if($id != NULL){
 	    return $this->db->query("SELECT c.co_titulo, c.co_dias, c.co_data_inicio, t.*,

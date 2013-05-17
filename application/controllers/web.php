@@ -511,7 +511,7 @@ class Web extends CI_Controller {
 		<p>Olá '.$in_user['email_usuario'].',</p>
 		<p>Seja bem vindo ao TilTheDay!</p>
 		<p>Você acabou de se cadastrar na ferramenta de contagem que vai estabelecer o vínculo entre você e seu melhores momentos futuros.</p>
-		<p>A partir de agora você poderá criar uma contagem regressiva de até 10 Dias para o evento ou acontecimento que você deseja.</p>
+		<p>A partir de agora você poderá criar uma contagem regressiva de até '.DIAS.' Dias para o evento ou acontecimento que você deseja.</p>
 		<p><a href="'.base_url().'">Clique Aqui</a> e comece já a motivar a sua ansiedade.</p>
 		<p>Caso o link acima não esteja funcionando, copie e cole o URL abaixo no seu Navegador:</p>
 		<p>'.base_url().'</p>';
