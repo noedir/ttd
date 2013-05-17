@@ -60,14 +60,99 @@ class Mobile extends CI_Controller {
 		$this->load->helper('email');
 		$this->load->library('email');
 		
-		$texto = '<img src="'.base_url().'img/logotipo_header.jpg">
-		    <p>Olá '.$input['email_usuario'].',</p>
-		    <p>Seja bem vindo ao TilTheDay!</p>
-		    <p>Você acabou de se cadastrar na ferramenta de contagem que vai estabelecer o vínculo entre você e seu melhores momentos futuros.</p>
-		    <p>A partir de agora você poderá criar uma contagem regressiva de até 10 Dias para o evento ou acontecimento que você deseja.</p>
-		    <p><a href="'.base_url().'web/confirma">Clique Aqui</a> para confirmar seu cadastro e comece já a ativar a sua ansiedade.</p>
-		    <p>Caso o link acima não esteja funcionando, copie e cole o URL abaixo no seu Navegador:</p>
-		    '.base_url().'web/confirma';
+		$texto = '<html>
+<head>
+<title>Bem Vindo</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table width="650" height="517" border="0" align="center" cellpadding="0" cellspacing="0" id="Table_01">
+	<tr>
+		<td height="55">
+			<img src="'.base_url().'email/images/email_cad_01.jpg" width="59" height="55" alt=""></td>
+		<td colspan="2">
+			<img src="'.base_url().'email/images/email_cad_02.jpg" alt="" width="145" height="55" border="0"></td>
+		<td colspan="2">
+			<img src="'.base_url().'email/images/email_cad_03.jpg" alt="" width="243" height="55" border="0"></td>
+		<td colspan="2">
+			<img src="'.base_url().'email/images/email_cad_04.jpg" alt="" width="144" height="55" border="0"></td>
+		<td>
+		  <img src="'.base_url().'email/images/email_cad_05.jpg" width="59" height="55" alt=""></td>
+  </tr>
+	<tr>
+		<td style="background-color: #e9e9e9;" rowspan="6">&nbsp;</td>
+		<td style="background-color: #fff;" rowspan="2">&nbsp;</td>
+		<td height="18" colspan="4" style="background-color: #fff;">&nbsp;</td>
+		<td style="background-color: #fff;" rowspan="2">&nbsp;</td>
+		<td style="background-color: #e9e9e9;" rowspan="6">&nbsp;</td>
+	</tr>
+	<tr>
+		<td height="154" colspan="4" style="font-family: Arial, Helvetica, sans-serif; background-color: #fff;">
+                <span style="font-size: 24px; font-weight: bold;">Olá '.$input['email_usuario'].',</span>
+                <Br>
+                <span style="font-size: 12px;">
+                <strong>Seja bem vindo(a) ao '.TITLE_PAGE.'!</strong>
+                <p style="font-size:11px; line-height: 12px;">
+                Você acabou de se cadastrar na ferramenta de contagem que vai estabelecer o
+                vínculo entre você e seu melhores momentos futuros. Aqui você terá a oportunidade de criar o conteúdo que irá motivar a sua
+                ansiedade no período que antecede esta grande data.
+                </p>
+                <p style="font-size:11px; line-height: 12px;">
+                A partir de agora você poderá criar uma contagem regressiva de
+                até <strong>10 Dias</strong> para o evento ou acontecimento que você deseja.
+          </p></span>
+      </td>
+	</tr>
+	<tr>
+		
+	</tr>
+	<tr>
+		<td style="background-color: #fff;" colspan="2">&nbsp;</td>
+		<td>
+			<img src="'.base_url().'email/images/email_cad_14.jpg" width="242" height="48" alt=""></td>
+		<td style="background-color: #fff;" colspan="3">&nbsp;</td>
+	</tr>
+	<tr>
+		
+	</tr>
+	<tr>
+		<td style="background-color: #fff;" height="154">&nbsp;</td>
+			<td style="font-family: Arial, Helvetica, sans-serif; background-color: #fff; font-size: 11px;" colspan="4">
+        
+        	Nós estamos em período BETA, então se experienciar qualquer problema entre em contato conosco pelo e-mail:
+		  	<br /><br /><strong style="font-size:14px;">'.EMAIL_CONTATO.'</strong>
+		  	<br /><br />Teremos o prazer de fazer desta uma experiência incrível para você
+		  	<br /><br />Obrigado,
+	    	<br /><br />Equipe '.TITLE_PAGE.'
+            
+      </td>
+		<td style="background-color: #fff;">&nbsp;</td>
+  </tr>
+	<tr>
+		<td style="background-color: #e9e9e9;" colspan="8">
+			<img src="'.base_url().'email/images/email_cad_20.jpg" width="650" height="53" alt=""></td>
+	</tr>
+	<tr>
+		<td>
+			<img src="'.base_url().'email/images/spacer.gif" width="59" height="1" alt=""></td>
+		<td>
+			<img src="'.base_url().'email/images/spacer.gif" width="27" height="1" alt=""></td>
+		<td>
+			<img src="'.base_url().'email/images/spacer.gif" width="118" height="1" alt=""></td>
+		<td>
+			<img src="'.base_url().'email/images/spacer.gif" width="242" height="1" alt=""></td>
+		<td>
+			<img src="'.base_url().'email/images/spacer.gif" width="1" height="1" alt=""></td>
+		<td>
+			<img src="'.base_url().'email/images/spacer.gif" width="116" height="1" alt=""></td>
+		<td>
+			<img src="'.base_url().'email/images/spacer.gif" width="28" height="1" alt=""></td>
+		<td>
+			<img src="'.base_url().'email/images/spacer.gif" width="59" height="1" alt=""></td>
+	</tr>
+</table>
+</body>
+</html>';
 		
 		$config['protocol']  = 'smtp';
 		$config['charset'] = 'utf8';
@@ -82,7 +167,7 @@ class Mobile extends CI_Controller {
 		$this->email->initialize($config);
 		$this->email->from(EMAIL_CONTATO);
 		$this->email->to($input['email_usuario']);
-		$this->email->subject('Confirmação de Email');
+		$this->email->subject('Bem Vindo ao '.TITLE_PAGE);
 		$this->email->message($texto);
 		$em = $this->email->send();
 		

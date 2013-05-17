@@ -449,7 +449,11 @@ class Web extends CI_Controller {
             'title' => TITLE_PAGE.' &raquo; Criar Novo '.TITLE_PAGE,
             'tela' => 'cadprojeto',
         );
-        
+	
+	// Verifica se o email é da Dcanm para liberar + dias
+        if($this->input->post('email_usuario') != ''){
+	    $vem = strpos($this->input->post('email_usuario'),'@dcanm');
+	}
 	
         $this->form_validation->set_rules('nome_usuario','Nome do Usuário','trim|required');
         $this->form_validation->set_rules('email_usuario','Email do Usuário','trim|required|valid_email|is_unique[tbl_usuario.us_email]');
@@ -457,7 +461,14 @@ class Web extends CI_Controller {
         $this->form_validation->set_rules('confirma_senha','Confirmação','trim|required|matches[senha_usuario]');
         $this->form_validation->set_rules('nome_projeto','Projeto','trim|required');
         $this->form_validation->set_rules('ocasiao_projeto','Ocasião','trim|required');
-        $this->form_validation->set_rules('dias_projeto','Dias do Projeto','trim|required|numeric|less_than['.DIAS.']');
+	
+	// Caso email não for @dcanm pode criar até 10 dias ou o limite na constante DIAS
+	// Caso email seja @dcanm pode ser criado quantos dias desejar, independente da contantes DIAS
+	if(isset($vem) && $vem === false){
+	    $this->form_validation->set_rules('dias_projeto','Dias do Projeto','trim|required|numeric|less_than['.DIAS.']');
+	}else{
+	    $this->form_validation->set_rules('dias_projeto','Dias do Projeto','trim|required|numeric');
+	}
         $this->form_validation->set_rules('nomeunico','Identificador','trim|required|is_unique[tbl_count.co_nomeunico]');
 	
 	if($this->form_validation->run()){
@@ -564,9 +575,21 @@ class Web extends CI_Controller {
             'tela' => 'novo_projeto'
         );
 	
+	// Verifica se o email é da Dcanm para liberar + dias
+	if($this->input->post('email_usuario') != ''){
+	    $vem = strpos($this->input->post('email_usuario'),'@dcanm');
+	}
+	
 	$this->form_validation->set_rules('nome_projeto','Projeto','trim|required');
         $this->form_validation->set_rules('ocasiao_projeto','Ocasião','trim|required');
-        $this->form_validation->set_rules('dias_projeto','Dias do Projeto','trim|required|numeric|less_than['.DIAS.']');
+	
+    	// Caso email não for @dcanm pode criar até 10 dias ou o limite na constante DIAS
+	// Caso email seja @dcanm pode ser criado quantos dias desejar, independente da contantes DIAS
+	if(isset($vem) && $vem === false){
+	    $this->form_validation->set_rules('dias_projeto','Dias do Projeto','trim|required|numeric|less_than['.DIAS.']');
+	}else{
+	    $this->form_validation->set_rules('dias_projeto','Dias do Projeto','trim|required|numeric');
+	}
         $this->form_validation->set_rules('nomeunico','Identificador','trim|required|is_unique[tbl_count.co_nomeunico]');
 	
 	if($this->form_validation->run()){

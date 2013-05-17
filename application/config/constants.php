@@ -31,7 +31,7 @@ define('EMAIL_CONTATO','contato@tiltheday.com');
 define('EMAIL_CONTATO_SENHA','dudinha09');
 define('EMAIL_NOREPLY','noreply@tiltheday.com');
 define('EMAIL_NOREPLY_SENHA','dudinha09');
-define('EMAIL_INVITE','mail.tiltheday.com');
+define('EMAIL_INVITE','invite@tiltheday.com');
 define('EMAIL_INVITE_SENHA','dudinha09');
 define('INSTAGRAM_ID','4df5f47cf2fa4da98b0d0f91beb158fb');
 define('INSTAGRAM_SECRET','4664a8ef7e3142e4bb12fb19fd4aa4d3');
@@ -39,6 +39,7 @@ define('INSTAGRAM_REDIRECT','http://www.tiltheday.com/auth/token');
 define('FACEBOOK_ID','445876232159922');
 define('FACEBOOK_SECRET','4e8db7c42234a9eac60854309e35a986');
 define('FACEBOOK_REDIRECT','http://www.tiltheday.com/auth/token_facebook');
+define('FACEBOOK_TOKEN','');
 
 /*
 |--------------------------------------------------------------------------

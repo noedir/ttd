@@ -120,7 +120,7 @@ a.black:hover{
     background: url(../img/fundo_claro.png);
     display: none;
     overflow: auto;
-    z-index: 99999;
+    z-index: 9999900;
     line-height: 100%;
 }
 #pagina{
@@ -135,7 +135,7 @@ a.black:hover{
     display: none;
     overflow: hidden;
     overflow-y: auto;
-    z-index: 100000;
+    z-index: 10000000;
     border-radius: 10px;
 }
 #pagina #loadering{
@@ -222,7 +222,7 @@ a.black:hover{
     position: relative;
     width: 1080px;
     margin: 0px auto;
-    min-height: 100%;	
+    min-height: 100%;
 }
 
 #baseLogo {
@@ -1052,7 +1052,7 @@ button[type='cancel']:hover{
 }
 button[type='reset']{
     background: #66B7D5;
-	width: 150px;
+    width: 150px;
     color: #fff;
     font-size: 12px;
     padding: 10px;
@@ -1417,7 +1417,7 @@ div.tagsinput div { display: block; float: left; }
     height: 228px;
     top: 143px;
     right: 30px;
-    z-index: 870000;
+    z-index: 870;
     overflow:hidden;
 }
 
@@ -1427,7 +1427,7 @@ div.tagsinput div { display: block; float: left; }
     height: 228px;
     right: 0px;
     background: url(../img/fundo.png);
-    z-index: 200000;
+    z-index: 200;
 }
 
 #metodosUpload .barraup{
@@ -1439,12 +1439,11 @@ div.tagsinput div { display: block; float: left; }
     display: none;
     color: #fff;
     border-bottom: 1px solid #181818;
-    z-index: 200000;
+    z-index: 200;
 }
 .barraup progress{
     width: 100px;
 }
-
 .tip-maior .barraupc{
     position: absolute;
     top: 0px;
@@ -1554,7 +1553,6 @@ div.tagsinput div { display: block; float: left; }
 #trocar_instagram a{
     color: #15e09b;
 }
-
 #google_translate_element{
     position: relative;
     float: left;
@@ -1571,11 +1569,11 @@ div.tagsinput div { display: block; float: left; }
     width: 120px;
 }
 #baseFooter {
-	position: absolute;
-	bottom: 0px;
-	background: #212121;
-	color: #CCC;
-	font-size: 11px;
-	width: 100%; height: 60px;
-	min-width: 100%;
+    position: absolute;
+    bottom: 0px;
+    background: #212121;
+    color: #CCC;
+    font-size: 11px;
+    width: 100%; height: 60px;
+    min-width: 100%;
 }

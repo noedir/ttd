@@ -2,7 +2,7 @@
 <div id="baseFooter">
        		<div class="centralizador">
             	<span style="float:left; margin-top: 25px;">Todos os Direitos Reservados</span>
-                <div style="float:right; margin-top: 10px;"><img width="90" src="<?php echo base_url(); ?>images/dcanm_logo.jpg" /></div>
+                <div style="float:right; margin-top: 10px;"><img width="90" src="<?php echo base_url(); ?>images/dcanm_logo.png" /></div>
             </div>
        </div>        
 </div>
